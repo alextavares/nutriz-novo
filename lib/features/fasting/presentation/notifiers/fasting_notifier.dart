@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/models/fasting_stage.dart';
 
 class FastingState {
   final bool isFasting;
@@ -13,6 +14,8 @@ class FastingState {
     this.elapsed = Duration.zero,
     this.goal = const Duration(hours: 16),
   });
+
+  FastingStage get currentStage => FastingStage.getStageForDuration(elapsed);
 
   FastingState copyWith({
     bool? isFasting,
@@ -56,6 +59,34 @@ class FastingNotifier extends StateNotifier<FastingState> {
       final currentElapsed = DateTime.now().difference(state.startTime!);
       state = state.copyWith(elapsed: currentElapsed);
     });
+  }
+
+  void updateStartTime(DateTime newStart) {
+    if (!state.isFasting) return;
+
+    final now = DateTime.now();
+    // Prevent future start times
+    if (newStart.isAfter(now)) {
+      // In a real app, we might want to return a result or throw to notify UI
+      // For now, we just clamp to now
+      newStart = now;
+    }
+
+    final newElapsed = now.difference(newStart);
+    state = state.copyWith(startTime: newStart, elapsed: newElapsed);
+  }
+
+  void updateEndTime(DateTime newEnd) {
+    if (!state.isFasting || state.startTime == null) return;
+
+    // Ensure end time is after start time
+    if (newEnd.isBefore(state.startTime!)) {
+      // In a real app, show error. For now, ignore or clamp.
+      return;
+    }
+
+    final newGoal = newEnd.difference(state.startTime!);
+    state = state.copyWith(goal: newGoal);
   }
 
   void stopFasting() {

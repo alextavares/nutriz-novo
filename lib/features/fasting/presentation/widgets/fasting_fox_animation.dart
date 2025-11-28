@@ -52,10 +52,12 @@ class _FastingFoxAnimationState extends State<FastingFoxAnimation>
           ),
         );
       },
-      child: Icon(
-        Icons.cruelty_free, // Fox-like icon
-        size: 120,
-        color: Colors.deepPurple[300],
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Icon(
+          Icons.cruelty_free, // Fox-like icon
+          color: Colors.deepPurple[300],
+        ),
       ),
     );
   }
