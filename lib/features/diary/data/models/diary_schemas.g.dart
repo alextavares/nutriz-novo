@@ -33,8 +33,13 @@ const DiaryDaySchemaSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'MealEmbedded',
     ),
-    r'waterIntakeMl': PropertySchema(
+    r'notes': PropertySchema(
       id: 3,
+      name: r'notes',
+      type: IsarType.string,
+    ),
+    r'waterIntakeMl': PropertySchema(
+      id: 4,
       name: r'waterIntakeMl',
       type: IsarType.double,
     )
@@ -85,6 +90,12 @@ int _diaryDaySchemaEstimateSize(
       bytesCount += MealEmbeddedSchema.estimateSize(value, offsets, allOffsets);
     }
   }
+  {
+    final value = object.notes;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -102,7 +113,8 @@ void _diaryDaySchemaSerialize(
     MealEmbeddedSchema.serialize,
     object.meals,
   );
-  writer.writeDouble(offsets[3], object.waterIntakeMl);
+  writer.writeString(offsets[3], object.notes);
+  writer.writeDouble(offsets[4], object.waterIntakeMl);
 }
 
 DiaryDaySchema _diaryDaySchemaDeserialize(
@@ -122,7 +134,8 @@ DiaryDaySchema _diaryDaySchemaDeserialize(
         MealEmbedded(),
       ) ??
       [];
-  object.waterIntakeMl = reader.readDouble(offsets[3]);
+  object.notes = reader.readStringOrNull(offsets[3]);
+  object.waterIntakeMl = reader.readDouble(offsets[4]);
   return object;
 }
 
@@ -146,6 +159,8 @@ P _diaryDaySchemaDeserializeProp<P>(
           ) ??
           []) as P;
     case 3:
+      return (reader.readStringOrNull(offset)) as P;
+    case 4:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -687,6 +702,160 @@ extension DiaryDaySchemaQueryFilter
   }
 
   QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'notes',
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'notes',
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'notes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'notes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'notes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'notes',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'notes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'notes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'notes',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'notes',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'notes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
+      notesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'notes',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterFilterCondition>
       waterIntakeMlEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -794,6 +963,18 @@ extension DiaryDaySchemaQuerySortBy
     });
   }
 
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterSortBy> sortByNotes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterSortBy> sortByNotesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
   QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterSortBy>
       sortByWaterIntakeMl() {
     return QueryBuilder.apply(this, (query) {
@@ -849,6 +1030,18 @@ extension DiaryDaySchemaQuerySortThenBy
     });
   }
 
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterSortBy> thenByNotes() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notes', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterSortBy> thenByNotesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'notes', Sort.desc);
+    });
+  }
+
   QueryBuilder<DiaryDaySchema, DiaryDaySchema, QAfterSortBy>
       thenByWaterIntakeMl() {
     return QueryBuilder.apply(this, (query) {
@@ -876,6 +1069,13 @@ extension DiaryDaySchemaQueryWhereDistinct
   QueryBuilder<DiaryDaySchema, DiaryDaySchema, QDistinct> distinctByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date');
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, DiaryDaySchema, QDistinct> distinctByNotes(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'notes', caseSensitive: caseSensitive);
     });
   }
 
@@ -912,6 +1112,12 @@ extension DiaryDaySchemaQueryProperty
       mealsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'meals');
+    });
+  }
+
+  QueryBuilder<DiaryDaySchema, String?, QQueryOperations> notesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'notes');
     });
   }
 
@@ -1661,43 +1867,48 @@ const FoodEmbeddedSchema = Schema(
   name: r'FoodEmbedded',
   id: 2780256086969751529,
   properties: {
-    r'calories': PropertySchema(
+    r'brand': PropertySchema(
       id: 0,
+      name: r'brand',
+      type: IsarType.string,
+    ),
+    r'calories': PropertySchema(
+      id: 1,
       name: r'calories',
       type: IsarType.double,
     ),
     r'carbs': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'carbs',
       type: IsarType.double,
     ),
     r'fat': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'fat',
       type: IsarType.double,
     ),
     r'id': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'id',
       type: IsarType.string,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'protein': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'protein',
       type: IsarType.double,
     ),
     r'servingSize': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'servingSize',
       type: IsarType.double,
     ),
     r'servingUnit': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'servingUnit',
       type: IsarType.string,
     )
@@ -1714,6 +1925,12 @@ int _foodEmbeddedEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.brand;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.id.length * 3;
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.servingUnit.length * 3;
@@ -1726,14 +1943,15 @@ void _foodEmbeddedSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDouble(offsets[0], object.calories);
-  writer.writeDouble(offsets[1], object.carbs);
-  writer.writeDouble(offsets[2], object.fat);
-  writer.writeString(offsets[3], object.id);
-  writer.writeString(offsets[4], object.name);
-  writer.writeDouble(offsets[5], object.protein);
-  writer.writeDouble(offsets[6], object.servingSize);
-  writer.writeString(offsets[7], object.servingUnit);
+  writer.writeString(offsets[0], object.brand);
+  writer.writeDouble(offsets[1], object.calories);
+  writer.writeDouble(offsets[2], object.carbs);
+  writer.writeDouble(offsets[3], object.fat);
+  writer.writeString(offsets[4], object.id);
+  writer.writeString(offsets[5], object.name);
+  writer.writeDouble(offsets[6], object.protein);
+  writer.writeDouble(offsets[7], object.servingSize);
+  writer.writeString(offsets[8], object.servingUnit);
 }
 
 FoodEmbedded _foodEmbeddedDeserialize(
@@ -1743,14 +1961,15 @@ FoodEmbedded _foodEmbeddedDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = FoodEmbedded();
-  object.calories = reader.readDouble(offsets[0]);
-  object.carbs = reader.readDouble(offsets[1]);
-  object.fat = reader.readDouble(offsets[2]);
-  object.id = reader.readString(offsets[3]);
-  object.name = reader.readString(offsets[4]);
-  object.protein = reader.readDouble(offsets[5]);
-  object.servingSize = reader.readDouble(offsets[6]);
-  object.servingUnit = reader.readString(offsets[7]);
+  object.brand = reader.readStringOrNull(offsets[0]);
+  object.calories = reader.readDouble(offsets[1]);
+  object.carbs = reader.readDouble(offsets[2]);
+  object.fat = reader.readDouble(offsets[3]);
+  object.id = reader.readString(offsets[4]);
+  object.name = reader.readString(offsets[5]);
+  object.protein = reader.readDouble(offsets[6]);
+  object.servingSize = reader.readDouble(offsets[7]);
+  object.servingUnit = reader.readString(offsets[8]);
   return object;
 }
 
@@ -1762,20 +1981,22 @@ P _foodEmbeddedDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 1:
       return (reader.readDouble(offset)) as P;
     case 2:
       return (reader.readDouble(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 6:
       return (reader.readDouble(offset)) as P;
     case 7:
+      return (reader.readDouble(offset)) as P;
+    case 8:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1784,6 +2005,158 @@ P _foodEmbeddedDeserializeProp<P>(
 
 extension FoodEmbeddedQueryFilter
     on QueryBuilder<FoodEmbedded, FoodEmbedded, QFilterCondition> {
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
+      brandIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'brand',
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
+      brandIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'brand',
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition> brandEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'brand',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
+      brandGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'brand',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition> brandLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'brand',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition> brandBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'brand',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
+      brandStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'brand',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition> brandEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'brand',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition> brandContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'brand',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition> brandMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'brand',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
+      brandIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'brand',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
+      brandIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'brand',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<FoodEmbedded, FoodEmbedded, QAfterFilterCondition>
       caloriesEqualTo(
     double value, {

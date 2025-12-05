@@ -9,6 +9,8 @@ abstract class DiaryRepository {
 
   // Atalhos para operações específicas (opcional, mas útil)
   Future<void> addMeal(DateTime date, Meal meal);
+  Future<void> removeMeal(DateTime date, String mealId);
+  Future<void> updateMealQuantity(DateTime date, String mealId, double newQuantity);
   Future<void> updateWaterIntake(DateTime date, WaterVolume volume);
   Future<void> logWeight(DateTime date, Weight weight);
 }

@@ -23,12 +23,15 @@ class DiaryDaySchema {
 
   double? calorieGoal;
 
+  String? notes;
+
   DiaryDay toEntity() {
     return DiaryDay(
       date: date,
       meals: meals.map((e) => e.toEntity()).toList(),
       waterIntake: WaterVolume(waterIntakeMl),
       calorieGoal: calorieGoal != null ? Calories(calorieGoal!) : null,
+      notes: notes,
     );
   }
 
@@ -37,7 +40,8 @@ class DiaryDaySchema {
       ..date = DateUtils.dateOnly(entity.date)
       ..meals = entity.meals.map((e) => MealEmbedded.fromEntity(e)).toList()
       ..waterIntakeMl = entity.waterIntake.valueMl
-      ..calorieGoal = entity.calorieGoal?.value;
+      ..calorieGoal = entity.calorieGoal?.value
+      ..notes = entity.notes;
   }
 }
 
@@ -93,6 +97,7 @@ class FoodEmbedded {
   late double fat;
   late double servingSize;
   late String servingUnit;
+  String? brand;
 
   Food toEntity() {
     return Food(
@@ -102,6 +107,7 @@ class FoodEmbedded {
       macros: MacroNutrients(carbs: carbs, protein: protein, fat: fat),
       servingSize: servingSize,
       servingUnit: servingUnit,
+      brand: brand,
     );
   }
 
@@ -114,6 +120,7 @@ class FoodEmbedded {
       ..protein = entity.macros.protein
       ..fat = entity.macros.fat
       ..servingSize = entity.servingSize
-      ..servingUnit = entity.servingUnit;
+      ..servingUnit = entity.servingUnit
+      ..brand = entity.brand;
   }
 }

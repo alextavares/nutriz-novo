@@ -2,37 +2,137 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../features/diary/presentation/pages/diary_page.dart';
-import '../features/diary/presentation/pages/food_search_page.dart';
-import '../features/diary/domain/entities/meal.dart';
 import '../features/fasting/presentation/pages/fasting_screen.dart';
+import '../features/diary/domain/entities/diary_day.dart';
+import '../features/diary/presentation/pages/nutrition_detail_screen.dart';
+import '../features/measurements/presentation/pages/weight_measurement_page.dart';
+import '../shared/widgets/main_scaffold.dart';
+import '../features/placeholders/placeholder_screens.dart';
+import '../features/profile/presentation/pages/profile_screen.dart';
+import '../features/diary/presentation/pages/food_search_screen.dart';
+import '../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../features/gamification/presentation/providers/gamification_providers.dart';
+import '../features/profile/data/repositories/profile_repository.dart';
+import '../features/splash/presentation/pages/splash_screen.dart';
 
 part 'app_router.g.dart';
 
+/// Provider to track if onboarding has been completed
+@riverpod
+class OnboardingStatus extends _$OnboardingStatus {
+  @override
+  Future<bool> build() async {
+    final isar = ref.watch(isarProvider);
+    final repo = ProfileRepository(isar);
+    final profile = await repo.getProfile();
+    return profile?.isOnboardingCompleted ?? false;
+  }
+
+  void setCompleted() {
+    state = const AsyncValue.data(true);
+  }
+}
+
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
+  final rootNavigatorKey = GlobalKey<NavigatorState>();
+  final shellNavigatorKey = GlobalKey<NavigatorState>();
+  final onboardingStatus = ref.watch(onboardingStatusProvider);
+
   return GoRouter(
-    initialLocation: '/diary', // Start at Diary for now
+    navigatorKey: rootNavigatorKey,
+    initialLocation: '/splash',
+    redirect: (context, state) {
+      final isOnboardingRoute = state.matchedLocation == '/onboarding';
+      final isSplashRoute = state.matchedLocation == '/splash';
+
+      return onboardingStatus.when(
+        data: (isCompleted) {
+          // If we're on splash, redirect based on onboarding status
+          if (isSplashRoute) {
+            return isCompleted ? '/diary' : '/onboarding';
+          }
+          // If onboarding is completed and trying to access onboarding, redirect to diary
+          if (isCompleted && isOnboardingRoute) {
+            return '/diary';
+          }
+          // If onboarding is NOT completed and NOT on onboarding page, redirect to onboarding
+          if (!isCompleted && !isOnboardingRoute && !isSplashRoute) {
+            return '/onboarding';
+          }
+          return null; // No redirect needed
+        },
+        loading: () {
+          // While loading, stay on splash screen
+          if (!isSplashRoute) {
+            return '/splash';
+          }
+          return null;
+        },
+        error: (_, __) => '/onboarding', // On error, go to onboarding
+      );
+    },
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Home'))),
+      ShellRoute(
+        navigatorKey: shellNavigatorKey,
+        builder: (context, state, child) {
+          return MainScaffold(child: child);
+        },
+        routes: [
+          GoRoute(
+            path: '/diary',
+            builder: (context, state) => const DiaryPage(),
+          ),
+          GoRoute(
+            path: '/fasting',
+            builder: (context, state) => const FastingScreen(),
+          ),
+          GoRoute(
+            path: '/recipes',
+            builder: (context, state) => const RecipesScreen(),
+          ),
+          GoRoute(
+            path: '/coach',
+            builder: (context, state) => const CoachScreen(),
+          ),
+          GoRoute(path: '/pro', builder: (context, state) => const ProScreen()),
+        ],
       ),
-      GoRoute(path: '/diary', builder: (context, state) => const DiaryPage()),
       GoRoute(
-        path: '/food-search/:mealType',
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/nutrition-detail',
         builder: (context, state) {
-          final mealTypeStr = state.pathParameters['mealType']!;
-          final mealType = MealType.values.firstWhere(
-            (e) => e.name == mealTypeStr,
-            orElse: () => MealType.breakfast,
-          );
-          return FoodSearchPage(mealType: mealType);
+          final diaryDay = state.extra as DiaryDay;
+          return NutritionDetailScreen(diaryDay: diaryDay);
         },
       ),
       GoRoute(
-        path: '/fasting',
-        builder: (context, state) => const FastingScreen(),
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/food-search/:mealType',
+        builder: (context, state) {
+          final mealType = state.pathParameters['mealType']!;
+          return FoodSearchScreen(mealType: mealType);
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/measurements',
+        builder: (context, state) => const WeightMeasurementPage(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingPage(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
       ),
     ],
   );

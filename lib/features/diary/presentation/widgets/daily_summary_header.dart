@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/value_objects/calories.dart';
 import '../../../../shared/widgets/progress/calorie_ring.dart';
-import '../../../../shared/widgets/progress/macro_bars.dart';
+import '../../../../shared/widgets/progress/macro_rings_row.dart';
 import '../../domain/entities/diary_day.dart';
 
 class DailySummaryHeader extends ConsumerWidget {
@@ -37,18 +37,21 @@ class DailySummaryHeader extends ConsumerWidget {
         child: Column(
           children: [
             // Calorie Ring - com AspectRatio para manter proporção
-            AspectRatio(
-              aspectRatio: 1,
-              child: CalorieRing(
-                consumed: consumed.value.toInt(),
-                goal: goal.value.toInt(),
-                burned: 0,
+            GestureDetector(
+              onTap: () => context.push('/nutrition-detail', extra: diaryDay),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: CalorieRing(
+                  consumed: consumed.value.toInt(),
+                  goal: goal.value.toInt(),
+                  burned: 0,
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
 
-            // Macro Bars
-            MacroBars(
+            // Macro Rings Row
+            MacroRingsRow(
               carbs: diaryDay.totalMacros.carbs,
               protein: diaryDay.totalMacros.protein,
               fat: diaryDay.totalMacros.fat,

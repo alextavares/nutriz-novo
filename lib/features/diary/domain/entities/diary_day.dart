@@ -14,6 +14,7 @@ class DiaryDay with _$DiaryDay {
     @Default([]) List<Meal> meals,
     @Default(WaterVolume(0)) WaterVolume waterIntake,
     Calories? calorieGoal,
+    String? notes,
   }) = _DiaryDay;
 
   Calories get totalCalories {

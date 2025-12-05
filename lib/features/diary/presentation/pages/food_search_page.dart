@@ -5,6 +5,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_typography.dart';
 import '../../domain/entities/meal.dart';
+import '../notifiers/food_search_notifier.dart';
 import '../providers/diary_providers.dart';
 
 class FoodSearchPage extends ConsumerStatefulWidget {
@@ -27,7 +28,8 @@ class _FoodSearchPageState extends ConsumerState<FoodSearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final foods = ref.watch(foodSearchNotifierProvider);
+    final state = ref.watch(foodSearchNotifierProvider);
+    final foods = state.results;
 
     return Scaffold(
       appBar: AppBar(
@@ -61,6 +63,16 @@ class _FoodSearchPageState extends ConsumerState<FoodSearchPage> {
               },
             ),
           ),
+          if (state.isLoading)
+            const LinearProgressIndicator()
+          else if (state.error != null)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Erro: ${state.error}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            ),
           Expanded(
             child: ListView.separated(
               itemCount: foods.length,
@@ -70,7 +82,7 @@ class _FoodSearchPageState extends ConsumerState<FoodSearchPage> {
                 return ListTile(
                   title: Text(food.name, style: AppTypography.bodyLarge),
                   subtitle: Text(
-                    '${food.calories.toDisplayString()} / ${food.servingSize}${food.servingUnit}',
+                    '${food.calories} kcal / ${food.servingSize}',
                     style: AppTypography.caption,
                   ),
                   trailing: IconButton(
@@ -84,7 +96,7 @@ class _FoodSearchPageState extends ConsumerState<FoodSearchPage> {
                           .read(diaryNotifierProvider.notifier)
                           .addFoodToMeal(
                             widget.mealType,
-                            food,
+                            food.toDomain(),
                             1.0, // Default 1 serving for now
                           );
                       context.pop();

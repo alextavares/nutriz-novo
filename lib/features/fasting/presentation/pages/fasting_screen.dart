@@ -35,9 +35,11 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFFDF4FF), // Light Purple Start
-              Color(0xFFF8E8FF), // Light Purple End (slightly darker)
+              Color(0xFFFDF4FF), // Very Light Purple
+              Color(0xFFF3E5F5), // Light Purple
+              Color(0xFFE1BEE7), // Soft Purple
             ],
+            stops: [0.0, 0.6, 1.0],
           ),
         ),
         child: SafeArea(

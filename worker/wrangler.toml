@@ -1,0 +1,7 @@
+name = "nutriz-food-ai"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+# We don't need to define the secret here, it's set via CLI
+# [vars]
+# GEMINI_API_KEY = "..." 

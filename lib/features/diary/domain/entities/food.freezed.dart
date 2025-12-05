@@ -22,7 +22,9 @@ mixin _$Food {
   MacroNutrients get macros => throw _privateConstructorUsedError;
   double get servingSize =>
       throw _privateConstructorUsedError; // em gramas ou ml
-  String get servingUnit => throw _privateConstructorUsedError;
+  String get servingUnit =>
+      throw _privateConstructorUsedError; // g, ml, fatia, etc.
+  String? get brand => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FoodCopyWith<Food> get copyWith => throw _privateConstructorUsedError;
@@ -39,7 +41,8 @@ abstract class $FoodCopyWith<$Res> {
       Calories calories,
       MacroNutrients macros,
       double servingSize,
-      String servingUnit});
+      String servingUnit,
+      String? brand});
 
   $CaloriesCopyWith<$Res> get calories;
   $MacroNutrientsCopyWith<$Res> get macros;
@@ -64,6 +67,7 @@ class _$FoodCopyWithImpl<$Res, $Val extends Food>
     Object? macros = null,
     Object? servingSize = null,
     Object? servingUnit = null,
+    Object? brand = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -90,6 +94,10 @@ class _$FoodCopyWithImpl<$Res, $Val extends Food>
           ? _value.servingUnit
           : servingUnit // ignore: cast_nullable_to_non_nullable
               as String,
+      brand: freezed == brand
+          ? _value.brand
+          : brand // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -123,7 +131,8 @@ abstract class _$$FoodImplCopyWith<$Res> implements $FoodCopyWith<$Res> {
       Calories calories,
       MacroNutrients macros,
       double servingSize,
-      String servingUnit});
+      String servingUnit,
+      String? brand});
 
   @override
   $CaloriesCopyWith<$Res> get calories;
@@ -147,6 +156,7 @@ class __$$FoodImplCopyWithImpl<$Res>
     Object? macros = null,
     Object? servingSize = null,
     Object? servingUnit = null,
+    Object? brand = freezed,
   }) {
     return _then(_$FoodImpl(
       id: null == id
@@ -173,6 +183,10 @@ class __$$FoodImplCopyWithImpl<$Res>
           ? _value.servingUnit
           : servingUnit // ignore: cast_nullable_to_non_nullable
               as String,
+      brand: freezed == brand
+          ? _value.brand
+          : brand // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -186,7 +200,8 @@ class _$FoodImpl implements _Food {
       required this.calories,
       required this.macros,
       required this.servingSize,
-      required this.servingUnit});
+      required this.servingUnit,
+      this.brand});
 
   @override
   final String id;
@@ -201,10 +216,13 @@ class _$FoodImpl implements _Food {
 // em gramas ou ml
   @override
   final String servingUnit;
+// g, ml, fatia, etc.
+  @override
+  final String? brand;
 
   @override
   String toString() {
-    return 'Food(id: $id, name: $name, calories: $calories, macros: $macros, servingSize: $servingSize, servingUnit: $servingUnit)';
+    return 'Food(id: $id, name: $name, calories: $calories, macros: $macros, servingSize: $servingSize, servingUnit: $servingUnit, brand: $brand)';
   }
 
   @override
@@ -220,12 +238,13 @@ class _$FoodImpl implements _Food {
             (identical(other.servingSize, servingSize) ||
                 other.servingSize == servingSize) &&
             (identical(other.servingUnit, servingUnit) ||
-                other.servingUnit == servingUnit));
+                other.servingUnit == servingUnit) &&
+            (identical(other.brand, brand) || other.brand == brand));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, name, calories, macros, servingSize, servingUnit);
+      runtimeType, id, name, calories, macros, servingSize, servingUnit, brand);
 
   @JsonKey(ignore: true)
   @override
@@ -241,7 +260,8 @@ abstract class _Food implements Food {
       required final Calories calories,
       required final MacroNutrients macros,
       required final double servingSize,
-      required final String servingUnit}) = _$FoodImpl;
+      required final String servingUnit,
+      final String? brand}) = _$FoodImpl;
 
   @override
   String get id;
@@ -255,6 +275,8 @@ abstract class _Food implements Food {
   double get servingSize;
   @override // em gramas ou ml
   String get servingUnit;
+  @override // g, ml, fatia, etc.
+  String? get brand;
   @override
   @JsonKey(ignore: true)
   _$$FoodImplCopyWith<_$FoodImpl> get copyWith =>

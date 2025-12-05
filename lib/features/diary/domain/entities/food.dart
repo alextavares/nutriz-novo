@@ -13,5 +13,6 @@ class Food with _$Food {
     required MacroNutrients macros,
     required double servingSize, // em gramas ou ml
     required String servingUnit, // g, ml, fatia, etc.
+    String? brand,
   }) = _Food;
 }

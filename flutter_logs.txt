@@ -1,0 +1,1519 @@
+--------- beginning of main
+12-02 20:07:22.773   556   569 E HwcComposer: getLuts failed Status(-8, EX_SERVICE_SPECIFIC): '8: '
+12-02 20:07:22.774   556   569 E HWComposer: getLuts: getLuts failed for display 4619827259835644672: UNSUPPORTED (8)
+12-02 20:09:35.400   556   570 E HwcComposer: getLuts failed Status(-8, EX_SERVICE_SPECIFIC): '8: '
+12-02 20:09:35.400   556   570 E HWComposer: getLuts: getLuts failed for display 4619827259835644672: UNSUPPORTED (8)
+--------- beginning of system
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: Cannot acquire BluetoothActivityEnergyInfo
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 11
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectBluetoothActivityInfo(BluetoothPowerStatsCollector.java:192)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectStats(BluetoothPowerStatsCollector.java:155)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector.collectAndDeliverStats(PowerStatsCollector.java:176)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 11
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector$1.onBluetoothActivityEnergyInfoError(BluetoothPowerStatsCollector.java:181)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.lambda$onBluetoothActivityEnergyInfoAvailable$0(BluetoothAdapter.java:1037)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.lambda$executeFromBinder$0(BluetoothUtils.java:343)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.SystemServerInitThreadPool$$ExternalSyntheticLambda0.execute(R8$$SyntheticClass:0)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.executeFromBinder(BluetoothUtils.java:343)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.onBluetoothActivityEnergyInfoAvailable(BluetoothAdapter.java:1035)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.IBluetoothActivityEnergyInfoListener$Stub.onTransact(IBluetoothActivityEnergyInfoListener.java:98)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:10:23.224   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: Cannot acquire BluetoothActivityEnergyInfo
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 11
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectBluetoothActivityInfo(BluetoothPowerStatsCollector.java:192)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectStats(BluetoothPowerStatsCollector.java:155)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector.collectAndDeliverStats(PowerStatsCollector.java:176)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 11
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector$1.onBluetoothActivityEnergyInfoError(BluetoothPowerStatsCollector.java:181)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.lambda$onBluetoothActivityEnergyInfoAvailable$0(BluetoothAdapter.java:1037)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.lambda$executeFromBinder$0(BluetoothUtils.java:343)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.SystemServerInitThreadPool$$ExternalSyntheticLambda0.execute(R8$$SyntheticClass:0)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.executeFromBinder(BluetoothUtils.java:343)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.onBluetoothActivityEnergyInfoAvailable(BluetoothAdapter.java:1035)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.IBluetoothActivityEnergyInfoListener$Stub.onTransact(IBluetoothActivityEnergyInfoListener.java:98)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:14:51.159   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:15:08.739  1559  2190 E bluetooth: system/gd/os/linux_generic/files.cc:223 FileCreatedTime: unable to read '/data/misc/bluetooth/logs/btsnooz_hci.log' file metadata, error: No such file or directory
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: Cannot acquire BluetoothActivityEnergyInfo
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 11
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectBluetoothActivityInfo(BluetoothPowerStatsCollector.java:192)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectStats(BluetoothPowerStatsCollector.java:155)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector.collectAndDeliverStats(PowerStatsCollector.java:176)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 11
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector$1.onBluetoothActivityEnergyInfoError(BluetoothPowerStatsCollector.java:181)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.lambda$onBluetoothActivityEnergyInfoAvailable$0(BluetoothAdapter.java:1037)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.lambda$executeFromBinder$0(BluetoothUtils.java:343)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.SystemServerInitThreadPool$$ExternalSyntheticLambda0.execute(R8$$SyntheticClass:0)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.executeFromBinder(BluetoothUtils.java:343)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.onBluetoothActivityEnergyInfoAvailable(BluetoothAdapter.java:1035)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.IBluetoothActivityEnergyInfoListener$Stub.onTransact(IBluetoothActivityEnergyInfoListener.java:98)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:15:54.783   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: Cannot acquire BluetoothActivityEnergyInfo
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 11
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectBluetoothActivityInfo(BluetoothPowerStatsCollector.java:192)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectStats(BluetoothPowerStatsCollector.java:155)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector.collectAndDeliverStats(PowerStatsCollector.java:176)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 11
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector$1.onBluetoothActivityEnergyInfoError(BluetoothPowerStatsCollector.java:181)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.lambda$onBluetoothActivityEnergyInfoAvailable$0(BluetoothAdapter.java:1037)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.lambda$executeFromBinder$0(BluetoothUtils.java:343)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.SystemServerInitThreadPool$$ExternalSyntheticLambda0.execute(R8$$SyntheticClass:0)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.executeFromBinder(BluetoothUtils.java:343)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.onBluetoothActivityEnergyInfoAvailable(BluetoothAdapter.java:1035)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.IBluetoothActivityEnergyInfoListener$Stub.onTransact(IBluetoothActivityEnergyInfoListener.java:98)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:22:50.975   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:31:00.155  8334 14123 E WorkSourceUtil: Could not find package: com.google.android.gms.westworld
+12-02 20:31:29.732  1753  1792 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[NexusLauncherActivity]#58) as ready
+12-02 20:31:29.733  1753  1792 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[NexusLauncherActivity]#59) as ready
+12-02 20:31:34.236   741   777 E IPCThreadState: Binder transaction failure. id: 3431087, BR_*: 29189, error: -22 (Invalid argument)
+12-02 20:31:35.711   556   556 E BpTransactionCompletedListener: Failed to transact (-32)
+12-02 20:31:35.715   556   556 E BpTransactionCompletedListener: Failed to transact (-32)
+12-02 20:31:38.504   741  4298 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: No service published for: persistent_data_block
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: android.os.ServiceManager$ServiceNotFoundException: No service published for: persistent_data_block
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.os.ServiceManager.getServiceOrThrow(ServiceManager.java:203)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry$82.createService(SystemServiceRegistry.java:1110)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry$82.createService(SystemServiceRegistry.java:1107)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry$StaticServiceFetcher.getService(SystemServiceRegistry.java:2405)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.app.SystemServiceRegistry.getSystemService(SystemServiceRegistry.java:1918)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.app.ContextImpl.getSystemService(ContextImpl.java:2315)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.content.Context.getSystemService(Context.java:4630)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageInstallerSession.markAsSealed(PackageInstallerSession.java:2449)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageInstallerSession.commit(PackageInstallerSession.java:2198)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.content.pm.PackageInstaller$Session.commit(PackageInstaller.java:1988)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageManagerShellCommand.doCommitSession(PackageManagerShellCommand.java:4316)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageManagerShellCommand.doRunInstall(PackageManagerShellCommand.java:1641)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageManagerShellCommand.runInstall(PackageManagerShellCommand.java:1562)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:246)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.os.ShellCommand.exec(ShellCommand.java:38)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onShellCommand(PackageManagerService.java:6684)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.os.Binder.shellCommand(Binder.java:1151)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.os.Binder.onTransact(Binder.java:953)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4729)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at com.android.server.pm.PackageManagerService$IPackageManagerImpl.onTransact(PackageManagerService.java:6668)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:31:46.363   741  3497 E SystemServiceRegistry: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:31:46.561   741  3497 E SystemServiceRegistry: Manager wrapper not available: persistent_data_block
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: Cannot acquire BluetoothActivityEnergyInfo
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 11
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectBluetoothActivityInfo(BluetoothPowerStatsCollector.java:192)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectStats(BluetoothPowerStatsCollector.java:155)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector.collectAndDeliverStats(PowerStatsCollector.java:176)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 11
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector$1.onBluetoothActivityEnergyInfoError(BluetoothPowerStatsCollector.java:181)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.lambda$onBluetoothActivityEnergyInfoAvailable$0(BluetoothAdapter.java:1037)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.lambda$executeFromBinder$0(BluetoothUtils.java:343)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.SystemServerInitThreadPool$$ExternalSyntheticLambda0.execute(R8$$SyntheticClass:0)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.executeFromBinder(BluetoothUtils.java:343)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.onBluetoothActivityEnergyInfoAvailable(BluetoothAdapter.java:1035)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.IBluetoothActivityEnergyInfoListener$Stub.onTransact(IBluetoothActivityEnergyInfoListener.java:98)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:31:58.864   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:32:01.406   741  1247 E AppOps  : attributionTag VCN not declared in manifest of android
+12-02 20:32:01.625  4271  4271 E SmsApplication: com.google.android.apps.messaging lost android:read_cell_broadcasts:  (fixing)
+12-02 20:32:02.330   741   777 E AppOps  : attributionTag VCN not declared in manifest of android
+12-02 20:32:05.120   741  1247 E AppOps  : attributionTag VCN not declared in manifest of android
+12-02 20:32:09.421  4271  4271 E SmsApplication: com.google.android.apps.messaging lost android:read_cell_broadcasts:  (fixing)
+12-02 20:32:09.776  4271  4271 E SmsApplication: com.google.android.apps.messaging lost android:read_cell_broadcasts:  (fixing)
+12-02 20:32:12.361  1364  2875 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[fitstreak]#45) as ready
+12-02 20:32:12.462  1364  2875 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[fitstreak]#46) as ready
+12-02 20:32:14.375   741  1522 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms.supervision, role: android.app.role.SYSTEM_SUPERVISION
+12-02 20:32:15.103  2047  2047 E aelw    : (REDACTED) Task %s failed or timed out. Client %d disconnecting from SearchService!
+12-02 20:32:15.103  2047  2047 E aelw    : java.util.concurrent.CancellationException: Task was cancelled.
+12-02 20:32:15.103  2047  2047 E aelw    : 	at fmnu.j(PG:33)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at fmnv.t(PG:23)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at fmnu.get(PG:1)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at e.bI(PG:2)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at fmsc.y(PG:10)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at fmqk.run(PG:23)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at aghm.run(PG:3)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at java.lang.reflect.Method.invoke(Native Method)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+12-02 20:32:15.103  2047  2047 E aelw    : 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+12-02 20:32:21.357  2047  2047 E aelw    : (REDACTED) Task %s failed or timed out. Client %d disconnecting from SearchService!
+12-02 20:32:21.357  2047  2047 E aelw    : java.util.concurrent.CancellationException: Task was cancelled.
+12-02 20:32:21.357  2047  2047 E aelw    : 	at fmnu.j(PG:33)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at fmnv.t(PG:23)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at fmnu.get(PG:1)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at e.bI(PG:2)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at fmsc.y(PG:10)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at fmqk.run(PG:23)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at aghm.run(PG:3)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at java.lang.reflect.Method.invoke(Native Method)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+12-02 20:32:21.357  2047  2047 E aelw    : 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+12-02 20:32:21.920   741  1522 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.SYSTEM_DEPENDENCY_INSTALLER
+12-02 20:32:22.394   741  1522 E RoleControllerServiceImpl: Default/fallback role holder package doesn't qualify for the role, package: com.google.android.gms, role: android.app.role.WALLET
+12-02 20:32:22.667   741  4298 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+12-02 20:32:26.238 14195 14195 E ashmem  : Pinning is deprecated since Android Q. Please use trim or other methods.
+12-02 20:32:35.686 14195 14282 I flutter : The Dart VM service is listening on http://127.0.0.1:46655/K5DO_Bv-AAY=/
+12-02 20:32:35.987 14195 14273 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: Error registering plugin health, cachet.plugins.health.HealthPlugin
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: java.lang.ClassCastException: com.fitstreak.fitstreak.MainActivity cannot be cast to androidx.activity.ComponentActivity
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at cachet.plugins.health.HealthPlugin.onAttachedToActivity(HealthPlugin.kt:194)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at io.flutter.embedding.engine.FlutterEngineConnectionRegistry.add(FlutterEngineConnectionRegistry.java:157)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at io.flutter.plugins.GeneratedPluginRegistrant.registerWith(GeneratedPluginRegistrant.java:44)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at java.lang.reflect.Method.invoke(Native Method)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at io.flutter.embedding.engine.plugins.util.GeneratedPluginRegister.registerGeneratedPlugins(GeneratedPluginRegister.java:80)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at io.flutter.embedding.android.FlutterActivity.configureFlutterEngine(FlutterActivity.java:1359)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at io.flutter.embedding.android.FlutterActivityAndFragmentDelegate.onAttach(FlutterActivityAndFragmentDelegate.java:226)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at io.flutter.embedding.android.FlutterActivity.onCreate(FlutterActivity.java:646)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.Activity.performCreate(Activity.java:9155)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.Activity.performCreate(Activity.java:9133)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1521)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:4262)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:4467)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:222)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.servertransaction.TransactionExecutor.executeNonLifecycleItem(TransactionExecutor.java:133)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.servertransaction.TransactionExecutor.executeTransactionItems(TransactionExecutor.java:103)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:80)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2823)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at java.lang.reflect.Method.invoke(Native Method)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+12-02 20:32:40.948 14195 14195 E GeneratedPluginRegistrant: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+12-02 20:32:41.739 14195 14294 E treak.fitstreak: No package ID 6a found for resource ID 0x6a0b0013.
+12-02 20:32:41.762 14195 14294 E FA      : Missing google_app_id. Firebase Analytics disabled. See https://goo.gl/NAOOOI
+12-02 20:32:41.762 14195 14294 E FA      : Uploading is not possible. App measurement disabled
+12-02 20:32:55.427  4911  4911 E ConfigUpdater: Content download complete but local path is null, retrying.
+12-02 20:33:21.143 14195 14195 E flutter : [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: Bad state: Tried to read the state of an uninitialized provider.
+12-02 20:33:21.143 14195 14195 E flutter : This generally means that have a circular dependency, and your provider end-up
+12-02 20:33:21.143 14195 14195 E flutter : depending on itself.
+12-02 20:33:21.143 14195 14195 E flutter : 
+12-02 20:33:21.143 14195 14195 E flutter : #0      ProviderElement.readSelf (package:riverpod/src/core/element.dart:473:70)
+12-02 20:33:21.143 14195 14195 E flutter : #1      AnyNotifier.state (package:riverpod/src/core/provider/notifier_provider.dart:84:25)
+12-02 20:33:21.143 14195 14195 E flutter : #2      HomeNotifier.loadHomeData (package:fitstreak/features/home/presentation/providers/home_provider.dart:54:13)
+12-02 20:33:21.143 14195 14195 E flutter : #3      HomeNotifier.build (package:fitstreak/features/home/presentation/providers/home_provider.dart:37:5)
+12-02 20:33:21.143 14195 14195 E flutter : #4      Notifier.runBuild (package:riverpod/src/providers/notifier/orphan.dart:70:21)
+12-02 20:33:21.143 14195 14195 E flutter : #5      $ClassProviderElement.create (package:riverpod/src/core/provider/notifier_provider.dart:561:26)
+12-02 20:33:21.143 14195 14195 E flutter : #6      ProviderElement.buildState (package:riverpod/src/core/element.dart:665:28)
+12-02 20:33:21.143 14195 14195 E flutter : #7      ProviderElement.mount (package:riverpod/src/core/element.dart:517:7)
+12-02 20:33:21.143 14195 14195 E flutter : #8      ProviderElement.flush (package:riverpod/src/core/element.dart:620:7)
+12-02 20:33:21.143 14195 14195 E flutter : #9      $ProviderBaseImpl._addListener (package:riverpod/src/core/provider/provider.dart:117:24)
+12-02 20:33:21.143 14195 14195 E flutter : #10     ProviderContainer.listen (package:riverpod/src/core/provider_container.dart:954:26)
+12-02 20:33:21.143 14195 14195 E flutter : #11     ConsumerStatefulElement.watch.<anonymous closure> (package:flutter_riverpod/src/core/consumer.dart:451:37)
+12-02 20:33:21.143 14195 14195 E flutter : #12     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:675:23)
+12-02 20:33:21.143 14195 14195 E flutter : #13     ConsumerStatefulElement.watch (package:flutter_riverpod/src/core/consumer.dart:444:14)
+12-02 20:33:21.143 14195 14195 E flutter : #14     HomePage.build (package:fitstreak/features/home/presentation/pages/home_page.dart:18:23)
+12-02 20:33:21.143 14195 14195 E flutter : #15     _ConsumerState.build (package:flutter_riverpod/src/core/consumer.dart:283:48)
+12-02 20:33:21.143 14195 14195 E flutter : #16     StatefulElement.build (package:flutter/src/widgets/framework.dart:5934:27)
+12-02 20:33:21.143 14195 14195 E flutter : #17     ConsumerStatefulElement.build (package:flutter_riverpod/src/core/consumer.dart:421:20)
+12-02 20:33:21.143 14195 14195 E flutter : #18     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5820:15)
+12-02 20:33:21.143 14195 14195 E flutter : #19     StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.143 14195 14195 E flutter : #20     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.143 14195 14195 E flutter : #21     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.143 14195 14195 E flutter : #22     StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.143 14195 14195 E flutter : #23     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.143 14195 14195 E flutter : #24     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.143 14195 14195 E flutter : #25     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.143 14195 14195 E flutter : #26     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.143 14195 14195 E flutter : #27     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.143 14195 14195 E flutter : #28     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.143 14195 14195 E flutter : #29     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.143 14195 14195 E flutter : #30     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.143 14195 14195 E flutter : #31     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.143 14195 14195 E flutter : #32     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.143 14195 14195 E flutter : #33     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.143 14195 14195 E flutter : #34     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.143 14195 14195 E flutter : #35     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.143 14195 14195 E flutter : #36     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.143 14195 14195 E flutter : #37     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.143 14195 14195 E flutter : #38     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.143 14195 14195 E flutter : #39     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.143 14195 14195 E flutter : #40     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.143 14195 14195 E flutter : #41     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #42     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #43     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #44     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #45     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #46     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #47     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #48     StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #49     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #50     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #51     StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #52     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #53     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #54     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #55     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #56     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #57     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #58     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #59     StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #60     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #61     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #62     StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #63     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #64     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #65     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #66     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #67     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #68     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #69     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #70     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #71     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #72     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #73     StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #74     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #75     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #76     StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #77     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #78     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #79     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #80     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #81     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #82     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #83     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #84     StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #85     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #86     ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #87     StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #88     ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #89     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #90     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #91     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #92     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #93     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #94     SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #95     Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #96     Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #97     ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #98     StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #99     Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #100    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #101    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #102    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #103    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #104    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #105    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #106    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #107    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #108    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #109    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #110    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #111    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #112    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #113    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #114    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #115    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #116    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #117    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #118    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #119    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #120    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #121    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #122    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #123    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #124    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #125    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #126    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #127    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #128    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #129    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #130    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #131    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #132    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #133    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #134    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #135    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #136    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #137    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #138    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #139    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #140    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #141    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #142    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #143    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #144    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #145    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #146    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #147    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #148    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #149    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #150    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #151    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #152    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #153    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #154    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #155    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #156    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #157    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #158    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #159    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #160    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #161    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #162    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #163    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #164    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #165    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #166    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #167    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #168    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #169    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #170    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #171    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #172    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #173    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #174    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #175    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #176    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #177    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #178    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #179    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #180    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #181    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #182    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #183    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #184    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #185    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #186    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #187    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #188    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #189    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #190    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #191    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #192    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #193    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #194    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #195    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #196    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #197    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #198    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #199    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #200    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #201    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #202    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #203    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #204    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #205    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #206    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #207    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #208    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #209    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #210    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #211    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #212    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #213    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #214    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #215    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #216    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #217    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #218    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #219    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #220    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #221    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #222    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #223    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #224    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #225    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #226    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #227    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #228    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #229    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #230    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #231    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #232    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #233    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #234    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #235    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #236    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #237    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #238    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #239    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #240    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #241    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #242    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #243    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #244    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #245    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #246    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #247    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #248    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #249    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #250    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #251    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #252    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #253    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #254    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.144 14195 14195 E flutter : #255    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #256    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #257    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #258    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #259    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #260    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #261    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #262    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #263    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #264    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #265    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #266    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #267    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #268    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #269    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #270    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #271    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #272    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #273    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #274    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #275    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #276    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #277    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #278    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #279    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #280    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #281    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #282    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #283    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #284    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #285    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #286    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #287    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #288    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #289    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #290    MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7269:36)
+12-02 20:33:21.144 14195 14195 E flutter : #291    MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7285:32)
+12-02 20:33:21.144 14195 14195 E flutter : #292    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #293    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #294    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #295    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #296    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #297    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #298    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #299    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #300    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #301    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #302    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #303    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #304    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #305    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #306    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #307    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #308    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #309    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #310    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #311    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #312    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.144 14195 14195 E flutter : #313    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.144 14195 14195 E flutter : #314    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.144 14195 14195 E flutter : #315    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.144 14195 14195 E flutter : #316    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.144 14195 14195 E flutter : #317    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.144 14195 14195 E flutter : #318    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.144 14195 14195 E flutter : #319    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.144 14195 14195 E flutter : #320    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #321    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #322    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.145 14195 14195 E flutter : #323    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.145 14195 14195 E flutter : #324    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.145 14195 14195 E flutter : #325    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.145 14195 14195 E flutter : #326    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #327    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #328    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.145 14195 14195 E flutter : #329    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.145 14195 14195 E flutter : #330    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.145 14195 14195 E flutter : #331    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.145 14195 14195 E flutter : #332    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.145 14195 14195 E flutter : #333    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.145 14195 14195 E flutter : #334    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #335    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #336    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.145 14195 14195 E flutter : #337    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.145 14195 14195 E flutter : #338    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.145 14195 14195 E flutter : #339    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.145 14195 14195 E flutter : #340    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.145 14195 14195 E flutter : #341    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.145 14195 14195 E flutter : #342    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #343    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #344    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.145 14195 14195 E flutter : #345    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #346    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #347    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.145 14195 14195 E flutter : #348    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #349    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #350    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.145 14195 14195 E flutter : #351    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.145 14195 14195 E flutter : #352    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.145 14195 14195 E flutter : #353    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.145 14195 14195 E flutter : #354    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #355    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #356    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.145 14195 14195 E flutter : #357    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.145 14195 14195 E flutter : #358    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.145 14195 14195 E flutter : #359    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.145 14195 14195 E flutter : #360    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.145 14195 14195 E flutter : #361    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.145 14195 14195 E flutter : #362    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.145 14195 14195 E flutter : #363    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.145 14195 14195 E flutter : #364    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.145 14195 14195 E flutter : #365    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.145 14195 14195 E flutter : #366    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.145 14195 14195 E flutter : #367    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #368    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #369    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #370    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #371    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #372    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #373    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #374    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #375    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #376    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #377    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #378    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #379    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #380    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #381    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #382    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #383    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #384    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #385    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #386    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #387    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #388    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #389    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #390    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #391    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #392    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #393    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #394    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #395    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #396    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #397    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #398    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #399    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #400    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #401    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #402    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #403    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #404    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #405    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #406    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #407    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #408    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #409    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #410    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #411    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #412    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #413    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #414    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #415    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #416    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #417    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #418    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #419    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #420    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #421    MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7269:36)
+12-02 20:33:21.151 14195 14195 E flutter : #422    MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7285:32)
+12-02 20:33:21.151 14195 14195 E flutter : #423    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #424    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #425    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #426    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #427    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #428    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #429    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #430    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #431    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #432    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #433    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #434    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #435    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #436    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #437    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #438    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #439    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #440    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #441    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #442    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #443    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #444    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #445    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #446    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #447    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #448    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #449    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #450    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #451    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #452    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #453    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #454    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #455    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #456    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #457    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #458    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #459    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #460    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #461    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #462    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #463    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #464    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #465    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #466    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #467    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #468    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #469    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #470    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #471    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #472    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #473    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #474    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #475    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #476    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #477    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #478    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #479    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #480    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #481    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #482    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #483    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #484    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #485    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #486    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #487    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #488    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #489    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #490    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #491    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #492    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #493    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #494    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #495    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #496    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #497    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #498    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #499    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #500    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #501    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #502    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #503    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #504    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #505    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #506    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #507    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #508    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #509    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #510    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #511    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #512    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #513    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #514    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #515    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #516    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #517    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #518    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #519    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #520    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #521    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #522    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #523    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #524    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #525    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #526    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #527    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #528    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #529    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #530    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #531    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #532    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #533    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #534    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #535    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #536    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #537    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #538    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #539    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #540    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #541    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #542    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #543    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #544    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #545    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #546    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #547    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #548    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #549    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #550    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #551    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #552    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #553    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #554    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #555    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #556    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #557    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #558    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #559    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #560    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #561    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #562    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #563    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #564    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #565    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #566    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #567    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #568    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #569    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #570    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #571    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #572    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #573    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #574    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #575    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #576    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #577    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #578    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #579    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #580    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #581    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #582    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #583    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #584    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #585    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #586    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #587    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #588    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #589    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #590    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #591    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #592    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #593    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #594    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #595    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #596    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #597    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #598    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #599    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #600    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #601    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #602    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #603    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #604    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #605    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #606    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #607    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #608    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #609    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #610    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #611    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #612    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #613    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #614    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #615    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #616    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #617    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #618    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #619    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #620    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #621    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #622    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #623    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #624    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #625    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #626    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #627    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #628    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #629    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #630    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #631    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.151 14195 14195 E flutter : #632    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #633    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #634    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #635    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.151 14195 14195 E flutter : #636    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #637    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #638    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.151 14195 14195 E flutter : #639    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #640    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.151 14195 14195 E flutter : #641    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.151 14195 14195 E flutter : #642    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.151 14195 14195 E flutter : #643    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.151 14195 14195 E flutter : #644    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.151 14195 14195 E flutter : #645    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.151 14195 14195 E flutter : #646    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #647    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #648    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #649    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #650    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #651    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #652    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #653    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #654    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #655    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #656    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #657    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #658    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #659    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #660    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #661    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #662    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #663    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #664    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #665    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #666    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #667    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #668    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #669    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #670    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #671    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #672    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.152 14195 14195 E flutter : #673    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #674    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #675    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #676    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #677    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #678    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #679    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #680    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #681    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.152 14195 14195 E flutter : #682    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #683    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #684    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #685    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #686    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #687    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #688    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #689    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #690    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #691    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #692    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #693    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #694    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #695    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #696    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #697    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #698    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #699    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #700    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #701    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #702    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #703    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #704    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #705    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #706    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #707    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #708    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #709    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #710    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #711    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #712    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #713    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #714    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #715    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #716    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #717    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #718    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #719    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #720    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #721    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #722    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #723    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #724    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.152 14195 14195 E flutter : #725    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #726    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #727    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #728    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #729    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #730    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #731    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #732    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #733    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #734    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #735    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #736    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #737    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #738    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #739    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #740    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #741    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #742    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #743    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #744    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #745    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #746    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #747    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #748    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #749    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #750    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #751    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #752    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #753    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #754    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #755    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #756    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #757    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #758    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #759    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #760    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #761    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #762    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #763    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.152 14195 14195 E flutter : #764    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #765    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #766    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #767    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #768    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #769    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #770    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #771    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #772    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #773    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #774    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #775    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #776    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #777    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #778    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #779    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #780    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #781    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #782    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #783    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #784    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #785    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #786    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #787    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #788    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #789    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #790    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #791    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #792    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #793    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #794    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #795    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #796    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #797    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #798    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #799    MultiChildRenderObjectElement.inflateWidget (package:flutter/src/widgets/framework.dart:7269:36)
+12-02 20:33:21.152 14195 14195 E flutter : #800    MultiChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7285:32)
+12-02 20:33:21.152 14195 14195 E flutter : #801    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #802    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #803    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #804    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #805    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #806    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #807    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #808    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #809    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #810    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #811    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #812    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #813    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #814    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #815    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #816    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #817    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #818    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #819    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #820    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #821    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #822    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #823    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #824    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #825    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #826    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #827    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #828    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #829    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #830    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #831    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #832    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #833    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #834    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #835    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #836    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #837    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #838    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #839    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #840    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #841    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #842    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #843    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #844    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #845    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #846    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #847    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #848    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #849    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #850    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #851    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #852    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #853    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.152 14195 14195 E flutter : #854    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #855    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #856    SingleChildRenderObjectElement.mount (package:flutter/src/widgets/framework.dart:7118:14)
+12-02 20:33:21.152 14195 14195 E flutter : #857    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #858    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #859    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #860    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #861    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #862    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #863    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #864    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #865    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #866    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #867    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #868    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #869    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #870    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #871    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #872    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #873    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #874    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #875    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #876    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #877    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #878    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #879    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #880    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #881    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #882    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #883    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #884    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #885    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #886    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #887    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #888    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #889    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #890    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #891    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #892    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #893    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #894    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #895    StatefulElement._firstBuild (package:flutter/src/widgets/framework.dart:5976:11)
+12-02 20:33:21.152 14195 14195 E flutter : #896    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #897    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #898    Element.updateChild (package:flutter/src/widgets/framework.dart:4059:18)
+12-02 20:33:21.152 14195 14195 E flutter : #899    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #900    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #901    ComponentElement._firstBuild (package:flutter/src/widgets/framework.dart:5802:5)
+12-02 20:33:21.152 14195 14195 E flutter : #902    ComponentElement.mount (package:flutter/src/widgets/framework.dart:5796:5)
+12-02 20:33:21.152 14195 14195 E flutter : #903    Element.inflateWidget (package:flutter/src/widgets/framework.dart:4590:20)
+12-02 20:33:21.152 14195 14195 E flutter : #904    Element.updateChild (package:flutter/src/widgets/framework.dart:4053:20)
+12-02 20:33:21.152 14195 14195 E flutter : #905    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #906    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #907    StatelessElement.update (package:flutter/src/widgets/framework.dart:5898:5)
+12-02 20:33:21.152 14195 14195 E flutter : #908    Element.updateChild (package:flutter/src/widgets/framework.dart:4037:15)
+12-02 20:33:21.152 14195 14195 E flutter : #909    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #910    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #911    ProxyElement.update (package:flutter/src/widgets/framework.dart:6152:5)
+12-02 20:33:21.152 14195 14195 E flutter : #912    Element.updateChild (package:flutter/src/widgets/framework.dart:4037:15)
+12-02 20:33:21.152 14195 14195 E flutter : #913    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #914    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #915    ProxyElement.update (package:flutter/src/widgets/framework.dart:6152:5)
+12-02 20:33:21.152 14195 14195 E flutter : #916    Element.updateChild (package:flutter/src/widgets/framework.dart:4037:15)
+12-02 20:33:21.152 14195 14195 E flutter : #917    ComponentElement.performRebuild (package:flutter/src/widgets/framework.dart:5844:16)
+12-02 20:33:21.152 14195 14195 E flutter : #918    StatefulElement.performRebuild (package:flutter/src/widgets/framework.dart:5985:11)
+12-02 20:33:21.152 14195 14195 E flutter : #919    Element.rebuild (package:flutter/src/widgets/framework.dart:5532:7)
+12-02 20:33:21.152 14195 14195 E flutter : #920    BuildScope._tryRebuild (package:flutter/src/widgets/framework.dart:2750:15)
+12-02 20:33:21.152 14195 14195 E flutter : #921    BuildScope._flushDirtyElements (package:flutter/src/widgets/framework.dart:2807:11)
+12-02 20:33:21.152 14195 14195 E flutter : #922    BuildOwner.buildScope (package:flutter/src/widgets/framework.dart:3111:18)
+12-02 20:33:21.152 14195 14195 E flutter : #923    WidgetsBinding.drawFrame (package:flutter/src/widgets/binding.dart:1262:21)
+12-02 20:33:21.152 14195 14195 E flutter : #924    RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:495:5)
+12-02 20:33:21.152 14195 14195 E flutter : #925    SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1434:15)
+12-02 20:33:21.152 14195 14195 E flutter : #926    SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1347:9)
+12-02 20:33:21.152 14195 14195 E flutter : #927    SchedulerBinding._handleDrawFrame (package:flutter/src/scheduler/binding.dart:1200:5)
+12-02 20:33:21.152 14195 14195 E flutter : #928    _invoke (dart:ui/hooks.dart:356:13)
+12-02 20:33:21.152 14195 14195 E flutter : #929    PlatformDispatcher._drawFrame (dart:ui/platform_dispatcher.dart:444:5)
+12-02 20:33:21.152 14195 14195 E flutter : #930    _drawFrame (dart:ui/hooks.dart:328:31)
+12-02 20:33:21.152 14195 14195 E flutter : 
+12-02 20:33:49.601  1364  1505 E FrameTracker: force finish cuj, time out: J<SPLASHSCREEN_EXIT_ANIM>
+12-02 20:34:08.037   741 14332 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:34:08.037   741 14332 E android.os.Debug: Failed to get binder state info for pid: 14195 status: -2: No such file or directory
+12-02 20:34:19.027   741 14332 E system_server: libdebuggerd_client: failed to read status response from tombstoned: Try again
+12-02 20:34:20.288   741 14332 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:34:20.288   741 14332 E android.os.Debug: Failed to get binder state info for pid: 14195 status: -2: No such file or directory
+12-02 20:34:22.341   741 14332 E system_server: libdebuggerd_client: failed to read status response from tombstoned: Try again
+12-02 20:34:23.831   741 14332 E ActivityManager: Aborted stack trace dump (current primary pid=14195); deadline exceeded.
+12-02 20:34:23.873   741 14333 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:34:23.873   741 14333 E android.os.Debug: Failed to get binder state info for pid: 741 status: -2: No such file or directory
+12-02 20:34:25.048   308   308 E tombstoned: failed to get crash output for type kDebuggerdNativeBacktrace
+12-02 20:34:25.278 14345 14345 E libc    : failed to read response to DumpRequest packet: No message of desired type
+12-02 20:34:28.206   741 14333 E system_server: libdebuggerd_client: failed to read status response from tombstoned: Try again
+12-02 20:34:28.369   741 14333 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:34:28.369   741 14333 E android.os.Debug: Failed to get binder state info for pid: 741 status: -2: No such file or directory
+12-02 20:34:30.644   741 14333 E system_server: libdebuggerd_client: failed to read status response from tombstoned: Try again
+12-02 20:34:31.289   741 14333 E ActivityManager: Aborting stack trace dump (current firstPid=741); deadline exceeded.
+12-02 20:34:31.613   741 14333 E ActivityManager: ANR in com.fitstreak.fitstreak (com.fitstreak.fitstreak/.MainActivity)
+12-02 20:34:31.613   741 14333 E ActivityManager: PID: 14195
+12-02 20:34:31.613   741 14333 E ActivityManager: Reason: Input dispatching timed out (adcd66a com.fitstreak.fitstreak/com.fitstreak.fitstreak.MainActivity is not responding. Waited 5030ms for MotionEvent).
+12-02 20:34:31.613   741 14333 E ActivityManager: Parent: com.fitstreak.fitstreak/.MainActivity
+12-02 20:34:31.613   741 14333 E ActivityManager: ErrorId: 98999f8c-148c-42ff-9197-9fcc64eb6d84
+12-02 20:34:31.613   741 14333 E ActivityManager: Frozen: false
+12-02 20:34:31.613   741 14333 E ActivityManager: Load: 11.63 / 11.35 / 9.36
+12-02 20:34:31.613   741 14333 E ActivityManager: ----- Output from /proc/pressure/memory -----
+12-02 20:34:31.613   741 14333 E ActivityManager: some avg10=0.11 avg60=3.81 avg300=2.98 total=85448673
+12-02 20:34:31.613   741 14333 E ActivityManager: full avg10=0.02 avg60=1.46 avg300=0.97 total=35716157
+12-02 20:34:31.613   741 14333 E ActivityManager: ----- End output from /proc/pressure/memory -----
+12-02 20:34:31.613   741 14333 E ActivityManager: ----- Output from /proc/pressure/cpu -----
+12-02 20:34:31.613   741 14333 E ActivityManager: some avg10=39.59 avg60=52.17 avg300=57.81 total=4084066061
+12-02 20:34:31.613   741 14333 E ActivityManager: full avg10=0.00 avg60=0.00 avg300=0.00 total=0
+12-02 20:34:31.613   741 14333 E ActivityManager: ----- End output from /proc/pressure/cpu -----
+12-02 20:34:31.613   741 14333 E ActivityManager: ----- Output from /proc/pressure/io -----
+12-02 20:34:31.613   741 14333 E ActivityManager: some avg10=1.36 avg60=5.79 avg300=4.84 total=188732580
+12-02 20:34:31.613   741 14333 E ActivityManager: full avg10=0.26 avg60=1.15 avg300=1.02 total=59940829
+12-02 20:34:31.613   741 14333 E ActivityManager: ----- End output from /proc/pressure/io -----
+12-02 20:34:31.613   741 14333 E ActivityManager: 
+12-02 20:34:31.613   741 14333 E ActivityManager: CPU usage from 32ms to 23424ms later (2025-12-02 20:34:07.907 to 2025-12-02 20:34:31.299):
+12-02 20:34:31.613   741 14333 E ActivityManager:   89% 741/system_server: 5.7% user + 83% kernel / faults: 3270 minor 152 major
+12-02 20:34:31.613   741 14333 E ActivityManager:   63% 14195/com.fitstreak.fitstreak: 11% user + 52% kernel / faults: 16247 minor 126 major
+12-02 20:34:31.613   741 14333 E ActivityManager:   29% 513/android.hardware.sensors-service.multihal: 0% user + 29% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   24% 519/android.hardware.graphics.composer3-service.ranchu: 0.1% user + 24% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   15% 556/surfaceflinger: 0.1% user + 15% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   13% 61/kswapd0: 0% user + 13% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   6.8% 2204/android.process.media: 0.4% user + 6.4% kernel / faults: 302 minor 1392 major
+12-02 20:34:31.613   741 14333 E ActivityManager:   5.6% 1720/adbd: 0.2% user + 5.3% kernel / faults: 1975 minor
+12-02 20:34:31.613   741 14333 E ActivityManager:   5.1% 1364/com.android.systemui: 0.5% user + 4.6% kernel / faults: 90 minor 1 major
+12-02 20:34:31.613   741 14333 E ActivityManager:   4.9% 8334/com.google.android.gms.persistent: 1.2% user + 3.6% kernel / faults: 583 minor 3 major
+12-02 20:34:31.613   741 14333 E ActivityManager: 80% TOTAL: 3.4% user + 61% kernel + 7.9% iowait + 6.6% softirq
+12-02 20:34:31.613   741 14333 E ActivityManager: CPU usage from 608ms to 12222ms later (2025-12-02 20:34:08.484 to 2025-12-02 20:34:20.098):
+12-02 20:34:31.613   741 14333 E ActivityManager:   124% 741/system_server: 6.3% user + 117% kernel / faults: 764 minor 8 major
+12-02 20:34:31.613   741 14333 E ActivityManager:     38% 14335/AnrAuxiliaryTas: 0.6% user + 38% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     30% 978/InputDispatcher: 0.9% user + 29% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     17% 981/InputReader: 0.3% user + 16% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     8.1% 741/system_server: 0.1% user + 8% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     6.2% 793/android.ui: 0.5% user + 5.6% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     4.1% 958/SensorService: 0% user + 4.1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     3.8% 1229/WifiHandlerThre: 0.1% user + 3.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     3.1% 961/eduling.default: 0.1% user + 3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1.9% 974/AlarmManager: 0% user + 1.9% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1.2% 827/PowerManagerSer: 0% user + 1.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1.1% 1472/binder:741_8: 0.2% user + 0.9% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1% 795/android.display: 0% user + 1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.8% 792/android.fg: 0.1% user + 0.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.8% 804/ActivityManager: 0.1% user + 0.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.8% 814/batterystats-ha: 0.1% user + 0.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.6% 1531/MobileDataStats: 0.1% user + 0.5% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.5% 14332/AnrMainProcessD: 0% user + 0.5% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.3% 811/OomAdjuster: 0% user + 0.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.2% 770/system_server: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   36% 513/android.hardware.sensors-service.multihal: 0% user + 36% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     26% 520/android.hardwar: 0% user + 26% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     10% 521/android.hardwar: 0% user + 10% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   20% 519/android.hardware.graphics.composer3-service.ranchu: 0.1% user + 20% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     17% 580/_thread: 0.1% user + 17% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     3.3% 534/binder:519_1: 0% user + 3.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   12% 556/surfaceflinger: 0.1% user + 12% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     3.5% 587/TimerDispatch: 0% user + 3.5% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     2.1% 588/app: 0% user + 2.1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     2% 1342/binder:556_5: 0.1% user + 1.9% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1.8% 570/binder:556_2: 0.1% user + 1.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1% 574/RenderEngine: 0% user + 1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.6% 592/TouchTimer: 0% user + 0.6% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.5% 636/binder:556_4: 0% user + 0.5% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.3% 593/surfaceflinger: 0% user + 0.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.2% 556/surfaceflinger: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   92% 14195/com.fitstreak.fitstreak: 6.1% user + 86% kernel / faults: 76 minor
+12-02 20:34:31.613   741 14333 E ActivityManager:     65% 14273/1.raster: 0% user + 65% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     20% 14195/treak.fitstreak: 2% user + 18% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     8.2% 14200/Signal Catcher: 2% user + 6.1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   4.2% 232/logd: 0% user + 4.2% kernel / faults: 4 minor
+12-02 20:34:31.613   741 14333 E ActivityManager:     3.5% 244/logd.auditd: 0% user + 3.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.7% 237/logd.writer: 0% user + 0.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   4.7% 1322/ot-daemon: 0% user + 4.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   4.2% 1364/com.android.systemui: 0.3% user + 3.9% kernel / faults: 54 minor 1 major
+12-02 20:34:31.613   741 14333 E ActivityManager:     4.2% 1364/ndroid.systemui: 0.4% user + 3.8% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   3.9% 1753/com.google.android.apps.nexuslauncher: 0.2% user + 3.7% kernel / faults: 35 minor
+12-02 20:34:31.613   741 14333 E ActivityManager:     3.9% 1753/s.nexuslauncher: 0.2% user + 3.7% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   3.2% 1720/adbd: 0.1% user + 3.1% kernel / faults: 2 minor
+12-02 20:34:31.613   741 14333 E ActivityManager:     2.1% 1720/adbd: 0.1% user + 2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.6% 13811/adbd: 0% user + 0.6% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.3% 13812/adbd: 0% user + 0.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   2% 2204/android.process.media: 0.2% user + 1.7% kernel / faults: 21 minor 757 major
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.4% 2204/d.process.media: 0% user + 0.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.3% 2310/android.bg: 0% user + 0.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:    +0% 14341/Thread-28: 0% user + 0% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1.4% 15/ksoftirqd/0: 0% user + 1.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1.3% 16/rcu_preempt: 0% user + 1.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1.4% 1291/android.hardware.biometrics.fingerprint-service.ranchu: 0% user + 1.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     1.5% 1302/binder:1291_3: 0% user + 1.5% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   2.8% 8334/com.google.android.gms.persistent: 0.8% user + 2% kernel / faults: 26 minor
+12-02 20:34:31.613   741 14333 E ActivityManager:     2.2% 8490/netscheduler-qu: 0.6% user + 1.5% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.6% 8334/.gms.persistent: 0.2% user + 0.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:    +0% 14339/-Executor] idle: 0% user + 0% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:    +0% 14340/-Executor] idle: 0% user + 0% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1.3% 1695/wpa_supplicant: 0% user + 1.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1% 481/statsd: 0% user + 0.9% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.5% 489/statsd.reader: 0% user + 0.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.3% 487/statsd.writer: 0% user + 0.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.8% 38/ksoftirqd/3: 0% user + 0.8% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.3% 32/ksoftirqd/2: 0% user + 0.3% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.4% 544/android.hardware.power-service.example: 0% user + 0.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.4% 544/android.hardwar: 0% user + 0.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.4% 549/android.hardware.threadnetwork-service: 0% user + 0.4% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.2% 26/ksoftirqd/1: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.2% 479/netd: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.2% 484/netd: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.1% 235/servicemanager: 0% user + 0.1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.2% 235/servicemanager: 0% user + 0.1% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0.2% 4271/com.android.phone: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0.2% 4343/binder:4271_5: 0% user + 0.2% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   0% 263/android.system.suspend-service: 0% user + 0% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:     0% 263/android.system.: 0% user + 0% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1.9% 13663/kworker/u10:1-loop30: 0% user + 1.9% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager:   1.9% 13913/logcat: 1.9% user + 0% kernel
+12-02 20:34:31.613   741 14333 E ActivityManager: 76% TOTAL: 4.2% user + 60% kernel + 5.2% iowait + 5.9% softirq
+12-02 20:34:32.667   308   308 E tombstoned: Traces for pid 14195 written to: trace_00
+12-02 20:34:33.896 14359 14359 E crash_dump64: failed to interrupt 14333 to detach: No such process
+12-02 20:34:33.898 14359 14359 E crash_dump64: failed to interrupt 14335 to detach: No such process
+12-02 20:34:34.964   308   308 E tombstoned: failed to get crash output for type kDebuggerdNativeBacktrace
+12-02 20:34:34.983 14359 14359 E libc    : failed to read response to DumpRequest packet: No message of desired type
+12-02 20:34:40.196   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[fitstreak]#4) as ready
+12-02 20:34:40.197   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[fitstreak]#5) as ready
+12-02 20:34:50.913   308   308 E tombstoned: Traces for pid 741 written to: trace_01
+12-02 20:35:01.321   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:01.459   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:01.552   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:01.683   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:01.789   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:01.935   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.040   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.178   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.375   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.517   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.624   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.754   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:02.873   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.011   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.109   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.268   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.448   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.570   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.712   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:03.970   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:04.110   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:04.232   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:04.358   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:04.506   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:04.709   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:04.911   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:05.042   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:05.177   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:05.295   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:05.480   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:05.668   504 14386 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:35:07.863   741   793 E ActivityManager: App already has anr dialog: ProcessRecord{1ebf322 14195:com.fitstreak.fitstreak/u0a215}
+12-02 20:35:09.093   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[fitstreak]#6) as ready
+12-02 20:35:09.120   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[fitstreak]#7) as ready
+12-02 20:35:18.644  4911  4911 E ConfigUpdater: Content download complete but local path is null, retrying.
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: Cannot acquire BluetoothActivityEnergyInfo
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: java.util.concurrent.ExecutionException: java.lang.RuntimeException: error: 11
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:372)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2072)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectBluetoothActivityInfo(BluetoothPowerStatsCollector.java:192)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector.collectStats(BluetoothPowerStatsCollector.java:155)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector.collectAndDeliverStats(PowerStatsCollector.java:176)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.PowerStatsCollector$$ExternalSyntheticLambda0.run(R8$$SyntheticClass:0)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.handleCallback(Handler.java:995)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.Handler.dispatchMessage(Handler.java:103)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loopOnce(Looper.java:248)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.Looper.loop(Looper.java:338)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: Caused by: java.lang.RuntimeException: error: 11
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.power.stats.BluetoothPowerStatsCollector$1.onBluetoothActivityEnergyInfoError(BluetoothPowerStatsCollector.java:181)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.lambda$onBluetoothActivityEnergyInfoAvailable$0(BluetoothAdapter.java:1037)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.lambda$executeFromBinder$0(BluetoothUtils.java:343)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils$$ExternalSyntheticLambda1.run(D8$$SyntheticClass:0)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at com.android.server.SystemServerInitThreadPool$$ExternalSyntheticLambda0.execute(R8$$SyntheticClass:0)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothUtils.executeFromBinder(BluetoothUtils.java:343)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.BluetoothAdapter$OnBluetoothActivityEnergyInfoProxy.onBluetoothActivityEnergyInfoAvailable(BluetoothAdapter.java:1035)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.bluetooth.IBluetoothActivityEnergyInfoListener$Stub.onTransact(IBluetoothActivityEnergyInfoListener.java:98)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransactInternal(Binder.java:1426)
+12-02 20:38:47.739   741   814 E BluetoothPowerStatsCollector: 	at android.os.Binder.execTransact(Binder.java:1365)
+12-02 20:38:54.042   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:54.169   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:54.320   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:54.927   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:55.119   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:55.383   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:55.572   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:55.822   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:38:55.943   504 14435 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:01.253   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[fitstreak]#8) as ready
+12-02 20:39:01.256   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[fitstreak]#9) as ready
+12-02 20:39:27.539   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:27.832   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:27.951   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:28.065   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:28.232   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:28.425   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:28.620   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:28.852   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:29.163   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:29.484   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:29.804   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:30.215   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:30.370   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:30.497   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:30.784   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:30.995   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:31.105   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:31.367   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:31.529   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:31.931   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:32.230   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:32.408   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:32.585   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:32.762   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:32.776   741 14449 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:39:32.776   741 14449 E android.os.Debug: Failed to get binder state info for pid: 741 status: -2: No such file or directory
+12-02 20:39:32.947   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:33.040   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:33.230   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:33.351   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:33.410   504 14445 E android.hardware.audio@7.1-impl.ranchu: pcmWrite:260 failure: -1
+12-02 20:39:35.429   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[fitstreak]#10) as ready
+12-02 20:39:35.430   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[fitstreak]#11) as ready
+12-02 20:39:38.687   741   978 E InputDispatcher: channel 'adcd66a com.fitstreak.fitstreak/com.fitstreak.fitstreak.MainActivity' ~ Channel is unrecoverably broken and will be disposed!
+12-02 20:39:41.893   741  3499 E IPCThreadState: Binder transaction failure. id: 3472902, BR_*: 29189, error: -22 (Invalid argument)
+12-02 20:39:42.095   556   556 E BpTransactionCompletedListener: Failed to transact (-32)
+12-02 20:39:42.097   556   556 E BpTransactionCompletedListener: Failed to transact (-32)
+12-02 20:39:42.102   741 14450 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:39:42.102   741 14450 E android.os.Debug: Failed to get binder state info for pid: 8474 status: -2: No such file or directory
+12-02 20:39:45.140   741  4298 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+12-02 20:39:46.920   741 14450 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:39:46.921   741 14450 E android.os.Debug: Failed to get binder state info for pid: 2097 status: -2: No such file or directory
+12-02 20:39:49.067   741 14450 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:39:49.067   741 14450 E android.os.Debug: Failed to get binder state info for pid: 4271 status: -2: No such file or directory
+12-02 20:39:52.303   741 14450 E system_server: libdebuggerd_client: failed to read status response from tombstoned: Try again
+12-02 20:39:52.566   741 14450 E system_server: Could not open /dev/binderfs/binder_logs/transactions. Likely a permissions issue. errno: 2
+12-02 20:39:52.566   741 14450 E android.os.Debug: Failed to get binder state info for pid: 4271 status: -2: No such file or directory
+12-02 20:39:54.575   741 14450 E system_server: libdebuggerd_client: timeout expired before poll
+12-02 20:39:54.841   741 14450 E ActivityManager: Aborting stack trace dump (current firstPid=4271); deadline exceeded.
+12-02 20:39:55.636   741 14450 E ActivityManager: ANR in system
+12-02 20:39:55.636   741 14450 E ActivityManager: PID: 741
+12-02 20:39:55.636   741 14450 E ActivityManager: Reason: Input dispatching timed out (PointerEventDispatcher0 is not responding. Waited 5004ms for MotionEvent).
+12-02 20:39:55.636   741 14450 E ActivityManager: ErrorId: 76867e70-25b2-4245-a2fa-a7a7f28a1c3c
+12-02 20:39:55.636   741 14450 E ActivityManager: Frozen: false
+12-02 20:39:55.636   741 14450 E ActivityManager: Load: 11.74 / 10.65 / 9.62
+12-02 20:39:55.636   741 14450 E ActivityManager: ----- Output from /proc/pressure/memory -----
+12-02 20:39:55.636   741 14450 E ActivityManager: some avg10=0.13 avg60=0.10 avg300=1.34 total=88427562
+12-02 20:39:55.636   741 14450 E ActivityManager: full avg10=0.06 avg60=0.04 avg300=0.47 total=37228003
+12-02 20:39:55.636   741 14450 E ActivityManager: ----- End output from /proc/pressure/memory -----
+12-02 20:39:55.636   741 14450 E ActivityManager: ----- Output from /proc/pressure/cpu -----
+12-02 20:39:55.636   741 14450 E ActivityManager: some avg10=49.55 avg60=63.90 avg300=60.80 total=4287774947
+12-02 20:39:55.636   741 14450 E ActivityManager: full avg10=0.00 avg60=0.00 avg300=0.00 total=0
+12-02 20:39:55.636   741 14450 E ActivityManager: ----- End output from /proc/pressure/cpu -----
+12-02 20:39:55.636   741 14450 E ActivityManager: ----- Output from /proc/pressure/io -----
+12-02 20:39:55.636   741 14450 E ActivityManager: some avg10=1.16 avg60=0.95 avg300=3.44 total=200545274
+12-02 20:39:55.636   741 14450 E ActivityManager: full avg10=0.10 avg60=0.17 avg300=0.90 total=63608838
+12-02 20:39:55.636   741 14450 E ActivityManager: ----- End output from /proc/pressure/io -----
+12-02 20:39:55.636   741 14450 E ActivityManager: 
+12-02 20:39:55.636   741 14450 E ActivityManager: CPU usage from 2ms to 22087ms later (2025-12-02 20:39:32.767 to 2025-12-02 20:39:54.859) with 99% awake:
+12-02 20:39:55.636   741 14450 E ActivityManager:   57% 741/system_server: 2.9% user + 54% kernel / faults: 14476 minor 43 major
+12-02 20:39:55.636   741 14450 E ActivityManager:   48% 513/android.hardware.sensors-service.multihal: 0% user + 48% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   46% 519/android.hardware.graphics.composer3-service.ranchu: 0.1% user + 45% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   33% 556/surfaceflinger: 0.6% user + 32% kernel / faults: 53 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:   22% 4271/com.android.phone: 1.4% user + 21% kernel / faults: 1697 minor 165 major
+12-02 20:39:55.636   741 14450 E ActivityManager:   16% 8474/com.google.android.inputmethod.latin: 6.1% user + 9.9% kernel / faults: 2864 minor 167 major
+12-02 20:39:55.636   741 14450 E ActivityManager:   11% 1364/com.android.systemui: 0.7% user + 10% kernel / faults: 93 minor 4 major
+12-02 20:39:55.636   741 14450 E ActivityManager:   8.2% 1753/com.google.android.apps.nexuslauncher: 0.7% user + 7.4% kernel / faults: 180 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:   0.4% 2097/com.android.emulator.multidisplay: 0% user + 0.4% kernel / faults: 1145 minor 322 major
+12-02 20:39:55.636   741 14450 E ActivityManager:   5.6% 1720/adbd: 0.3% user + 5.3% kernel / faults: 2192 minor
+12-02 20:39:55.636   741 14450 E ActivityManager: 76% TOTAL: 4% user + 66% kernel + 1.3% iowait + 4.1% softirq
+12-02 20:39:55.636   741 14450 E ActivityManager: CPU usage from 351ms to 2134ms later (2025-12-02 20:39:33.180 to 2025-12-02 20:39:34.899) with 103% awake:
+12-02 20:39:55.636   741 14450 E ActivityManager:   81% 519/android.hardware.graphics.composer3-service.ranchu: 0% user + 81% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     75% 534/binder:519_1: 0% user + 75% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     7.1% 580/_thread: 0% user + 7.1% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   65% 741/system_server: 5.6% user + 59% kernel / faults: 771 minor 2 major
+12-02 20:39:55.636   741 14450 E ActivityManager:     40% 14451/AnrAuxiliaryTas: 0% user + 40% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     11% 1770/RenderThread: 1.1% user + 10% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     3.3% 768/Signal Catcher: 0% user + 3.3% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     2.2% 819/FileObserver: 1.1% user + 1.1% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     1.1% 793/android.ui: 1.1% user + 0% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     1.1% 804/ActivityManager: 0% user + 1.1% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   43% 556/surfaceflinger: 1.1% user + 42% kernel / faults: 4 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:     17% 574/RenderEngine: 0% user + 17% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     12% 556/surfaceflinger: 1.1% user + 11% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     6.7% 590/RegionSampling: 0% user + 6.7% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     3.3% 636/binder:556_4: 0% user + 3.3% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     2.2% 587/TimerDispatch: 0% user + 2.2% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     1.1% 570/binder:556_2: 0% user + 1.1% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   29% 1364/com.android.systemui: 3.3% user + 26% kernel / faults: 1 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:     27% 1543/RenderThread: 0% user + 27% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   29% 1753/com.google.android.apps.nexuslauncher: 3.4% user + 26% kernel / faults: 3 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:     29% 1778/RenderThread: 1.1% user + 28% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     1.1% 1753/s.nexuslauncher: 0% user + 1.1% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   35% 8474/com.google.android.inputmethod.latin: 14% user + 21% kernel / faults: 33 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:     35% 8481/HeapTaskDaemon: 19% user + 15% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     1.7% 8775/ExeSeq-P10-1: 0% user + 1.7% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   21% 509/android.hardware.graphics.allocator-service.ranchu: 0% user + 21% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     22% 581/binder:509_3: 1.1% user + 21% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   33% 14195/com.fitstreak.fitstreak: 2.2% user + 31% kernel / faults: 2 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:     17% 14273/1.raster: 0% user + 17% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     15% 14195/treak.fitstreak: 2.2% user + 13% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   4.7% 513/android.hardware.sensors-service.multihal: 0% user + 4.7% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:     4.7% 520/android.hardwar: 0% user + 4.7% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   2.2% 1720/adbd: 0% user + 2.2% kernel / faults: 3 minor
+12-02 20:39:55.636   741 14450 E ActivityManager:     1.1% 1720/adbd: 0% user + 1.1% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   4.3% 13927/kworker/u9:0-writeback: 0% user + 4.3% kernel
+12-02 20:39:55.636   741 14450 E ActivityManager:   0.7% 15/ksoftirqd/0: 0% user + 0.7% kernel
+12-02 20:39:55.639   741 14450 E ActivityManager:   2.1% 13147/kworker/u12:2-events_unbound: 0% user + 2.1% kernel
+12-02 20:39:55.639   741 14450 E ActivityManager:   2.2% 14110/kworker/2:4-virtio_vsock: 0% user + 2.2% kernel
+12-02 20:39:55.639   741 14450 E ActivityManager: 78% TOTAL: 3.2% user + 71% kernel + 0.9% iowait + 3.2% softirq
+12-02 20:39:56.019   308   308 E tombstoned: Traces for pid 4271 written to: trace_02
+12-02 20:39:59.076   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(wmsSync-VRI[Application Not Responding: system]#14) as ready
+12-02 20:39:59.112   741  1780 E SurfaceSyncGroup: Failed to receive transaction ready in 1000ms. Marking SurfaceSyncGroup(VRI[Application Not Responding: system]#15) as ready

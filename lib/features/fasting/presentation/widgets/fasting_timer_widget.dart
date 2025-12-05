@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../shared/widgets/gamification/streak_flame.dart';
+import '../../../../shared/widgets/progress/animated_progress_ring.dart';
 import 'fasting_fox_animation.dart';
 import 'fasting_history_chart.dart';
 
@@ -59,9 +61,23 @@ class FastingTimerWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     // Animated Ring Painter
-                    AnimatedFastingRing(progress: progress, size: ringSize),
+                    AnimatedProgressRing(
+                      progress: progress,
+                      size: ringSize,
+                      strokeWidth: 22,
+                      color: Colors.transparent,
+                      backgroundColor: const Color(0xFFE1BEE7).withOpacity(0.3),
+                      gradient: const SweepGradient(
+                        startAngle: -math.pi / 2,
+                        endAngle: 3 * math.pi / 2,
+                        colors: [
+                          Color(0xFF9C27B0), // Purple
+                          Color(0xFFE91E63), // Pink
+                        ],
+                        tileMode: TileMode.clamp,
+                      ),
+                    ),
 
-                    // Center Content
                     // Center Content
                     Column(
                       mainAxisSize: MainAxisSize.min,
@@ -146,7 +162,7 @@ class FastingTimerWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     elevation: 8,
-                    shadowColor: const Color(0xFF8E24AA).withValues(alpha: 0.4),
+                    shadowColor: const Color(0xFF8E24AA).withOpacity(0.4),
                   ),
                   child: Text(
                     'END FASTING',
@@ -172,7 +188,7 @@ class FastingTimerWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.purple.withValues(alpha: 0.05),
+                      color: Colors.purple.withOpacity(0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -181,11 +197,7 @@ class FastingTimerWidget extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
-                      Icons.local_fire_department,
-                      color: Color(0xFFFF6B35), // Orange Fire
-                      size: 20,
-                    ),
+                    StreakFlame(streakDays: 12),
                     const SizedBox(width: 8),
                     Text(
                       '16:8 Streak → ',
@@ -291,91 +303,4 @@ class FastingTimerWidget extends StatelessWidget {
       ],
     );
   }
-}
-
-// =======================================
-// Animated Ring Component
-// =======================================
-class AnimatedFastingRing extends StatelessWidget {
-  final double progress;
-  final double size;
-
-  const AnimatedFastingRing({
-    required this.progress,
-    required this.size,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: progress),
-      duration: const Duration(milliseconds: 1200),
-      curve: Curves.easeOutCubic,
-      builder: (context, value, child) {
-        return CustomPaint(
-          size: Size(size, size),
-          painter: _FastingRingPainter(
-            progress: value.clamp(0.0, 1.0),
-            strokeWidth: 22, // Thick premium stroke
-          ),
-        );
-      },
-    );
-  }
-}
-
-// =======================================
-// Custom Painter for the Ring
-// =======================================
-class _FastingRingPainter extends CustomPainter {
-  final double progress;
-  final double strokeWidth;
-
-  _FastingRingPainter({required this.progress, required this.strokeWidth});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    // CRITICAL: Radius calculation to prevent clipping
-    final radius = (math.min(size.width, size.height) - strokeWidth) / 2;
-
-    // 1. Background Ring (Soft Purple/Pink)
-    final bgPaint = Paint()
-      ..color = const Color(0xFFE1BEE7)
-          .withValues(alpha: 0.3) // Very light purple
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawCircle(center, radius, bgPaint);
-
-    // 2. Progress Ring (Gradient Purple -> Pink)
-    final progressPaint = Paint()
-      ..shader = const SweepGradient(
-        startAngle: -math.pi / 2,
-        endAngle: 3 * math.pi / 2,
-        colors: [
-          Color(0xFF9C27B0), // Purple
-          Color(0xFFE91E63), // Pink
-        ],
-        tileMode: TileMode.clamp,
-      ).createShader(Rect.fromCircle(center: center, radius: radius))
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
-
-    // Draw arc starting from top (-pi/2)
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -math.pi / 2,
-      2 * math.pi * progress,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant _FastingRingPainter old) =>
-      old.progress != progress || old.strokeWidth != strokeWidth;
 }

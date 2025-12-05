@@ -20,6 +20,7 @@ mixin _$DiaryDay {
   List<Meal> get meals => throw _privateConstructorUsedError;
   WaterVolume get waterIntake => throw _privateConstructorUsedError;
   Calories? get calorieGoal => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DiaryDayCopyWith<DiaryDay> get copyWith =>
@@ -35,7 +36,8 @@ abstract class $DiaryDayCopyWith<$Res> {
       {DateTime date,
       List<Meal> meals,
       WaterVolume waterIntake,
-      Calories? calorieGoal});
+      Calories? calorieGoal,
+      String? notes});
 
   $WaterVolumeCopyWith<$Res> get waterIntake;
   $CaloriesCopyWith<$Res>? get calorieGoal;
@@ -58,6 +60,7 @@ class _$DiaryDayCopyWithImpl<$Res, $Val extends DiaryDay>
     Object? meals = null,
     Object? waterIntake = null,
     Object? calorieGoal = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_value.copyWith(
       date: null == date
@@ -76,6 +79,10 @@ class _$DiaryDayCopyWithImpl<$Res, $Val extends DiaryDay>
           ? _value.calorieGoal
           : calorieGoal // ignore: cast_nullable_to_non_nullable
               as Calories?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -112,7 +119,8 @@ abstract class _$$DiaryDayImplCopyWith<$Res>
       {DateTime date,
       List<Meal> meals,
       WaterVolume waterIntake,
-      Calories? calorieGoal});
+      Calories? calorieGoal,
+      String? notes});
 
   @override
   $WaterVolumeCopyWith<$Res> get waterIntake;
@@ -135,6 +143,7 @@ class __$$DiaryDayImplCopyWithImpl<$Res>
     Object? meals = null,
     Object? waterIntake = null,
     Object? calorieGoal = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_$DiaryDayImpl(
       date: null == date
@@ -153,6 +162,10 @@ class __$$DiaryDayImplCopyWithImpl<$Res>
           ? _value.calorieGoal
           : calorieGoal // ignore: cast_nullable_to_non_nullable
               as Calories?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -164,7 +177,8 @@ class _$DiaryDayImpl extends _DiaryDay {
       {required this.date,
       final List<Meal> meals = const [],
       this.waterIntake = const WaterVolume(0),
-      this.calorieGoal})
+      this.calorieGoal,
+      this.notes})
       : _meals = meals,
         super._();
 
@@ -184,10 +198,12 @@ class _$DiaryDayImpl extends _DiaryDay {
   final WaterVolume waterIntake;
   @override
   final Calories? calorieGoal;
+  @override
+  final String? notes;
 
   @override
   String toString() {
-    return 'DiaryDay(date: $date, meals: $meals, waterIntake: $waterIntake, calorieGoal: $calorieGoal)';
+    return 'DiaryDay(date: $date, meals: $meals, waterIntake: $waterIntake, calorieGoal: $calorieGoal, notes: $notes)';
   }
 
   @override
@@ -200,12 +216,18 @@ class _$DiaryDayImpl extends _DiaryDay {
             (identical(other.waterIntake, waterIntake) ||
                 other.waterIntake == waterIntake) &&
             (identical(other.calorieGoal, calorieGoal) ||
-                other.calorieGoal == calorieGoal));
+                other.calorieGoal == calorieGoal) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, date,
-      const DeepCollectionEquality().hash(_meals), waterIntake, calorieGoal);
+  int get hashCode => Object.hash(
+      runtimeType,
+      date,
+      const DeepCollectionEquality().hash(_meals),
+      waterIntake,
+      calorieGoal,
+      notes);
 
   @JsonKey(ignore: true)
   @override
@@ -219,7 +241,8 @@ abstract class _DiaryDay extends DiaryDay {
       {required final DateTime date,
       final List<Meal> meals,
       final WaterVolume waterIntake,
-      final Calories? calorieGoal}) = _$DiaryDayImpl;
+      final Calories? calorieGoal,
+      final String? notes}) = _$DiaryDayImpl;
   const _DiaryDay._() : super._();
 
   @override
@@ -230,6 +253,8 @@ abstract class _DiaryDay extends DiaryDay {
   WaterVolume get waterIntake;
   @override
   Calories? get calorieGoal;
+  @override
+  String? get notes;
   @override
   @JsonKey(ignore: true)
   _$$DiaryDayImplCopyWith<_$DiaryDayImpl> get copyWith =>
