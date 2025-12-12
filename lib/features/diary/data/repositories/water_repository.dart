@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import '../../../../core/storage/local_storage.dart';
+
 import '../../../../core/value_objects/water_volume.dart';
 import '../models/water_intake_schema.dart';
 
@@ -12,7 +12,7 @@ class WaterRepository {
   /// Get water intake for a specific date
   Future<WaterVolume> getWaterForDate(DateTime date) async {
     final normalizedDate = _normalizeDate(date);
-    
+
     final schema = await _isar.waterIntakeSchemas
         .filter()
         .dateEqualTo(normalizedDate)
@@ -28,7 +28,7 @@ class WaterRepository {
   /// Save water intake for a specific date
   Future<void> saveWater(DateTime date, WaterVolume volume) async {
     final normalizedDate = _normalizeDate(date);
-    
+
     await _isar.writeTxn(() async {
       // Check if record exists
       final existing = await _isar.waterIntakeSchemas
@@ -46,10 +46,11 @@ class WaterRepository {
         final schema = WaterIntakeSchema()
           ..date = normalizedDate
           ..volumeMl = volume.valueMl.toInt()
-          ..goalMl = 2000 // Default goal
+          ..goalMl =
+              2000 // Default goal
           ..createdAt = DateTime.now()
           ..updatedAt = DateTime.now();
-        
+
         await _isar.waterIntakeSchemas.put(schema);
       }
     });
@@ -85,7 +86,7 @@ class WaterRepository {
   /// Get water goal for a specific date
   Future<int> getGoalForDate(DateTime date) async {
     final normalizedDate = _normalizeDate(date);
-    
+
     final schema = await _isar.waterIntakeSchemas
         .filter()
         .dateEqualTo(normalizedDate)
@@ -97,7 +98,7 @@ class WaterRepository {
   /// Update water goal for a specific date
   Future<void> updateGoal(DateTime date, int goalMl) async {
     final normalizedDate = _normalizeDate(date);
-    
+
     await _isar.writeTxn(() async {
       final existing = await _isar.waterIntakeSchemas
           .filter()
@@ -116,7 +117,7 @@ class WaterRepository {
           ..goalMl = goalMl
           ..createdAt = DateTime.now()
           ..updatedAt = DateTime.now();
-        
+
         await _isar.waterIntakeSchemas.put(schema);
       }
     });

@@ -9,7 +9,7 @@ import '../features/measurements/presentation/pages/weight_measurement_page.dart
 import '../shared/widgets/main_scaffold.dart';
 import '../features/placeholders/placeholder_screens.dart';
 import '../features/profile/presentation/pages/profile_screen.dart';
-import '../features/diary/presentation/pages/food_search_screen.dart';
+import '../features/diary/presentation/pages/add_food_page.dart';
 import '../features/onboarding/presentation/pages/onboarding_page.dart';
 import '../features/gamification/presentation/providers/gamification_providers.dart';
 import '../features/profile/data/repositories/profile_repository.dart';
@@ -25,7 +25,11 @@ class OnboardingStatus extends _$OnboardingStatus {
     final isar = ref.watch(isarProvider);
     final repo = ProfileRepository(isar);
     final profile = await repo.getProfile();
-    return profile?.isOnboardingCompleted ?? false;
+    final isCompleted = profile?.isOnboardingCompleted ?? false;
+    print(
+      'DEBUG: OnboardingStatus build. Profile found: ${profile != null}, isCompleted: $isCompleted',
+    );
+    return isCompleted;
   }
 
   void setCompleted() {
@@ -45,6 +49,8 @@ GoRouter appRouter(AppRouterRef ref) {
     redirect: (context, state) {
       final isOnboardingRoute = state.matchedLocation == '/onboarding';
       final isSplashRoute = state.matchedLocation == '/splash';
+
+      // print('DEBUG: Redirect check. Path: ${state.matchedLocation}, OnboardingStatus: $onboardingStatus');
 
       return onboardingStatus.when(
         data: (isCompleted) {
@@ -69,7 +75,7 @@ GoRouter appRouter(AppRouterRef ref) {
           }
           return null;
         },
-        error: (_, __) => '/onboarding', // On error, go to onboarding
+        error: (_, _) => '/onboarding', // On error, go to onboarding
       );
     },
     routes: [
@@ -96,6 +102,10 @@ GoRouter appRouter(AppRouterRef ref) {
             builder: (context, state) => const CoachScreen(),
           ),
           GoRoute(path: '/pro', builder: (context, state) => const ProScreen()),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const ProfileScreen(),
+          ),
         ],
       ),
       GoRoute(
@@ -111,13 +121,8 @@ GoRouter appRouter(AppRouterRef ref) {
         path: '/food-search/:mealType',
         builder: (context, state) {
           final mealType = state.pathParameters['mealType']!;
-          return FoodSearchScreen(mealType: mealType);
+          return AddFoodPage(mealType: mealType);
         },
-      ),
-      GoRoute(
-        parentNavigatorKey: rootNavigatorKey,
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,

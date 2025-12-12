@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -111,10 +111,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             },
             decoration: InputDecoration(
               hintText: 'Search for food...',
-              hintStyle: GoogleFonts.inter(
-                color: Colors.grey[500],
-                fontSize: 16,
-              ),
+              hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
               prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
@@ -138,7 +135,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             )
           else ...[
             IconButton(
+              icon: const Icon(Icons.camera_alt, color: Colors.black),
+              tooltip: 'AI Food Recognition',
+              onPressed: () => _showImageSourceSheet(context),
+            ),
+            IconButton(
               icon: const Icon(Icons.qr_code_scanner, color: Colors.black),
+              tooltip: 'Scan Barcode',
               onPressed: () {
                 // TODO: Implement Barcode Scanner
               },
@@ -154,11 +157,11 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             indicatorColor: AppColors.primary,
             indicatorSize: TabBarIndicatorSize.label,
             indicatorWeight: 3,
-            labelStyle: GoogleFonts.inter(
+            labelStyle: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
-            unselectedLabelStyle: GoogleFonts.inter(
+            unselectedLabelStyle: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 14,
             ),
@@ -180,25 +183,50 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               onTap: () {
                 _showImageSourceSheet(context);
               },
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
               child: Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.primary.withOpacity(0.2)),
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primary.withValues(alpha: 0.2),
+                      AppColors.primary.withValues(alpha: 0.08),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                            blurRadius: 8,
+                            spreadRadius: 1,
+                          ),
+                        ],
                       ),
                       child: const Icon(
                         Icons.camera_alt,
                         color: AppColors.primary,
+                        size: 24,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -206,18 +234,42 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'AI Food Recognition',
-                            style: GoogleFonts.inter(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: AppColors.textPrimary,
-                            ),
+                          Row(
+                            children: [
+                              const Text(
+                                'AI Food Recognition',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: AppColors.textPrimary,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: const Text(
+                                  'AI',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
+                          const SizedBox(height: 4),
+                          const Text(
                             'Take a photo to add food instantly',
-                            style: GoogleFonts.inter(
-                              fontSize: 12,
+                            style: TextStyle(
+                              fontSize: 13,
                               color: AppColors.textSecondary,
                             ),
                           ),
@@ -226,7 +278,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                     ),
                     const Icon(
                       Icons.arrow_forward_ios,
-                      size: 16,
+                      size: 18,
                       color: AppColors.primary,
                     ),
                   ],
@@ -308,7 +360,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             const SizedBox(height: 16),
             Text(
               'No food found',
-              style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[500]),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -324,7 +376,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             const SizedBox(height: 16),
             Text(
               'Start typing to search',
-              style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[500]),
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -394,7 +446,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                 children: [
                   Text(
                     food.name,
-                    style: GoogleFonts.inter(
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       color: AppColors.textPrimary,
@@ -405,7 +457,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                     children: [
                       Text(
                         '${food.calories.round()} kcal',
-                        style: GoogleFonts.inter(
+                        style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.primary,
                           fontWeight: FontWeight.w500,
@@ -413,7 +465,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                       ),
                       Text(
                         ' • ${food.servingSize}',
-                        style: GoogleFonts.inter(
+                        style: const TextStyle(
                           fontSize: 13,
                           color: AppColors.textSecondary,
                         ),
@@ -427,7 +479,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.add, color: AppColors.primary, size: 20),
@@ -447,7 +499,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
           const SizedBox(height: 16),
           Text(
             'No $title yet',
-            style: GoogleFonts.inter(fontSize: 16, color: Colors.grey[500]),
+            style: const TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],
       ),

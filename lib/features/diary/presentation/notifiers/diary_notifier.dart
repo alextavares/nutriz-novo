@@ -47,16 +47,16 @@ class DiaryNotifier extends StateNotifier<DiaryState> {
     );
     try {
       final day = await _getDailySummary(date);
-      print('📅 Loaded diary for ${date.toString().split(' ')[0]}: ${day.meals.length} meals');
+// print('📅 Loaded diary for ${date.toString().split(' ')[0]}: ${day.meals.length} meals');
       for (final meal in day.meals) {
-        print('   🍽️ ${meal.type.name}: ${meal.foods.length} foods');
+// print('   🍽️ ${meal.type.name}: ${meal.foods.length} foods');
         for (final food in meal.foods) {
-          print('      - ${food.food.name} (${food.quantity}x)');
+// print('      - ${food.food.name} (${food.quantity}x)');
         }
       }
       state = state.copyWith(diaryDay: AsyncValue.data(day));
     } catch (e, st) {
-      print('❌ Error loading diary: $e');
+// print('❌ Error loading diary: $e');
       state = state.copyWith(diaryDay: AsyncValue.error(e, st));
     }
   }
@@ -76,7 +76,7 @@ class DiaryNotifier extends StateNotifier<DiaryState> {
     double servingAmount,
   ) async {
     try {
-      print('➕ Adding food: ${food.name} to ${type.name} (qty: $servingAmount)');
+// print('➕ Adding food: ${food.name} to ${type.name} (qty: $servingAmount)');
       final foodItem = FoodItem(food: food, quantity: servingAmount);
       final meal = Meal(
         id: DateTime.now().millisecondsSinceEpoch
@@ -86,39 +86,39 @@ class DiaryNotifier extends StateNotifier<DiaryState> {
         timestamp: DateTime.now(),
       );
       await _addFoodToMeal(date: state.selectedDate, meal: meal);
-      print('✅ Food saved successfully!');
+// print('✅ Food saved successfully!');
       await loadDate(state.selectedDate);
     } catch (e, st) {
-      print('❌ Error adding food: $e');
-      print(st);
+// print('❌ Error adding food: $e');
+// print(st);
     }
   }
 
   Future<void> removeFoodFromMeal(String mealId) async {
     try {
-      print('🗑️ Removing meal: $mealId');
+// print('🗑️ Removing meal: $mealId');
       await _removeFoodFromMeal(date: state.selectedDate, mealId: mealId);
-      print('✅ Food removed successfully!');
+// print('✅ Food removed successfully!');
       await loadDate(state.selectedDate);
     } catch (e, st) {
-      print('❌ Error removing food: $e');
-      print(st);
+// print('❌ Error removing food: $e');
+// print(st);
     }
   }
 
   Future<void> updateFoodQuantity(String mealId, double newQuantity) async {
     try {
-      print('✏️ Updating meal $mealId quantity to $newQuantity');
+// print('✏️ Updating meal $mealId quantity to $newQuantity');
       await _updateFoodQuantity(
         date: state.selectedDate,
         mealId: mealId,
         newQuantity: newQuantity,
       );
-      print('✅ Quantity updated successfully!');
+// print('✅ Quantity updated successfully!');
       await loadDate(state.selectedDate);
     } catch (e, st) {
-      print('❌ Error updating quantity: $e');
-      print(st);
+// print('❌ Error updating quantity: $e');
+// print(st);
     }
   }
 

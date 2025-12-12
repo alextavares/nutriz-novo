@@ -109,7 +109,9 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
                       Text(
                         'kcal/dia',
                         style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.6),
+                          color: theme.colorScheme.onSurface.withValues(
+                            alpha: 0.6,
+                          ),
                         ),
                       ),
                     ],
@@ -125,7 +127,7 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
         Text(
               'Seu orçamento diário de calorias',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             )
@@ -190,7 +192,7 @@ class _MacroChip extends StatelessWidget {
               width: 64,
               height: 64,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.15),
+                color: color.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Center(
@@ -207,7 +209,7 @@ class _MacroChip extends StatelessWidget {
             Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.6),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ],
@@ -312,8 +314,8 @@ class TimeEstimateWidget extends StatelessWidget {
         Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withOpacity(
-                  0.5,
+                color: theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -338,7 +340,7 @@ class TimeEstimateWidget extends StatelessWidget {
                               Container(
                                 height: 4,
                                 decoration: BoxDecoration(
-                                  color: progressColor.withOpacity(0.3),
+                                  color: progressColor.withValues(alpha: 0.3),
                                   borderRadius: BorderRadius.circular(2),
                                 ),
                               ),
@@ -394,7 +396,7 @@ class TimeEstimateWidget extends StatelessWidget {
                   Text(
                     'Data estimada: ${_formatDate(estimatedDate)}',
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -408,7 +410,7 @@ class TimeEstimateWidget extends StatelessWidget {
         Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               decoration: BoxDecoration(
-                color: progressColor.withOpacity(0.15),
+                color: progressColor.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -453,19 +455,19 @@ class _WeightBubble extends StatelessWidget {
           height: 80,
           decoration: BoxDecoration(
             color: isPrimary
-                ? bubbleColor.withOpacity(0.15)
+                ? bubbleColor.withValues(alpha: 0.15)
                 : theme.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(16),
             border: isPrimary ? Border.all(color: bubbleColor, width: 2) : null,
           ),
           child: Center(
             child: Text(
-              '${weight.toStringAsFixed(1)}',
+              weight.toStringAsFixed(1),
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isPrimary
                     ? bubbleColor
-                    : theme.colorScheme.onSurface.withOpacity(0.7),
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ),
@@ -474,7 +476,7 @@ class _WeightBubble extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             fontWeight: isPrimary ? FontWeight.w500 : null,
           ),
         ),
@@ -514,12 +516,12 @@ class CalculatingAnimation extends StatelessWidget {
               _AnimatedRing(
                 size: 90,
                 duration: 1.5.seconds,
-                color: theme.colorScheme.primary.withOpacity(0.7),
+                color: theme.colorScheme.primary.withValues(alpha: 0.7),
               ),
               _AnimatedRing(
                 size: 60,
                 duration: 1.seconds,
-                color: theme.colorScheme.primary.withOpacity(0.5),
+                color: theme.colorScheme.primary.withValues(alpha: 0.5),
               ),
             ],
           ),
@@ -528,7 +530,7 @@ class CalculatingAnimation extends StatelessWidget {
         Text(
               message,
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               textAlign: TextAlign.center,
             )

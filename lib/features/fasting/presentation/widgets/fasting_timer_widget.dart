@@ -1,9 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../shared/widgets/gamification/streak_flame.dart';
 import '../../../../shared/widgets/progress/animated_progress_ring.dart';
-import 'fasting_fox_animation.dart';
 import 'fasting_history_chart.dart';
 
 class FastingTimerWidget extends StatelessWidget {
@@ -26,6 +24,10 @@ class FastingTimerWidget extends StatelessWidget {
     this.onEditEnd,
   });
 
+  // Modern Yazio-like Palette
+  static const Color _primaryColor = Color(0xFF00BFA5); // Teal/Turquoise
+  static const Color _secondaryColor = Color(0xFF1DE9B6); // Lighter Teal
+
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final hours = twoDigits(duration.inHours);
@@ -45,14 +47,13 @@ class FastingTimerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Calculate available width for the ring
         final availableWidth = constraints.maxWidth;
-        // Ring size should be responsive but not overwhelming
-        final ringSize = math.min(availableWidth * 0.85, 350.0);
+        final ringSize = math.min(availableWidth * 0.85, 320.0);
 
         return SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 20),
               // 1. The Big Animated Ring
               SizedBox(
                 width: ringSize,
@@ -60,20 +61,44 @@ class FastingTimerWidget extends StatelessWidget {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
+                    // Shadow for depth
+                    Container(
+                      width: ringSize,
+                      height: ringSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: _primaryColor.withValues(alpha: 0.1),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Background Ring
+                    SizedBox(
+                      width: ringSize,
+                      height: ringSize,
+                      child: CircularProgressIndicator(
+                        value: 1.0,
+                        strokeWidth: 22,
+                        color: Colors.grey[100],
+                        strokeCap: StrokeCap.round,
+                      ),
+                    ),
                     // Animated Ring Painter
                     AnimatedProgressRing(
                       progress: progress,
                       size: ringSize,
                       strokeWidth: 22,
                       color: Colors.transparent,
-                      backgroundColor: const Color(0xFFE1BEE7).withOpacity(0.3),
+                      backgroundColor: Colors.transparent,
                       gradient: const SweepGradient(
                         startAngle: -math.pi / 2,
                         endAngle: 3 * math.pi / 2,
-                        colors: [
-                          Color(0xFF9C27B0), // Purple
-                          Color(0xFFE91E63), // Pink
-                        ],
+                        colors: [_secondaryColor, _primaryColor],
                         tileMode: TileMode.clamp,
                       ),
                     ),
@@ -84,34 +109,46 @@ class FastingTimerWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // Fox/Bunny Icon (Kawaii)
-                        SizedBox(
-                          height: ringSize * 0.18,
-                          width: ringSize * 0.18,
-                          child: const FastingFoxAnimation(),
+                        // Icon
+                        Icon(
+                          Icons.bolt_rounded,
+                          size: 32,
+                          color: _primaryColor,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 8),
 
                         // Giant Timer
                         Text(
                           _formatDuration(elapsed),
-                          style: GoogleFonts.inter(
-                            fontSize: ringSize * 0.16, // Responsive font size
-                            fontWeight: FontWeight.w800, // ExtraBold
-                            color: const Color(0xFF4A148C), // Deep Purple
-                            fontFeatures: [const FontFeature.tabularFigures()],
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                            fontFeatures: const [FontFeature.tabularFigures()],
                             height: 1.0,
+                            letterSpacing: -1.0,
                           ),
                         ),
                         const SizedBox(height: 8),
 
                         // Label
-                        Text(
-                          'Fasting Time',
-                          style: GoogleFonts.inter(
-                            fontSize: ringSize * 0.045,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[600],
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: _primaryColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            'Fasting',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: _primaryColor,
+                              letterSpacing: 0.5,
+                            ),
                           ),
                         ),
                       ],
@@ -120,30 +157,64 @@ class FastingTimerWidget extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
 
-              // 2. Stats Row (Start / End / Goal)
-              Builder(
-                builder: (context) {
-                  final start = startTime;
-                  final end = start?.add(goal);
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      _buildStatColumn(
-                        'Start',
-                        _formatTime(start),
-                        onEdit: onEditStart,
-                      ),
-                      _buildStatColumn(
-                        'End',
-                        _formatTime(end),
-                        onEdit: onEditEnd,
-                      ),
-                      _buildStatColumn('Goal', '${goal.inHours}h'),
-                    ],
-                  );
-                },
+              // 2. Stats Card
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Builder(
+                  builder: (context) {
+                    final start = startTime;
+                    final end = start?.add(goal);
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildStatItem(
+                          'Start',
+                          _formatTime(start),
+                          icon: Icons.play_arrow_rounded,
+                          onEdit: onEditStart,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: Colors.grey[200],
+                        ),
+                        _buildStatItem(
+                          'End',
+                          _formatTime(end),
+                          icon: Icons.stop_rounded,
+                          onEdit: onEditEnd,
+                        ),
+                        Container(
+                          width: 1,
+                          height: 40,
+                          color: Colors.grey[200],
+                        ),
+                        _buildStatItem(
+                          'Goal',
+                          '${goal.inHours}h',
+                          icon: Icons.flag_rounded,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
 
               const SizedBox(height: 32),
@@ -151,93 +222,44 @@ class FastingTimerWidget extends StatelessWidget {
               // 3. End Fasting Button
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 32),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: ElevatedButton(
                   onPressed: onStop,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF8E24AA), // Strong Purple
+                    backgroundColor: _primaryColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    elevation: 8,
-                    shadowColor: const Color(0xFF8E24AA).withOpacity(0.4),
+                    elevation: 2,
+                    shadowColor: _primaryColor.withValues(alpha: 0.3),
                   ),
-                  child: Text(
-                    'END FASTING',
-                    style: GoogleFonts.inter(
+                  child: const Text(
+                    'End Fasting',
+                    style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.0,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // 4. Streak Pill
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.purple.withOpacity(0.05),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    StreakFlame(streakDays: 12),
-                    const SizedBox(width: 8),
-                    Text(
-                      '16:8 Streak → ',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFFFF6B35), Color(0xFF8E24AA)],
-                      ).createShader(bounds),
-                      child: Text(
-                        '12 days',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white, // Masked by shader
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              // 5. Chart at the bottom
+              // 4. Streak & History
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       'Last 7 Days',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey,
-                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                        fontSize: 16,
                       ),
                     ),
                     SizedBox(height: 16),
@@ -246,7 +268,7 @@ class FastingTimerWidget extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 40), // Bottom padding
+              const SizedBox(height: 40),
             ],
           ),
         );
@@ -254,53 +276,49 @@ class FastingTimerWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatColumn(String label, String value, {VoidCallback? onEdit}) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.inter(
-            fontSize: 12,
-            color: Colors.grey[500],
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: const Color(0xFF2D0C57), // Darker purple text
-          ),
-        ),
-        if (onEdit != null) ...[
-          const SizedBox(height: 4),
-          InkWell(
-            onTap: onEdit,
-            borderRadius: BorderRadius.circular(12),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Edit',
-                    style: GoogleFonts.inter(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF8E24AA),
-                    ),
+  Widget _buildStatItem(
+    String label,
+    String value, {
+    IconData? icon,
+    VoidCallback? onEdit,
+  }) {
+    return InkWell(
+      onTap: onEdit,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if (icon != null) Icon(icon, size: 14, color: Colors.grey[400]),
+                const SizedBox(width: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[500],
+                    fontWeight: FontWeight.w500,
                   ),
+                ),
+                if (onEdit != null) ...[
                   const SizedBox(width: 4),
-                  const Icon(Icons.edit, size: 12, color: Color(0xFF8E24AA)),
+                  Icon(Icons.edit, size: 12, color: _primaryColor),
                 ],
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
             ),
-          ),
-        ],
-      ],
+          ],
+        ),
+      ),
     );
   }
 }

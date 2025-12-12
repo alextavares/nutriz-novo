@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:math' as math;
 import '../../../../core/constants/app_spacing.dart';
 import '../../domain/models/fasting_stage.dart';
 import '../notifiers/fasting_notifier.dart';
-import 'dart:math' as math;
 
 class FastingBodyStatusScreen extends ConsumerWidget {
   const FastingBodyStatusScreen({super.key});
@@ -14,121 +13,153 @@ class FastingBodyStatusScreen extends ConsumerWidget {
     final fastingState = ref.watch(fastingNotifierProvider);
     final currentStage = fastingState.currentStage;
 
+    // Calculate progress through the current 24h cycle (or goal)
+    // For visualization, we'll cap it at 1.0
+    final double overallProgress = (fastingState.elapsed.inMinutes / (24 * 60))
+        .clamp(0.0, 1.0);
+
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row (Fasting Stages + Goal)
+          // Header Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Fasting Stages",
-                style: GoogleFonts.inter(
-                  fontSize: 20,
+              const Text(
+                'Body Status',
+                style: TextStyle(
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF4A148C),
+                  color: Colors.black87,
                 ),
               ),
-              Row(
-                children: [
-                  Text(
-                    "${fastingState.goal.inHours}:${(fastingState.goal.inMinutes % 60).toString().padLeft(2, '0')}",
-                    style: GoogleFonts.inter(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blue,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      "${fastingState.goal.inHours}:${(fastingState.goal.inMinutes % 60).toString().padLeft(2, '0')}",
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.teal,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.edit, size: 16, color: Colors.blue),
-                ],
+                    const SizedBox(width: 4),
+                    const Icon(Icons.edit, size: 14, color: Colors.teal),
+                  ],
+                ),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
 
-          // Main Card
+          // Main White Card
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.symmetric(
+              vertical: AppSpacing.xl,
+              horizontal: AppSpacing.lg,
+            ),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
                 ),
               ],
             ),
             child: Column(
               children: [
-                // Circular Gauge
+                // Circular Arc Painter
                 SizedBox(
-                  height: 250,
+                  height: 220,
+                  width: 220,
                   child: CustomPaint(
-                    painter: FastingStagesPainter(
-                      elapsed: fastingState.elapsed,
-                      currentStage: currentStage,
-                    ),
+                    painter: FastingStagesPainter(progress: overallProgress),
                     child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             currentStage.icon,
-                            size: 48,
-                            color: currentStage.color,
+                            size: 32,
+                            color: const Color(
+                              0xFF8D6E63,
+                            ), // Matching brownish theme
                           ),
                         ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: AppSpacing.md),
 
-                // Stage Text
-                Text(
-                  "Your current fasting stage:",
-                  style: GoogleFonts.inter(
+                const SizedBox(height: AppSpacing.lg),
+
+                // Text Content
+                const Text(
+                  'Current Stage',
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 8),
                 Text(
                   currentStage.title,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 20,
+                  style: const TextStyle(
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF5D4037), // Brownish
+                    color: Color(0xFF5D4037),
+                    letterSpacing: -0.5,
                   ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    "Check back while fasting to see the stages your body is going through.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      height: 1.4,
+                    ),
+                  ),
+                ),
 
-                // Stats Row
+                const SizedBox(height: 32),
+
+                // Bottom Stats Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatItem(
-                      "Fat burn",
+                      'Fat burn',
                       _getTimeInStage(
                         fastingState.elapsed,
                         FastingStage.fatBurn,
                       ),
-                      Icons.local_fire_department,
+                      Icons.local_fire_department_rounded,
                     ),
                     _buildStatItem(
-                      "Autophagy",
+                      'Autophagy',
                       _getTimeInStage(
                         fastingState.elapsed,
                         FastingStage.autophagy,
                       ),
-                      Icons.cleaning_services,
+                      Icons.auto_awesome_rounded,
                     ),
                   ],
                 ),
@@ -142,10 +173,10 @@ class FastingBodyStatusScreen extends ConsumerWidget {
 
   String _getTimeInStage(Duration elapsed, FastingStage stage) {
     if (elapsed < stage.startDuration) {
-      return "0 hr 0 min";
+      return '0 hr 0 min';
     }
     final timeInStage = elapsed - stage.startDuration;
-    return "${timeInStage.inHours} hr ${timeInStage.inMinutes % 60} min";
+    return '${timeInStage.inHours} hr ${timeInStage.inMinutes % 60} min';
   }
 
   Widget _buildStatItem(String label, String value, IconData icon) {
@@ -153,26 +184,30 @@ class FastingBodyStatusScreen extends ConsumerWidget {
       children: [
         Text(
           label,
-          style: GoogleFonts.inter(fontSize: 14, color: Colors.grey[600]),
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[500],
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.grey[50],
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: Colors.grey[200]!),
           ),
           child: Row(
             children: [
-              Icon(icon, size: 14, color: Colors.grey[600]),
-              const SizedBox(width: 4),
+              Icon(icon, size: 16, color: Colors.grey[600]),
+              const SizedBox(width: 6),
               Text(
                 value,
-                style: GoogleFonts.inter(
+                style: TextStyle(
                   fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[600],
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
                 ),
               ),
             ],
@@ -184,41 +219,56 @@ class FastingBodyStatusScreen extends ConsumerWidget {
 }
 
 class FastingStagesPainter extends CustomPainter {
-  final Duration elapsed;
-  final FastingStage currentStage;
+  final double progress;
 
-  FastingStagesPainter({required this.elapsed, required this.currentStage});
+  FastingStagesPainter({required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2 - 20;
+    final radius = math.min(size.width, size.height) / 2 - 10;
 
-    // Draw background circle
-    final paint = Paint()
+    // Draw background track (Partial Circle)
+    // Starting from -220 degrees to +40 degrees (leaving bottom open)
+    const startAngle = -math.pi * 1.2;
+    const sweepLength = math.pi * 1.4;
+
+    final trackPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 20
-      ..color = Colors.grey[200]!;
-
-    canvas.drawCircle(center, radius, paint);
-
-    // Draw progress arc
-    // Assume 24 hours for full circle for visualization
-    final progress = (elapsed.inMinutes / (24 * 60)).clamp(0.0, 1.0);
-    final sweepAngle = 2 * math.pi * progress;
-
-    paint.color = const Color(0xFF8D6E63); // Brownish color from image
-    paint.strokeCap = StrokeCap.round;
+      ..strokeWidth = 24
+      ..color =
+          const Color(0xFFF5F5F5) // Very light grey
+      ..strokeCap = StrokeCap.round;
 
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      -math.pi / 2, // Start from top
-      sweepAngle,
+      startAngle,
+      sweepLength,
       false,
-      paint,
+      trackPaint,
+    );
+
+    // Draw Progress
+    final progressSweep = sweepLength * progress;
+
+    final progressPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 24
+      ..color =
+          const Color(0xFF8D6E63) // Brownish
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      startAngle,
+      progressSweep,
+      false,
+      progressPaint,
     );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant FastingStagesPainter oldDelegate) {
+    return oldDelegate.progress != progress;
+  }
 }

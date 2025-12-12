@@ -77,7 +77,7 @@ class _MacroRingItem extends StatelessWidget {
               size: size,
               strokeWidth: 5,
               color: color,
-              backgroundColor: color.withOpacity(0.15),
+              backgroundColor: color.withValues(alpha: 0.15),
             ),
             Column(
               mainAxisSize: MainAxisSize.min,

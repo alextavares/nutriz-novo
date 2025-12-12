@@ -33,24 +33,6 @@ class DiaryPage extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5), // Light grey background
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Reset onboarding for testing
-          final isar = ref.read(isarProvider);
-          await isar.writeTxn(() async {
-            final profile = await isar.userProfileEntitys.where().findFirst();
-            if (profile != null) {
-              profile.isOnboardingCompleted = false;
-              await isar.userProfileEntitys.put(profile);
-            }
-          });
-          ref.invalidate(onboardingStatusProvider);
-          if (context.mounted) {
-            context.go('/splash');
-          }
-        },
-        child: const Icon(Icons.refresh),
-      ),
       appBar: AppBar(
         backgroundColor: const Color(0xFFF5F5F5),
         elevation: 0,

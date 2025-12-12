@@ -85,7 +85,7 @@ class _StreakFlameState extends State<StreakFlame>
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFFFF6B6B).withOpacity(0.6),
+                      color: const Color(0xFFFF6B6B).withValues(alpha: 0.6),
                       blurRadius: _glowAnimation.value,
                       spreadRadius: _glowAnimation.value / 4,
                       offset: const Offset(0, 2),

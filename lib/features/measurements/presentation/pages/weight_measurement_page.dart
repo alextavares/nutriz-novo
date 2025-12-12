@@ -41,7 +41,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
   Future<void> _saveWeight() async {
     final repository = ref.read(measurementsRepositoryProvider);
     final useMetric = ref.read(unitPreferenceProvider);
-    
+
     await repository.saveMeasurement(
       type: MeasurementType.weight.key,
       value: _currentWeight,
@@ -106,7 +106,8 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
               setState(() {
                 // Convert weight
                 _currentWeight = useMetric
-                    ? _currentWeight * 2.20462 // kg to lb
+                    ? _currentWeight *
+                          2.20462 // kg to lb
                     : _currentWeight / 2.20462; // lb to kg
               });
             },
@@ -158,7 +159,10 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                               icon: Icons.remove,
                               onTap: () {
                                 setState(() {
-                                  _currentWeight = (_currentWeight - 0.1).clamp(0, 500);
+                                  _currentWeight = (_currentWeight - 0.1).clamp(
+                                    0,
+                                    500,
+                                  );
                                   _hasChanges = true;
                                 });
                               },
@@ -181,7 +185,10 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                               icon: Icons.add,
                               onTap: () {
                                 setState(() {
-                                  _currentWeight = (_currentWeight + 0.1).clamp(0, 500);
+                                  _currentWeight = (_currentWeight + 0.1).clamp(
+                                    0,
+                                    500,
+                                  );
                                   _hasChanges = true;
                                 });
                               },
@@ -202,7 +209,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                       return _WeightChart(measurements: measurements);
                     },
                     loading: () => const CircularProgressIndicator(),
-                    error: (_, __) => const SizedBox.shrink(),
+                    error: (_, _) => const SizedBox.shrink(),
                   ),
 
                   const SizedBox(height: 24),
@@ -305,10 +312,7 @@ class _CircleButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _CircleButton({
-    required this.icon,
-    required this.onTap,
-  });
+  const _CircleButton({required this.icon, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -319,18 +323,14 @@ class _CircleButton extends StatelessWidget {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.2),
+          color: Colors.white.withValues(alpha: 0.2),
           shape: BoxShape.circle,
           border: Border.all(
-            color: Colors.white.withOpacity(0.3),
+            color: Colors.white.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
-        child: Icon(
-          icon,
-          color: Colors.white,
-          size: 24,
-        ),
+        child: Icon(icon, color: Colors.white, size: 24),
       ),
     );
   }
@@ -346,10 +346,7 @@ class _WeightChart extends StatelessWidget {
     if (measurements.length < 2) return const SizedBox.shrink();
 
     final spots = measurements.asMap().entries.map((entry) {
-      return FlSpot(
-        entry.key.toDouble(),
-        entry.value.value,
-      );
+      return FlSpot(entry.key.toDouble(), entry.value.value);
     }).toList();
 
     return Container(
@@ -420,7 +417,7 @@ class _WeightChart extends StatelessWidget {
               ),
               belowBarData: BarAreaData(
                 show: true,
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
               ),
             ),
           ],

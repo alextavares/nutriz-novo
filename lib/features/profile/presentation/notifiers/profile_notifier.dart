@@ -40,7 +40,7 @@ class ProfileNotifier extends _$ProfileNotifier {
       }
     } catch (e) {
       // Handle error or keep default
-      print('Error loading profile: $e');
+// print('Error loading profile: $e');
     }
   }
 

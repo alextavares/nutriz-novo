@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_spacing.dart';
 
 class MeasurementsCard extends StatelessWidget {
   final double currentWeight;
@@ -32,7 +30,7 @@ class MeasurementsCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -49,7 +47,7 @@ class MeasurementsCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.purple.withOpacity(0.1),
+                        color: Colors.purple.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -61,7 +59,7 @@ class MeasurementsCard extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       'Weight',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF2D3436),
@@ -125,7 +123,7 @@ class MeasurementsCard extends StatelessWidget {
                   height: 40,
                   width: 80,
                   decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                    color: Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_spacing.dart';
+
 import '../../domain/entities/meal.dart';
 
 class MealSection extends StatelessWidget {
@@ -26,7 +26,7 @@ class MealSection extends StatelessWidget {
     );
 
     // Determine goal based on meal type (placeholder logic)
-    int goal = 0;
+    var goal = 0;
     if (title.contains('Breakfast') || title.contains('Café')) goal = 400;
     if (title.contains('Lunch') || title.contains('Almoço')) goal = 600;
     if (title.contains('Dinner') || title.contains('Jantar')) goal = 500;
@@ -40,7 +40,7 @@ class MealSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -86,84 +86,86 @@ class MealSection extends StatelessWidget {
             const SizedBox(height: 20),
             const Divider(height: 1, color: Color(0xFFF0F0F0)),
             const SizedBox(height: 20),
-            ...meals.map((meal) {
-              return meal.foods.map((foodItem) {
-                return Dismissible(
-                  key: Key(meal.id),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.red[400],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(
-                      Icons.delete_outline,
-                      color: Colors.white,
-                    ),
-                  ),
-                  onDismissed: (_) {
-                    onRemoveFood?.call(meal.id);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Food Image Placeholder (or real image if available)
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Icon(
-                            Icons.restaurant_menu_rounded,
-                            color: Colors.grey,
-                            size: 20,
-                          ),
+            ...meals
+                .map((meal) {
+                  return meal.foods.map((foodItem) {
+                    return Dismissible(
+                      key: Key(meal.id),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        margin: const EdgeInsets.only(bottom: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.red[400],
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                foodItem.food.name,
-                                style: GoogleFonts.inter(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: const Color(0xFF2D3436),
-                                ),
+                        child: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onDismissed: (_) {
+                        onRemoveFood?.call(meal.id);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Food Image Placeholder (or real image if available)
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              const SizedBox(height: 2),
-                              Text(
-                                '${foodItem.quantity}x ${foodItem.food.servingSize}${foodItem.food.servingUnit}',
-                                style: GoogleFonts.inter(
-                                  fontSize: 13,
-                                  color: Colors.grey[500],
-                                ),
+                              child: const Icon(
+                                Icons.restaurant_menu_rounded,
+                                color: Colors.grey,
+                                size: 20,
                               ),
-                            ],
-                          ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    foodItem.food.name,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: const Color(0xFF2D3436),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${foodItem.quantity}x ${foodItem.food.servingSize}${foodItem.food.servingUnit}',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 13,
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              '${foodItem.totalCalories.value.toInt()}',
+                              style: GoogleFonts.inter(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF2D3436),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${foodItem.totalCalories.value.toInt()}',
-                          style: GoogleFonts.inter(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: const Color(0xFF2D3436),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList();
-            }).expand((list) => list),
+                      ),
+                    );
+                  }).toList();
+                })
+                .expand((list) => list),
           ],
         ],
       ),
@@ -217,7 +219,7 @@ class _AddButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.primary.withOpacity(0.1),
+          color: AppColors.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: const Icon(

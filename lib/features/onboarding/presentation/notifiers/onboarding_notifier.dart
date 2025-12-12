@@ -115,6 +115,10 @@ class OnboardingNotifier extends _$OnboardingNotifier {
     // Save to local storage
     final isar = ref.read(isarProvider);
     final repository = ProfileRepository(isar);
+    print(
+      'DEBUG: Saving profile with isOnboardingCompleted: ${state.isOnboardingCompleted}',
+    );
     await repository.saveProfile(state);
+    print('DEBUG: Profile saved successfully');
   }
 }

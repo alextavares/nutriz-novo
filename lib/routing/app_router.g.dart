@@ -6,7 +6,7 @@ part of 'app_router.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appRouterHash() => r'274ea2c9b31ae6fb7c638f0b5ae5293728429fb8';
+String _$appRouterHash() => r'99c5bf71027f759801ca70ab5d2c55af0169a576';
 
 /// See also [appRouter].
 @ProviderFor(appRouter)
@@ -20,7 +20,7 @@ final appRouterProvider = AutoDisposeProvider<GoRouter>.internal(
 );
 
 typedef AppRouterRef = AutoDisposeProviderRef<GoRouter>;
-String _$onboardingStatusHash() => r'ae4163b1a15d3724e8a1083f027ba848d05a8095';
+String _$onboardingStatusHash() => r'ffd4b810a92b1308e2010f513afb20590f4115e3';
 
 /// Provider to track if onboarding has been completed
 ///

@@ -1,7 +1,6 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/constants/app_colors.dart';
+
 import '../../../../core/value_objects/water_volume.dart';
 
 class WaterTrackerCard extends StatelessWidget {
@@ -28,7 +27,7 @@ class WaterTrackerCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(0.05),
+            color: Colors.blue.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -45,7 +44,7 @@ class WaterTrackerCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -135,8 +134,8 @@ class _AnimatedWaterCircle extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: Colors.blue.withOpacity(0.05),
-            border: Border.all(color: Colors.blue.withOpacity(0.2), width: 2),
+            color: Colors.blue.withValues(alpha: 0.05),
+            border: Border.all(color: Colors.blue.withValues(alpha: 0.2), width: 2),
           ),
           child: Stack(
             alignment: Alignment.center,
@@ -148,7 +147,7 @@ class _AnimatedWaterCircle extends StatelessWidget {
                   child: Container(
                     width: 100,
                     height: 100 * value,
-                    color: Colors.blue.withOpacity(0.2),
+                    color: Colors.blue.withValues(alpha: 0.2),
                   ),
                 ),
               ),
@@ -193,9 +192,9 @@ class _QuickAddButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.1),
+          color: Colors.blue.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.blue.withOpacity(0.2)),
+          border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
         ),
         child: Text(
           label,

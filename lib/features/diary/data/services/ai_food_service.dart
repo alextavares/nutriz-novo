@@ -27,7 +27,7 @@ class AiFoodService {
         throw Exception('Failed to analyze image: ${response.statusMessage}');
       }
 
-      String responseBody = response.data.toString();
+      var responseBody = response.data.toString();
       // Clean markdown code blocks if present
       responseBody = responseBody
           .replaceAll('```json', '')
@@ -52,13 +52,13 @@ class AiFoodService {
       );
     } catch (e) {
       if (e is DioException) {
-        print('DioError Type: ${e.type}');
-        print('DioError Message: ${e.message}');
-        print('DioError Error: ${e.error}');
-        print('Worker Error Status: ${e.response?.statusCode}');
-        print('Worker Error Data: ${e.response?.data}');
+// print('DioError Type: ${e.type}');
+// print('DioError Message: ${e.message}');
+// print('DioError Error: ${e.error}');
+// print('Worker Error Status: ${e.response?.statusCode}');
+// print('Worker Error Data: ${e.response?.data}');
       }
-      print('Full Exception: $e');
+// print('Full Exception: $e');
       throw Exception('Failed to analyze food: $e');
     }
   }

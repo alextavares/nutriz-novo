@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 class FastingHistoryChart extends StatelessWidget {
   const FastingHistoryChart({super.key});
 
+  static const Color _primaryColor = Color(0xFF00BFA5); // Teal
+  static const Color _lightColor = Color(0xFFB2DFDB); // Light Teal
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -71,7 +74,7 @@ class FastingHistoryChart extends StatelessWidget {
             getDrawingHorizontalLine: (value) {
               if (value == 16) {
                 return const FlLine(
-                  color: Color(0xFF8E24AA),
+                  color: _primaryColor,
                   strokeWidth: 1,
                   dashArray: [5, 5],
                 );
@@ -101,7 +104,7 @@ class FastingHistoryChart extends StatelessWidget {
       barRods: [
         BarChartRodData(
           toY: y,
-          color: y >= 16 ? const Color(0xFF8E24AA) : const Color(0xFFE1BEE7),
+          color: y >= 16 ? _primaryColor : _lightColor,
           width: 16,
           borderRadius: BorderRadius.circular(4),
           backDrawRodData: BackgroundBarChartRodData(

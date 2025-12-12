@@ -12,7 +12,7 @@ class NutritionCalculatorService {
     // Men: (10 × weight in kg) + (6.25 × height in cm) - (5 × age in years) + 5
     // Women: (10 × weight in kg) + (6.25 × height in cm) - (5 × age in years) - 161
 
-    double bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * ageYears);
+    var bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * ageYears);
 
     if (gender == Gender.male) {
       bmr += 5;
@@ -56,7 +56,7 @@ class NutritionCalculatorService {
     // Daily deficit/surplus = (weeklyGoal * 7700) / 7
     final dailyAdjustment = (weeklyGoalKg * 7700) / 7;
 
-    int target = (tdee + dailyAdjustment).round();
+    var target = (tdee + dailyAdjustment).round();
 
     // Safety limits (approximate)
     if (target < 1200) return 1200; // Minimum safe limit

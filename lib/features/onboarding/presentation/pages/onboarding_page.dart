@@ -210,7 +210,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   void _finishOnboarding() {
-    ref.read(onboardingStatusProvider.notifier).setCompleted();
+    // Force the provider to re-read from database instead of using stale state
+    ref.invalidate(onboardingStatusProvider);
     context.go('/diary');
   }
 
@@ -233,7 +234,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     end: Alignment.bottomRight,
                     colors: [
                       theme.colorScheme.primary,
-                      theme.colorScheme.primary.withOpacity(0.7),
+                      theme.colorScheme.primary.withValues(alpha: 0.7),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(40),
@@ -251,7 +252,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           Text(
             'Responda algumas perguntas para calcularmos suas metas diárias de calorias e macros.',
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
             ),
             textAlign: TextAlign.center,
           ).animate(delay: 300.ms).fadeIn(duration: 400.ms),
@@ -445,7 +446,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: BoxDecoration(
-              color: diffColor.withOpacity(0.15),
+              color: diffColor.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(

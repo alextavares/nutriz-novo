@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../notifiers/fasting_notifier.dart';
 
@@ -17,6 +16,10 @@ class FastingScreen extends ConsumerStatefulWidget {
 class _FastingScreenState extends ConsumerState<FastingScreen> {
   int _selectedIndex = 0;
 
+  // Modern Yazio-like Palette
+  static const Color _primaryColor = Color(0xFF00BFA5); // Teal/Turquoise
+  static const Color _backgroundColor = Color(0xFFFAFAFA); // Almost white
+
   @override
   Widget build(BuildContext context) {
     final fastingState = ref.watch(fastingNotifierProvider);
@@ -27,56 +30,84 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         );
 
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFFDF4FF), // Very Light Purple
-              Color(0xFFF3E5F5), // Light Purple
-              Color(0xFFE1BEE7), // Soft Purple
-            ],
-            stops: [0.0, 0.6, 1.0],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Header
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "You're fasting!",
-                        style: GoogleFonts.inter(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF4A148C),
-                        ),
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      const Icon(
-                        Icons.rocket_launch,
-                        color: Colors.orange,
-                        size: 24,
-                      ),
-                    ],
+      backgroundColor: _backgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg,
+                vertical: AppSpacing.md,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Fasting Tracker",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _primaryColor.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          "16:8", // Placeholder for dynamic protocol
+                          style: TextStyle(
+                            color: _primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 14,
+                          color: _primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-                // Main Content (Timer or Body Status)
-                // Using SizedBox to give it a fixed height or AspectRatio could work,
-                // but FastingTimerWidget is responsive. Let's give it a reasonable height constraint
-                // or let it take what it needs. Since it's in a Column in a ScrollView,
-                // we shouldn't use Expanded.
-                SizedBox(
-                  height: 550, // Adjust as needed for design
+            // Tab Switcher (Segmented Control look)
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Row(
+                children: [
+                  Expanded(child: _buildSegmentOption(0, "Timer")),
+                  Expanded(child: _buildSegmentOption(1, "Body Status")),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.md),
+
+            // Main Content Area
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
                   child: _selectedIndex == 0
                       ? FastingTimerWidget(
                           progress: progress,
@@ -84,7 +115,6 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
                           goal: fastingState.goal,
                           startTime: fastingState.startTime,
                           onStop: () {
-                            // TODO: Confirm dialog
                             ref
                                 .read(fastingNotifierProvider.notifier)
                                 .stopFasting();
@@ -107,161 +137,43 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
                         )
                       : const FastingBodyStatusScreen(),
                 ),
-
-                // Tab Card
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.md,
-                    vertical: AppSpacing.sm,
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildNavItem(0, Icons.timer_outlined),
-                        _buildNavItem(
-                          1,
-                          Icons.accessibility_new_rounded,
-                        ), // Body/Person
-                        _buildNavItem(2, Icons.bar_chart_rounded),
-                        _buildNavItem(3, Icons.calendar_today_rounded),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Suggestions Section (Moved from Body Status)
-                Padding(
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Suggestions for Your Next Meal",
-                        style: GoogleFonts.inter(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF4A148C),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      SizedBox(
-                        height: 180,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            _buildMealCard(
-                              "Midday Meal",
-                              "Prep",
-                              "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80",
-                            ),
-                            const SizedBox(width: AppSpacing.md),
-                            _buildMealCard(
-                              "Delicious,",
-                              "Filling Meals",
-                              "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=500&q=80",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Bottom Padding for scrolling
-                const SizedBox(height: 80),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon) {
+  Widget _buildSegmentOption(int index, String label) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedIndex = index),
-      child: Container(
-        padding: const EdgeInsets.all(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF4A148C) : Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          color: isSelected ? Colors.white : Colors.grey[400],
-          size: 24,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMealCard(String title, String subtitle, String imageUrl) {
-    return Container(
-      width: 140,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.network(
-              imageUrl,
-              height: 100,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF4A148C),
+          color: isSelected ? Colors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
                   ),
-                ),
-                Text(
-                  subtitle,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
-                ),
-              ],
-            ),
+                ]
+              : null,
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isSelected ? Colors.black87 : Colors.grey[600],
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontSize: 14,
           ),
-        ],
+        ),
       ),
     );
   }
@@ -280,9 +192,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Color(0xFF8E24AA), // Purple
+              primary: _primaryColor,
               onPrimary: Colors.white,
-              onSurface: Color(0xFF4A148C),
+              onSurface: Color(0xFF424242),
             ),
           ),
           child: child!,
@@ -298,9 +210,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
           return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: const ColorScheme.light(
-                primary: Color(0xFF8E24AA), // Purple
+                primary: _primaryColor,
                 onPrimary: Colors.white,
-                onSurface: Color(0xFF4A148C),
+                onSurface: Color(0xFF424242),
               ),
             ),
             child: child!,
@@ -331,15 +243,15 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: currentEnd,
-      firstDate: currentStart, // Cannot end before start
-      lastDate: currentStart.add(const Duration(days: 7)), // Reasonable limit
+      firstDate: currentStart,
+      lastDate: currentStart.add(const Duration(days: 7)),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: Color(0xFF8E24AA), // Purple
+              primary: _primaryColor,
               onPrimary: Colors.white,
-              onSurface: Color(0xFF4A148C),
+              onSurface: Color(0xFF424242),
             ),
           ),
           child: child!,
@@ -355,9 +267,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
           return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: const ColorScheme.light(
-                primary: Color(0xFF8E24AA), // Purple
+                primary: _primaryColor,
                 onPrimary: Colors.white,
-                onSurface: Color(0xFF4A148C),
+                onSurface: Color(0xFF424242),
               ),
             ),
             child: child!,

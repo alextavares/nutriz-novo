@@ -27,7 +27,7 @@ class AiFoodNotifier extends StateNotifier<AiFoodState> {
 
   Future<void> pickAndAnalyzeImage(ImageSource source) async {
     try {
-      final XFile? image = await _picker.pickImage(source: source);
+      final image = await _picker.pickImage(source: source);
       if (image == null) return;
 
       state = state.copyWith(isLoading: true, error: null);

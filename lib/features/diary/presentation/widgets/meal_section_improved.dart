@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_spacing.dart';
 import '../../domain/entities/meal.dart';
 
 class MealSectionImproved extends StatelessWidget {
@@ -29,7 +28,7 @@ class MealSectionImproved extends StatelessWidget {
     );
 
     // Determine goal based on meal type (placeholder logic)
-    int goal = 0;
+    var goal = 0;
     if (title.contains('Breakfast') || title.contains('Café')) goal = 400;
     if (title.contains('Lunch') || title.contains('Almoço')) goal = 600;
     if (title.contains('Dinner') || title.contains('Jantar')) goal = 500;
@@ -50,13 +49,13 @@ class MealSectionImproved extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: hasFoodItems
-            ? Border.all(color: _getMealColor(title).withOpacity(0.3), width: 2)
+            ? Border.all(color: _getMealColor(title).withValues(alpha: 0.3), width: 2)
             : null,
         boxShadow: [
           BoxShadow(
             color: hasFoodItems
-                ? _getMealColor(title).withOpacity(0.08)
-                : Colors.black.withOpacity(0.03),
+                ? _getMealColor(title).withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.03),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -94,7 +93,7 @@ class MealSectionImproved extends StatelessWidget {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.1),
+                                color: AppColors.primary.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
@@ -296,7 +295,7 @@ class _FloatingAddButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),

@@ -159,7 +159,7 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
           Container(
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
-              color: AppColors.surfaceVariant.withOpacity(0.5),
+              color: AppColors.surfaceVariant.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: Colors.grey[200]!),
             ),
@@ -195,7 +195,7 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:nutriz/main.dart' as app;
@@ -68,17 +67,17 @@ void main() {
 
     // Step 10: Dietary Preference - classic by default, tap Next (triggers calculation)
     await tester.tap(find.text('Próximo'));
-    print('Tapped Next to start calculation');
+// print('Tapped Next to start calculation');
 
     // Step 11: Calculating - wait for calculation animation
     // Use pump() with specific duration because of looping animations
     await tester.pump(const Duration(seconds: 5));
-    print('Waiting for calculation...');
+// print('Waiting for calculation...');
     await tester.pump(const Duration(seconds: 2));
 
     // Step 12: Results - should show calculated calories
     expect(find.text('Seu plano está pronto!'), findsOneWidget);
-    print('Found results page');
+// print('Found results page');
 
     // Tap continue to go to PRO upsell
     await tester.tap(find.text('Continuar'));
@@ -86,7 +85,7 @@ void main() {
 
     // Step 13: PRO Upsell - tap "Continuar com versão gratuita"
     await tester.tap(find.text('Continuar com versão gratuita'));
-    print('Tapped continue free');
+// print('Tapped continue free');
 
     // Wait for navigation with pump() due to looping animations on DiaryPage
     await tester.pump(const Duration(seconds: 3));
@@ -94,11 +93,11 @@ void main() {
 
     // Verify we navigated to Diary
     expect(find.byType(DiaryPage), findsOneWidget);
-    print('Found DiaryPage');
+// print('Found DiaryPage');
 
     // Verify calculated calories are shown
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.text('Remaining'), findsOneWidget);
-    print('Found Remaining text');
+// print('Found Remaining text');
   });
 }

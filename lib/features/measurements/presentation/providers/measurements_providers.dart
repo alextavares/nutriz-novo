@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 import '../../data/repositories/measurements_repository.dart';
-import '../../data/models/measurement_schemas.dart';
 import '../../domain/entities/measurement.dart';
 
 // Provider for Isar (from gamification)

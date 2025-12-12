@@ -1,7 +1,5 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/app_colors.dart';
 import '../../../../core/value_objects/water_volume.dart';
 
 class WaterTrackerCardImproved extends StatelessWidget {
@@ -22,7 +20,6 @@ class WaterTrackerCardImproved extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final progress = (currentVolume.valueMl / goalMl).clamp(0.0, 1.0);
     final glassesGoal = 8; // 8 glasses of 250ml = 2000ml
     final glassesFilled = (currentVolume.valueMl / 250).floor().clamp(
       0,
@@ -31,9 +28,10 @@ class WaterTrackerCardImproved extends StatelessWidget {
     final hasWater = currentVolume.valueMl > 0;
 
     // Debug
-    print(
-      '💧 Water: ${currentVolume.valueMl}ml | hasWater: $hasWater | onRemove: ${onRemove != null}',
-    );
+    // Debug
+    // print(
+    //   '💧 Water: ${currentVolume.valueMl}ml | hasWater: $hasWater | onRemove: ${onRemove != null}',
+    // );
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -41,13 +39,13 @@ class WaterTrackerCardImproved extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: hasWater
-            ? Border.all(color: Colors.blue.withOpacity(0.3), width: 2)
+            ? Border.all(color: Colors.blue.withValues(alpha: 0.3), width: 2)
             : null,
         boxShadow: [
           BoxShadow(
             color: hasWater
-                ? Colors.blue.withOpacity(0.12)
-                : Colors.blue.withOpacity(0.08),
+                ? Colors.blue.withValues(alpha: 0.12)
+                : Colors.blue.withValues(alpha: 0.08),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -66,7 +64,7 @@ class WaterTrackerCardImproved extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.1),
+                        color: Colors.blue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(
@@ -78,7 +76,7 @@ class WaterTrackerCardImproved extends StatelessWidget {
                     const SizedBox(width: 12),
                     Text(
                       'Water Tracker',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF2D3436),
@@ -285,13 +283,13 @@ class _GlassPainter extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.fill
       ..color = isFilled
-          ? Colors.blue.withOpacity(0.3)
-          : Colors.grey.withOpacity(0.1);
+          ? Colors.blue.withValues(alpha: 0.3)
+          : Colors.grey.withValues(alpha: 0.1);
 
     final borderPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
-      ..color = isFilled ? Colors.blue : Colors.grey.withOpacity(0.3);
+      ..color = isFilled ? Colors.blue : Colors.grey.withValues(alpha: 0.3);
 
     // Draw glass outline (trapezoid)
     final path = Path()
@@ -353,9 +351,12 @@ class _QuickAddButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue.withOpacity(0.3), width: 1.5),
+            border: Border.all(
+              color: Colors.blue.withValues(alpha: 0.3),
+              width: 1.5,
+            ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

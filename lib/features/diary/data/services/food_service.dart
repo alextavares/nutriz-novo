@@ -39,7 +39,7 @@ class FoodServiceImpl implements FoodService {
             .toList();
       }
     } catch (e) {
-      print('Worker API error: $e');
+// print('Worker API error: $e');
     }
 
     // 4. Fallback: OpenFoodFacts
@@ -49,7 +49,7 @@ class FoodServiceImpl implements FoodService {
           .take(20)
           .toList();
     } catch (e) {
-      print('OpenFoodFacts error: $e');
+// print('OpenFoodFacts error: $e');
     }
 
     // Retorna pelo menos os resultados locais
@@ -142,7 +142,7 @@ class FoodServiceImpl implements FoodService {
         throw Exception('Failed to analyze image: ${response.body}');
       }
     } catch (e) {
-      print('Error analyzing image: $e');
+// print('Error analyzing image: $e');
       return null;
     }
   }
@@ -175,7 +175,7 @@ class FoodServiceImpl implements FoodService {
       }
       return null;
     } catch (e) {
-      print('Error scanning barcode: $e');
+// print('Error scanning barcode: $e');
       return null;
     }
   }

@@ -27,8 +27,8 @@ class FoodItem with _$FoodItem {
 
   Food toDomain() {
     // Basic parsing for serving size (e.g. "100g" -> 100.0)
-    double parsedServingSize = 100.0;
-    String unit = 'g';
+    var parsedServingSize = 100.0;
+    var unit = 'g';
 
     final match = RegExp(
       r'(\d+(\.\d+)?)\s*([a-zA-Z]+)',

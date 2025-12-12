@@ -11,13 +11,20 @@ class ProfileRepository {
     final entity = UserProfileEntity.fromDomain(profile);
     await _isar.writeTxn(() async {
       // Clear existing profile since we only support one user for now
+      print('DEBUG: Clearing existing profiles...');
       await _isar.userProfileEntitys.clear();
+      print(
+        'DEBUG: Putting new profile: ${entity.id}, completed: ${entity.isOnboardingCompleted}',
+      );
       await _isar.userProfileEntitys.put(entity);
     });
   }
 
   Future<UserProfile?> getProfile() async {
     final entity = await _isar.userProfileEntitys.where().findFirst();
+    print(
+      'DEBUG: Retrieved profile entity: ${entity?.id}, completed: ${entity?.isOnboardingCompleted}',
+    );
     return entity?.toDomain();
   }
 }

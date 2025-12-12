@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../notifiers/profile_notifier.dart';
@@ -17,12 +18,16 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Profile',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => GoRouter.of(context).go('/diary'),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -38,7 +43,7 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.lg),
 
           // My Goals Section
-          Text(
+          const Text(
             'My Goals',
             style: TextStyle(
               fontSize: 18,
@@ -63,7 +68,7 @@ class ProfileScreen extends ConsumerWidget {
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundColor: AppColors.primary.withOpacity(0.2),
+          backgroundColor: AppColors.primary.withValues(alpha: 0.2),
           child: Text(
             'A', // Mock initial
             style: TextStyle(
@@ -105,7 +110,7 @@ class ProfileScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

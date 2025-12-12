@@ -33,8 +33,10 @@ class GoalCard extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: isSelected
-              ? primaryColor.withOpacity(0.15)
-              : theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              ? primaryColor.withValues(alpha: 0.15)
+              : theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? primaryColor : Colors.transparent,
@@ -43,7 +45,7 @@ class GoalCard extends StatelessWidget {
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: primaryColor.withOpacity(0.2),
+                    color: primaryColor.withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -62,11 +64,11 @@ class GoalCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: isSelected
-                      ? [primaryColor, primaryColor.withOpacity(0.7)]
+                      ? [primaryColor, primaryColor.withValues(alpha: 0.7)]
                       : [
                           theme.colorScheme.surfaceContainerHighest,
-                          theme.colorScheme.surfaceContainerHighest.withOpacity(
-                            0.8,
+                          theme.colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.8,
                           ),
                         ],
                 ),
@@ -77,7 +79,7 @@ class GoalCard extends StatelessWidget {
                 size: 36,
                 color: isSelected
                     ? Colors.white
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 16),
@@ -95,7 +97,7 @@ class GoalCard extends StatelessWidget {
               Text(
                 subtitle!,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -137,8 +139,10 @@ class ActivityLevelCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isSelected
-              ? primaryColor.withOpacity(0.15)
-              : theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+              ? primaryColor.withValues(alpha: 0.15)
+              : theme.colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.5,
+                ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected ? primaryColor : Colors.transparent,
@@ -156,11 +160,11 @@ class ActivityLevelCard extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: isSelected
-                      ? [primaryColor, primaryColor.withOpacity(0.7)]
+                      ? [primaryColor, primaryColor.withValues(alpha: 0.7)]
                       : [
                           theme.colorScheme.surfaceContainerHighest,
-                          theme.colorScheme.surfaceContainerHighest.withOpacity(
-                            0.8,
+                          theme.colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.8,
                           ),
                         ],
                 ),
@@ -171,7 +175,7 @@ class ActivityLevelCard extends StatelessWidget {
                 size: 28,
                 color: isSelected
                     ? Colors.white
-                    : theme.colorScheme.onSurface.withOpacity(0.6),
+                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(width: 16),
@@ -193,7 +197,7 @@ class ActivityLevelCard extends StatelessWidget {
                   Text(
                     description,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                     ),
                   ),
                 ],

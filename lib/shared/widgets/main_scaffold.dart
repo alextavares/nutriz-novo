@@ -1,26 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'bottom_nav_bar.dart';
 
-class MainScaffold extends StatelessWidget {
+/// MainScaffold with WidgetsBindingObserver to intercept the back button
+/// at the platform level, before GoRouter processes it.
+class MainScaffold extends StatefulWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBody: true, // Allows content to scroll behind the floating nav bar
-      body: child,
-      bottomNavigationBar: NutrizBottomNavBar(
-        currentIndex: _calculateSelectedIndex(context),
-        onTap: (index) => _onItemTapped(index, context),
-      ),
-    );
+  State<MainScaffold> createState() => _MainScaffoldState();
+}
+
+class _MainScaffoldState extends State<MainScaffold>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  Future<bool> didPopRoute() async {
+    final currentIndex = _calculateSelectedIndex(context);
+
+    // Debug print to verify this is being called
+    debugPrint('DEBUG: didPopRoute called, currentIndex=$currentIndex');
+
+    // If we're NOT on the home/diary tab, navigate to diary instead of exiting
+    if (currentIndex != 0) {
+      context.go('/diary');
+      return true; // We handled it, prevent default behavior (exit)
+    }
+
+    // If on diary, let the system handle it (exit app)
+    return false;
   }
 
   int _calculateSelectedIndex(BuildContext context) {
-    final String location = GoRouterState.of(context).uri.path;
+    final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/diary')) return 0;
     if (location.startsWith('/fasting')) return 1;
     if (location.startsWith('/recipes')) return 2;
@@ -44,8 +70,22 @@ class MainScaffold extends StatelessWidget {
         context.go('/profile');
         break;
       case 4:
-        context.go('/premium'); // Assuming /premium route exists, or /pro
+        context.go('/premium');
         break;
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentIndex = _calculateSelectedIndex(context);
+
+    return Scaffold(
+      extendBody: true,
+      body: widget.child,
+      bottomNavigationBar: NutrizBottomNavBar(
+        currentIndex: currentIndex,
+        onTap: (index) => _onItemTapped(index, context),
+      ),
+    );
   }
 }

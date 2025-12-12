@@ -43,7 +43,7 @@ class _BiometricSliderState extends State<BiometricSlider> {
         Text(
           widget.label,
           style: theme.textTheme.titleMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         const SizedBox(height: 16),
@@ -67,7 +67,7 @@ class _BiometricSliderState extends State<BiometricSlider> {
             Text(
               widget.unit,
               style: theme.textTheme.headlineSmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.5),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
             ),
           ],
@@ -77,9 +77,9 @@ class _BiometricSliderState extends State<BiometricSlider> {
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: color,
-            inactiveTrackColor: color.withOpacity(0.2),
+            inactiveTrackColor: color.withValues(alpha: 0.2),
             thumbColor: color,
-            overlayColor: color.withOpacity(0.1),
+            overlayColor: color.withValues(alpha: 0.1),
             trackHeight: 8,
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 16,
@@ -107,13 +107,13 @@ class _BiometricSliderState extends State<BiometricSlider> {
               Text(
                 '${widget.isInteger ? widget.min.round() : widget.min.toStringAsFixed(1)} ${widget.unit}',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.4),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
               ),
               Text(
                 '${widget.isInteger ? widget.max.round() : widget.max.toStringAsFixed(1)} ${widget.unit}',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.4),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
               ),
             ],
@@ -173,7 +173,7 @@ class WeeklyGoalSlider extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
@@ -189,7 +189,7 @@ class WeeklyGoalSlider extends StatelessWidget {
               Text(
                 _getDescription(value),
                 style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],
@@ -200,9 +200,9 @@ class WeeklyGoalSlider extends StatelessWidget {
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
             activeTrackColor: color,
-            inactiveTrackColor: color.withOpacity(0.2),
+            inactiveTrackColor: color.withValues(alpha: 0.2),
             thumbColor: color,
-            overlayColor: color.withOpacity(0.1),
+            overlayColor: color.withValues(alpha: 0.1),
             trackHeight: 8,
             thumbShape: const RoundSliderThumbShape(
               enabledThumbRadius: 16,
@@ -229,20 +229,20 @@ class WeeklyGoalSlider extends StatelessWidget {
               Text(
                 '-1 kg',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.orange.withOpacity(0.7),
+                  color: Colors.orange.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 'Manter',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
               ),
               Text(
                 '+1 kg',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: Colors.blue.withOpacity(0.7),
+                  color: Colors.blue.withValues(alpha: 0.7),
                   fontWeight: FontWeight.w500,
                 ),
               ),

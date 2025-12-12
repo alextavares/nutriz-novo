@@ -13,26 +13,25 @@ final waterRepositoryProvider = Provider<WaterRepository>((ref) {
 final waterGoalProvider = Provider<int>((ref) => 2000);
 
 /// Provider for water intake by date
-final waterIntakeByDateProvider = FutureProvider.family<WaterVolume, DateTime>(
-  (ref, date) async {
-    final repo = ref.watch(waterRepositoryProvider);
-    return await repo.getWaterForDate(date);
-  },
-);
+final waterIntakeByDateProvider = FutureProvider.family<WaterVolume, DateTime>((
+  ref,
+  date,
+) async {
+  final repo = ref.watch(waterRepositoryProvider);
+  return await repo.getWaterForDate(date);
+});
 
 /// Notifier for managing water intake with date support
 class WaterNotifier extends Notifier<void> {
   @override
   void build() {}
 
-  Future<void> addWater({
-    required DateTime date,
-    required int amountMl,
-  }) async {
+  Future<void> addWater({required DateTime date, required int amountMl}) async {
     final repo = ref.read(waterRepositoryProvider);
     await repo.addWater(date, amountMl);
-    
+
     // Refresh provider (mais suave que invalidate)
+    // ignore: unused_result
     ref.refresh(waterIntakeByDateProvider(date));
   }
 
@@ -42,16 +41,18 @@ class WaterNotifier extends Notifier<void> {
   }) async {
     final repo = ref.read(waterRepositoryProvider);
     await repo.saveWater(date, volume);
-    
+
     // Refresh provider (mais suave que invalidate)
+    // ignore: unused_result
     ref.refresh(waterIntakeByDateProvider(date));
   }
 
   Future<void> resetWater(DateTime date) async {
     final repo = ref.read(waterRepositoryProvider);
     await repo.resetWater(date);
-    
+
     // Refresh provider (mais suave que invalidate)
+    // ignore: unused_result
     ref.refresh(waterIntakeByDateProvider(date));
   }
 }

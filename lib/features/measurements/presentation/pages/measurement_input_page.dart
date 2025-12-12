@@ -28,7 +28,6 @@ class MeasurementInputPage extends ConsumerStatefulWidget {
 class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
   final TextEditingController _controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String? _errorMessage;
 
   @override
   void dispose() {
@@ -127,9 +126,7 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
   @override
   Widget build(BuildContext context) {
     final lastMeasurements = ref.watch(
-      lastNMeasurementsProvider(
-        MeasurementQuery(widget.type.key, 7),
-      ),
+      lastNMeasurementsProvider(MeasurementQuery(widget.type.key, 7)),
     );
 
     return Scaffold(
@@ -208,8 +205,10 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 2),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                            width: 2,
+                          ),
                         ),
                         errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -217,8 +216,10 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                         ),
                         focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:
-                              const BorderSide(color: Colors.red, width: 2),
+                          borderSide: const BorderSide(
+                            color: Colors.red,
+                            width: 2,
+                          ),
                         ),
                       ),
                       validator: _validateInput,
@@ -261,7 +262,9 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                                       width: 40,
                                       height: 40,
                                       decoration: BoxDecoration(
-                                        color: Colors.blue.withOpacity(0.1),
+                                        color: Colors.blue.withValues(
+                                          alpha: 0.1,
+                                        ),
                                         shape: BoxShape.circle,
                                       ),
                                       child: Center(
@@ -279,8 +282,9 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                                       ),
                                     ),
                                     subtitle: Text(
-                                      DateFormat('MMM dd, yyyy')
-                                          .format(measurement.date),
+                                      DateFormat(
+                                        'MMM dd, yyyy',
+                                      ).format(measurement.date),
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -309,10 +313,9 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                           ],
                         );
                       },
-                      loading: () => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      error: (_, __) => const SizedBox.shrink(),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (_, _) => const SizedBox.shrink(),
                     ),
                   ],
                 ),
