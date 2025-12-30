@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
@@ -16,6 +15,7 @@ import '../widgets/biometric_slider.dart';
 import '../widgets/calorie_result_display.dart';
 import '../widgets/pro_upsell_card.dart';
 import '../widgets/calculating_step.dart';
+import '../widgets/ruler_picker.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   final bool isEditMode;
@@ -32,27 +32,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  // Cached profile to prevent rebuilds during animation
-  UserProfile? _cachedProfile;
-
   @override
   void initState() {
     super.initState();
     debugPrint('DEBUG: initState called - NEW WIDGET CREATED');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint('DEBUG: _stepKeys list: $_stepKeys');
-      // Initialize cached profile
-      _cachedProfile = ref.read(onboardingNotifierProvider);
-      // Listen for changes without triggering rebuild
-      ref.listen<UserProfile>(onboardingNotifierProvider, (previous, next) {
-        _cachedProfile = next;
-        // Only rebuild if we're not in an animation
-        if (mounted &&
-            _pageController.positions.length == 1 &&
-            !_pageController.position.isScrollingNotifier.value) {
-          setState(() {});
-        }
-      });
     });
   }
 
@@ -204,14 +189,18 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     switch (_currentStepKey) {
       case _StepKey.welcome:
         return true;
+      case _StepKey.gender:
+        return true;
       case _StepKey.mainGoal:
         return true;
       case _StepKey.commitment:
         return true;
       case _StepKey.birthDate:
-        return profile.birthDate.year < DateTime.now().year - 5;
+        // Ensure user is at least 10 years old (Diet.ai limit)
+        return profile.birthDate.year <= DateTime.now().year - 10;
       case _StepKey.height:
-        return profile.height >= 100 && profile.height <= 250;
+        // Ensure valid height (e.g., 50cm to 300cm)
+        return profile.height >= 50 && profile.height <= 300;
       case _StepKey.currentWeight:
         return profile.currentWeight >= 30 && profile.currentWeight <= 300;
       case _StepKey.targetWeight:
@@ -244,9 +233,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('DEBUG: BUILD called. _currentPage=$_currentPage');
-    // Use cached profile to avoid rebuilds during animation
-    final UserProfile profile =
-        _cachedProfile ?? ref.read(onboardingNotifierProvider);
+    // Watch profile to react to state changes (e.g., gender selection)
+    final UserProfile profile = ref.watch(onboardingNotifierProvider);
     final notifier = ref.read(onboardingNotifierProvider.notifier);
     final theme = Theme.of(context);
     final totalSteps = _calculatingPageIndex > 1
@@ -898,18 +886,28 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
                   children: [
-                    // Mars/Venus Icon
-                    const Icon(
-                      Icons.transgender,
-                      size: 50,
-                      color: Colors.blueAccent,
-                    ), // Placeholder color
+                    // Mars/Venus Icons (Diet.ai style - coral/pink)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.male,
+                          size: 28,
+                          color: Color(0xFFE57373), // Coral/pink
+                        ),
+                        Icon(
+                          Icons.female,
+                          size: 28,
+                          color: Color(0xFFE57373), // Coral/pink
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
 
                     Text(
                       'Qual é seu sexo?',
                       style: GoogleFonts.inter(
-                        fontSize: 24,
+                        fontSize: 28,
                         fontWeight: FontWeight.w700,
                         color: const Color(0xFF1E1E1E),
                       ),
@@ -944,7 +942,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 12,
-                        color: const Color(0xFF9E9E9E),
+                        color: const Color(0xFF212121),
                         height: 1.5,
                       ),
                     ),
@@ -1063,10 +1061,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     OnboardingNotifier notifier,
     UserProfile profile,
   ) {
-    debugPrint('DEBUG: Calling _buildCommitmentStepDebug');
     final theme = Theme.of(context);
     return OnboardingStepContainer(
-      title: 'Um compromisso rápido 📝',
+      title: 'Um compromisso rápido',
       subtitle: 'Isso aumenta a chance de você ter resultado',
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1118,13 +1115,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       title: 'Qual é sua idade?',
       subtitle: 'Sua idade afeta seu metabolismo',
       child: Center(
-        child: BiometricSlider(
-          label: 'Idade',
+        child: RulerPicker(
+          label: 'IDADE',
           unit: 'anos',
           value: age.toDouble(),
           min: 12,
           max: 100,
-          divisions: 88,
           onChanged: (value) {
             final year = DateTime.now().year - value.round();
             notifier.updateBiometrics(birthDate: DateTime(year, 1, 1));
@@ -1135,20 +1131,125 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   Widget _buildHeightStep(OnboardingNotifier notifier, UserProfile profile) {
+    // Diet.ai uses a specific layout: Avatar Left, Ruler Right, Value Top.
+    final isMale = profile.gender == Gender.male;
+    final theme = Theme.of(context);
+
+    // Default to cm for now (Diet.ai has a toggle)
+    final heightCm = profile.height;
+
     return OnboardingStepContainer(
       title: 'Qual é sua altura?',
       subtitle: 'Usada para calcular seu metabolismo basal',
-      child: Center(
-        child: BiometricSlider(
-          label: 'Altura',
-          unit: 'cm',
-          value: profile.height.toDouble(),
-          min: 100,
-          max: 250,
-          divisions: 150,
-          onChanged: (value) {
-            notifier.updateBiometrics(height: value.round());
-          },
+      // We override the child padding or layout if needed, but OnboardingStepContainer usually provides padding.
+      // We might need to "break out" of padding for the edge-to-edge ruler if desired, but sticking to container is safer.
+      child: Column(
+        children: [
+          // Unit Toggle (Visual for now)
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFFF5F5F5),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            padding: const EdgeInsets.all(4),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildUnitToggleOption('cm', true),
+                _buildUnitToggleOption('ft', false),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Main Content Area
+          Expanded(
+            child: Stack(
+              children: [
+                // Avatar (Bottom Left/Center)
+                Positioned(
+                  left: 0,
+                  right: 80, // Leave space for ruler
+                  bottom: 0,
+                  top: 40, // Space for value? Or overlap?
+                  child: Image.asset(
+                    isMale
+                        ? 'assets/images/gender_man.png'
+                        : 'assets/images/gender_woman.png',
+                    fit: BoxFit.contain,
+                    alignment: Alignment.bottomCenter,
+                  ),
+                ),
+
+                // Height Value Display (Floating near head or fixed top)
+                Positioned(
+                  left: 0,
+                  right: 80,
+                  top: 0,
+                  child: Column(
+                    children: [
+                      Text(
+                        '$heightCm',
+                        style: GoogleFonts.inter(
+                          fontSize: 64,
+                          fontWeight: FontWeight.w900,
+                          color: theme.colorScheme.primary,
+                          height: 1.0,
+                          letterSpacing: -2.0,
+                        ),
+                      ),
+                      Text(
+                        'cm',
+                        style: GoogleFonts.inter(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF9E9E9E),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Vertical Ruler (Right Edge)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  width: 100,
+                  child: RulerPicker(
+                    label: '',
+                    unit: 'cm',
+                    value: heightCm.toDouble(),
+                    min: 100,
+                    max: 250,
+                    direction: Axis.vertical, // NEW: Vertical Mode
+                    showValue: false, // NEW: Hide internal display
+                    onChanged: (value) {
+                      notifier.updateBiometrics(height: value.round());
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildUnitToggleOption(String text, bool isSelected) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.green : Colors.transparent, // Diet.ai Green
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: isSelected ? Colors.white : const Color(0xFF9E9E9E),
+          fontWeight: FontWeight.w700,
+          fontSize: 14,
         ),
       ),
     );
@@ -1871,68 +1972,56 @@ class _Gender3DCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            height: 300,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isSelected ? Colors.blue : Colors.transparent,
-                width: 3,
-              ),
-              boxShadow: [
-                if (isSelected)
-                  BoxShadow(
-                    color: Colors.blue.withOpacity(0.2),
-                    blurRadius: 10,
-                    spreadRadius: 2,
+      child: AnimatedScale(
+        scale: isSelected ? 1.02 : 1.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        child: AnimatedOpacity(
+          opacity: isSelected ? 1.0 : 0.6,
+          duration: const Duration(milliseconds: 200),
+          child: Column(
+            children: [
+              // Avatar with Selection Border
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isSelected ? Colors.blue : Colors.transparent,
+                    width: 2,
                   ),
-              ],
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Placeholder for 3D Image
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        isMale
-                            ? 'assets/images/gender_man.png'
-                            : 'assets/images/gender_woman.png',
-                        fit: BoxFit.cover,
-                      ),
+                ),
+                padding: const EdgeInsets.all(
+                  4,
+                ), // Space between border and image
+                child: SizedBox(
+                  height: 400, // Maximized height
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.asset(
+                      isMale
+                          ? 'assets/images/gender_man.png'
+                          : 'assets/images/gender_woman.png',
+                      alignment: Alignment.topCenter,
+                      fit: BoxFit
+                          .cover, // Fill the space, cropping sides if needed
                     ),
                   ),
                 ),
-                if (isSelected)
-                  const Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Icon(Icons.check_circle, color: Colors.blue),
-                  ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                label,
+                style: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: isSelected
+                      ? const Color(0xFF1E1E1E)
+                      : const Color(0xFF757575),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
-          Text(
-            label,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: isSelected
-                  ? const Color(0xFF1E1E1E)
-                  : const Color(0xFF757575),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
