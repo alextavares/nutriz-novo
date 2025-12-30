@@ -32,12 +32,27 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
+  // Cached profile to prevent rebuilds during animation
+  UserProfile? _cachedProfile;
+
   @override
   void initState() {
     super.initState();
     debugPrint('DEBUG: initState called - NEW WIDGET CREATED');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint('DEBUG: _stepKeys list: $_stepKeys');
+      // Initialize cached profile
+      _cachedProfile = ref.read(onboardingNotifierProvider);
+      // Listen for changes without triggering rebuild
+      ref.listen<UserProfile>(onboardingNotifierProvider, (previous, next) {
+        _cachedProfile = next;
+        // Only rebuild if we're not in an animation
+        if (mounted &&
+            _pageController.positions.length == 1 &&
+            !_pageController.position.isScrollingNotifier.value) {
+          setState(() {});
+        }
+      });
     });
   }
 
@@ -229,7 +244,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint('DEBUG: BUILD called. _currentPage=$_currentPage');
-    final profile = ref.watch(onboardingNotifierProvider);
+    // Use cached profile to avoid rebuilds during animation
+    final UserProfile profile =
+        _cachedProfile ?? ref.read(onboardingNotifierProvider);
     final notifier = ref.read(onboardingNotifierProvider.notifier);
     final theme = Theme.of(context);
     final totalSteps = _calculatingPageIndex > 1
@@ -344,6 +361,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
               // Page Content
               Expanded(
+                key: const ValueKey('onboarding_pageview_expanded'),
                 child: PageView.builder(
                   key: const ValueKey('onboarding_pageview'),
                   controller: _pageController,
