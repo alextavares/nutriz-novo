@@ -38,61 +38,96 @@ const UserProfileEntitySchema = CollectionSchema(
       name: r'carbsGrams',
       type: IsarType.long,
     ),
-    r'currentWeight': PropertySchema(
+    r'challengeLastMealAt': PropertySchema(
       id: 4,
+      name: r'challengeLastMealAt',
+      type: IsarType.dateTime,
+    ),
+    r'challengeMealsRemaining': PropertySchema(
+      id: 5,
+      name: r'challengeMealsRemaining',
+      type: IsarType.long,
+    ),
+    r'challengeStartedAt': PropertySchema(
+      id: 6,
+      name: r'challengeStartedAt',
+      type: IsarType.dateTime,
+    ),
+    r'committedToLogDaily': PropertySchema(
+      id: 7,
+      name: r'committedToLogDaily',
+      type: IsarType.bool,
+    ),
+    r'currentWeight': PropertySchema(
+      id: 8,
       name: r'currentWeight',
       type: IsarType.double,
     ),
     r'dietaryPreference': PropertySchema(
-      id: 5,
+      id: 9,
       name: r'dietaryPreference',
       type: IsarType.byte,
       enumMap: _UserProfileEntitydietaryPreferenceEnumValueMap,
     ),
     r'fatGrams': PropertySchema(
-      id: 6,
+      id: 10,
       name: r'fatGrams',
       type: IsarType.long,
     ),
+    r'favoriteFoodKeysJson': PropertySchema(
+      id: 11,
+      name: r'favoriteFoodKeysJson',
+      type: IsarType.string,
+    ),
+    r'freeMealsRemaining': PropertySchema(
+      id: 12,
+      name: r'freeMealsRemaining',
+      type: IsarType.long,
+    ),
     r'gender': PropertySchema(
-      id: 7,
+      id: 13,
       name: r'gender',
       type: IsarType.byte,
       enumMap: _UserProfileEntitygenderEnumValueMap,
     ),
     r'height': PropertySchema(
-      id: 8,
+      id: 14,
       name: r'height',
       type: IsarType.long,
     ),
     r'isOnboardingCompleted': PropertySchema(
-      id: 9,
+      id: 15,
       name: r'isOnboardingCompleted',
       type: IsarType.bool,
     ),
     r'mainGoal': PropertySchema(
-      id: 10,
+      id: 16,
       name: r'mainGoal',
       type: IsarType.byte,
       enumMap: _UserProfileEntitymainGoalEnumValueMap,
     ),
+    r'paywallDismissCount': PropertySchema(
+      id: 17,
+      name: r'paywallDismissCount',
+      type: IsarType.long,
+    ),
     r'profileId': PropertySchema(
-      id: 11,
+      id: 18,
       name: r'profileId',
       type: IsarType.string,
     ),
     r'proteinGrams': PropertySchema(
-      id: 12,
+      id: 19,
       name: r'proteinGrams',
       type: IsarType.long,
     ),
     r'targetWeight': PropertySchema(
-      id: 13,
+      id: 20,
       name: r'targetWeight',
       type: IsarType.double,
     ),
     r'weeklyGoal': PropertySchema(
-      id: 14,
+      id: 21,
       name: r'weeklyGoal',
       type: IsarType.double,
     )
@@ -131,6 +166,12 @@ int _userProfileEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final value = object.favoriteFoodKeysJson;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.profileId.length * 3;
   return bytesCount;
 }
@@ -145,17 +186,24 @@ void _userProfileEntitySerialize(
   writer.writeDateTime(offsets[1], object.birthDate);
   writer.writeLong(offsets[2], object.calculatedCalories);
   writer.writeLong(offsets[3], object.carbsGrams);
-  writer.writeDouble(offsets[4], object.currentWeight);
-  writer.writeByte(offsets[5], object.dietaryPreference.index);
-  writer.writeLong(offsets[6], object.fatGrams);
-  writer.writeByte(offsets[7], object.gender.index);
-  writer.writeLong(offsets[8], object.height);
-  writer.writeBool(offsets[9], object.isOnboardingCompleted);
-  writer.writeByte(offsets[10], object.mainGoal.index);
-  writer.writeString(offsets[11], object.profileId);
-  writer.writeLong(offsets[12], object.proteinGrams);
-  writer.writeDouble(offsets[13], object.targetWeight);
-  writer.writeDouble(offsets[14], object.weeklyGoal);
+  writer.writeDateTime(offsets[4], object.challengeLastMealAt);
+  writer.writeLong(offsets[5], object.challengeMealsRemaining);
+  writer.writeDateTime(offsets[6], object.challengeStartedAt);
+  writer.writeBool(offsets[7], object.committedToLogDaily);
+  writer.writeDouble(offsets[8], object.currentWeight);
+  writer.writeByte(offsets[9], object.dietaryPreference.index);
+  writer.writeLong(offsets[10], object.fatGrams);
+  writer.writeString(offsets[11], object.favoriteFoodKeysJson);
+  writer.writeLong(offsets[12], object.freeMealsRemaining);
+  writer.writeByte(offsets[13], object.gender.index);
+  writer.writeLong(offsets[14], object.height);
+  writer.writeBool(offsets[15], object.isOnboardingCompleted);
+  writer.writeByte(offsets[16], object.mainGoal.index);
+  writer.writeLong(offsets[17], object.paywallDismissCount);
+  writer.writeString(offsets[18], object.profileId);
+  writer.writeLong(offsets[19], object.proteinGrams);
+  writer.writeDouble(offsets[20], object.targetWeight);
+  writer.writeDouble(offsets[21], object.weeklyGoal);
 }
 
 UserProfileEntity _userProfileEntityDeserialize(
@@ -171,24 +219,31 @@ UserProfileEntity _userProfileEntityDeserialize(
   object.birthDate = reader.readDateTime(offsets[1]);
   object.calculatedCalories = reader.readLong(offsets[2]);
   object.carbsGrams = reader.readLong(offsets[3]);
-  object.currentWeight = reader.readDouble(offsets[4]);
+  object.challengeLastMealAt = reader.readDateTimeOrNull(offsets[4]);
+  object.challengeMealsRemaining = reader.readLongOrNull(offsets[5]);
+  object.challengeStartedAt = reader.readDateTimeOrNull(offsets[6]);
+  object.committedToLogDaily = reader.readBoolOrNull(offsets[7]);
+  object.currentWeight = reader.readDouble(offsets[8]);
   object.dietaryPreference = _UserProfileEntitydietaryPreferenceValueEnumMap[
-          reader.readByteOrNull(offsets[5])] ??
+          reader.readByteOrNull(offsets[9])] ??
       DietaryPreference.classic;
-  object.fatGrams = reader.readLong(offsets[6]);
-  object.gender =
-      _UserProfileEntitygenderValueEnumMap[reader.readByteOrNull(offsets[7])] ??
-          Gender.male;
-  object.height = reader.readLong(offsets[8]);
+  object.fatGrams = reader.readLong(offsets[10]);
+  object.favoriteFoodKeysJson = reader.readStringOrNull(offsets[11]);
+  object.freeMealsRemaining = reader.readLongOrNull(offsets[12]);
+  object.gender = _UserProfileEntitygenderValueEnumMap[
+          reader.readByteOrNull(offsets[13])] ??
+      Gender.male;
+  object.height = reader.readLong(offsets[14]);
   object.id = id;
-  object.isOnboardingCompleted = reader.readBool(offsets[9]);
+  object.isOnboardingCompleted = reader.readBool(offsets[15]);
   object.mainGoal = _UserProfileEntitymainGoalValueEnumMap[
-          reader.readByteOrNull(offsets[10])] ??
+          reader.readByteOrNull(offsets[16])] ??
       MainGoal.loseWeight;
-  object.profileId = reader.readString(offsets[11]);
-  object.proteinGrams = reader.readLong(offsets[12]);
-  object.targetWeight = reader.readDouble(offsets[13]);
-  object.weeklyGoal = reader.readDouble(offsets[14]);
+  object.paywallDismissCount = reader.readLongOrNull(offsets[17]);
+  object.profileId = reader.readString(offsets[18]);
+  object.proteinGrams = reader.readLong(offsets[19]);
+  object.targetWeight = reader.readDouble(offsets[20]);
+  object.weeklyGoal = reader.readDouble(offsets[21]);
   return object;
 }
 
@@ -210,32 +265,46 @@ P _userProfileEntityDeserializeProp<P>(
     case 3:
       return (reader.readLong(offset)) as P;
     case 4:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 5:
+      return (reader.readLongOrNull(offset)) as P;
+    case 6:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 7:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 8:
+      return (reader.readDouble(offset)) as P;
+    case 9:
       return (_UserProfileEntitydietaryPreferenceValueEnumMap[
               reader.readByteOrNull(offset)] ??
           DietaryPreference.classic) as P;
-    case 6:
+    case 10:
       return (reader.readLong(offset)) as P;
-    case 7:
+    case 11:
+      return (reader.readStringOrNull(offset)) as P;
+    case 12:
+      return (reader.readLongOrNull(offset)) as P;
+    case 13:
       return (_UserProfileEntitygenderValueEnumMap[
               reader.readByteOrNull(offset)] ??
           Gender.male) as P;
-    case 8:
+    case 14:
       return (reader.readLong(offset)) as P;
-    case 9:
+    case 15:
       return (reader.readBool(offset)) as P;
-    case 10:
+    case 16:
       return (_UserProfileEntitymainGoalValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MainGoal.loseWeight) as P;
-    case 11:
+    case 17:
+      return (reader.readLongOrNull(offset)) as P;
+    case 18:
       return (reader.readString(offset)) as P;
-    case 12:
+    case 19:
       return (reader.readLong(offset)) as P;
-    case 13:
+    case 20:
       return (reader.readDouble(offset)) as P;
-    case 14:
+    case 21:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -707,6 +776,256 @@ extension UserProfileEntityQueryFilter
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeLastMealAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'challengeLastMealAt',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeLastMealAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'challengeLastMealAt',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeLastMealAtEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'challengeLastMealAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeLastMealAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'challengeLastMealAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeLastMealAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'challengeLastMealAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeLastMealAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'challengeLastMealAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeMealsRemainingIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'challengeMealsRemaining',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeMealsRemainingIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'challengeMealsRemaining',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeMealsRemainingEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'challengeMealsRemaining',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeMealsRemainingGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'challengeMealsRemaining',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeMealsRemainingLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'challengeMealsRemaining',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeMealsRemainingBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'challengeMealsRemaining',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeStartedAtIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'challengeStartedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeStartedAtIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'challengeStartedAt',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeStartedAtEqualTo(DateTime? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'challengeStartedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeStartedAtGreaterThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'challengeStartedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeStartedAtLessThan(
+    DateTime? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'challengeStartedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      challengeStartedAtBetween(
+    DateTime? lower,
+    DateTime? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'challengeStartedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      committedToLogDailyIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'committedToLogDaily',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      committedToLogDailyIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'committedToLogDaily',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      committedToLogDailyEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'committedToLogDaily',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
       currentWeightEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -876,6 +1195,234 @@ extension UserProfileEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'fatGrams',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'favoriteFoodKeysJson',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'favoriteFoodKeysJson',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'favoriteFoodKeysJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'favoriteFoodKeysJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'favoriteFoodKeysJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'favoriteFoodKeysJson',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'favoriteFoodKeysJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'favoriteFoodKeysJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'favoriteFoodKeysJson',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'favoriteFoodKeysJson',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'favoriteFoodKeysJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      favoriteFoodKeysJsonIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'favoriteFoodKeysJson',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      freeMealsRemainingIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'freeMealsRemaining',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      freeMealsRemainingIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'freeMealsRemaining',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      freeMealsRemainingEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'freeMealsRemaining',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      freeMealsRemainingGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'freeMealsRemaining',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      freeMealsRemainingLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'freeMealsRemaining',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      freeMealsRemainingBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'freeMealsRemaining',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1110,6 +1657,80 @@ extension UserProfileEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'mainGoal',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      paywallDismissCountIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'paywallDismissCount',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      paywallDismissCountIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'paywallDismissCount',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      paywallDismissCountEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'paywallDismissCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      paywallDismissCountGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'paywallDismissCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      paywallDismissCountLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'paywallDismissCount',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      paywallDismissCountBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'paywallDismissCount',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1508,6 +2129,62 @@ extension UserProfileEntityQuerySortBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByChallengeLastMealAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeLastMealAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByChallengeLastMealAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeLastMealAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByChallengeMealsRemaining() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeMealsRemaining', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByChallengeMealsRemainingDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeMealsRemaining', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByChallengeStartedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeStartedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByChallengeStartedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeStartedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByCommittedToLogDaily() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'committedToLogDaily', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByCommittedToLogDailyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'committedToLogDaily', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       sortByCurrentWeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentWeight', Sort.asc);
@@ -1546,6 +2223,34 @@ extension UserProfileEntityQuerySortBy
       sortByFatGramsDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fatGrams', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByFavoriteFoodKeysJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'favoriteFoodKeysJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByFavoriteFoodKeysJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'favoriteFoodKeysJson', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByFreeMealsRemaining() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'freeMealsRemaining', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByFreeMealsRemainingDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'freeMealsRemaining', Sort.desc);
     });
   }
 
@@ -1602,6 +2307,20 @@ extension UserProfileEntityQuerySortBy
       sortByMainGoalDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'mainGoal', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByPaywallDismissCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paywallDismissCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByPaywallDismissCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paywallDismissCount', Sort.desc);
     });
   }
 
@@ -1721,6 +2440,62 @@ extension UserProfileEntityQuerySortThenBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByChallengeLastMealAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeLastMealAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByChallengeLastMealAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeLastMealAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByChallengeMealsRemaining() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeMealsRemaining', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByChallengeMealsRemainingDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeMealsRemaining', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByChallengeStartedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeStartedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByChallengeStartedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'challengeStartedAt', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByCommittedToLogDaily() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'committedToLogDaily', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByCommittedToLogDailyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'committedToLogDaily', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       thenByCurrentWeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'currentWeight', Sort.asc);
@@ -1759,6 +2534,34 @@ extension UserProfileEntityQuerySortThenBy
       thenByFatGramsDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fatGrams', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByFavoriteFoodKeysJson() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'favoriteFoodKeysJson', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByFavoriteFoodKeysJsonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'favoriteFoodKeysJson', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByFreeMealsRemaining() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'freeMealsRemaining', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByFreeMealsRemainingDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'freeMealsRemaining', Sort.desc);
     });
   }
 
@@ -1828,6 +2631,20 @@ extension UserProfileEntityQuerySortThenBy
       thenByMainGoalDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'mainGoal', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByPaywallDismissCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paywallDismissCount', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByPaywallDismissCountDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'paywallDismissCount', Sort.desc);
     });
   }
 
@@ -1919,6 +2736,34 @@ extension UserProfileEntityQueryWhereDistinct
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByChallengeLastMealAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'challengeLastMealAt');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByChallengeMealsRemaining() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'challengeMealsRemaining');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByChallengeStartedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'challengeStartedAt');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByCommittedToLogDaily() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'committedToLogDaily');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
       distinctByCurrentWeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'currentWeight');
@@ -1936,6 +2781,21 @@ extension UserProfileEntityQueryWhereDistinct
       distinctByFatGrams() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'fatGrams');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByFavoriteFoodKeysJson({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'favoriteFoodKeysJson',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByFreeMealsRemaining() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'freeMealsRemaining');
     });
   }
 
@@ -1964,6 +2824,13 @@ extension UserProfileEntityQueryWhereDistinct
       distinctByMainGoal() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'mainGoal');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByPaywallDismissCount() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'paywallDismissCount');
     });
   }
 
@@ -2031,6 +2898,34 @@ extension UserProfileEntityQueryProperty
     });
   }
 
+  QueryBuilder<UserProfileEntity, DateTime?, QQueryOperations>
+      challengeLastMealAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'challengeLastMealAt');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, int?, QQueryOperations>
+      challengeMealsRemainingProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'challengeMealsRemaining');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, DateTime?, QQueryOperations>
+      challengeStartedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'challengeStartedAt');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, bool?, QQueryOperations>
+      committedToLogDailyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'committedToLogDaily');
+    });
+  }
+
   QueryBuilder<UserProfileEntity, double, QQueryOperations>
       currentWeightProperty() {
     return QueryBuilder.apply(this, (query) {
@@ -2048,6 +2943,20 @@ extension UserProfileEntityQueryProperty
   QueryBuilder<UserProfileEntity, int, QQueryOperations> fatGramsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fatGrams');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, String?, QQueryOperations>
+      favoriteFoodKeysJsonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'favoriteFoodKeysJson');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, int?, QQueryOperations>
+      freeMealsRemainingProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'freeMealsRemaining');
     });
   }
 
@@ -2074,6 +2983,13 @@ extension UserProfileEntityQueryProperty
       mainGoalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mainGoal');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, int?, QQueryOperations>
+      paywallDismissCountProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'paywallDismissCount');
     });
   }
 

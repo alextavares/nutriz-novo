@@ -1,6 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math' as math;
+
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../domain/models/fasting_stage.dart';
 import '../notifiers/fasting_notifier.dart';
@@ -13,54 +16,16 @@ class FastingBodyStatusScreen extends ConsumerWidget {
     final fastingState = ref.watch(fastingNotifierProvider);
     final currentStage = fastingState.currentStage;
 
-    // Calculate progress through the current 24h cycle (or goal)
-    // For visualization, we'll cap it at 1.0
-    final double overallProgress = (fastingState.elapsed.inMinutes / (24 * 60))
-        .clamp(0.0, 1.0);
+    final goalMinutes = fastingState.goal.inMinutes;
+    final overallProgress = goalMinutes <= 0
+        ? 0.0
+        : (fastingState.elapsed.inMinutes / goalMinutes).clamp(0.0, 1.0);
 
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: 220),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Body Status',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.teal.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      "${fastingState.goal.inHours}:${(fastingState.goal.inMinutes % 60).toString().padLeft(2, '0')}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.teal,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.edit, size: 14, color: Colors.teal),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-
-          // Main White Card
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
@@ -68,50 +33,52 @@ class FastingBodyStatusScreen extends ConsumerWidget {
               horizontal: AppSpacing.lg,
             ),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+              border: Border.all(color: AppColors.border),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
+                  color: AppColors.shadow,
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
                 ),
               ],
             ),
             child: Column(
               children: [
-                // Circular Arc Painter
                 SizedBox(
                   height: 220,
                   width: 220,
                   child: CustomPaint(
-                    painter: FastingStagesPainter(progress: overallProgress),
+                    painter: FastingStagesPainter(
+                      progress: overallProgress,
+                      trackColor: AppColors.surfaceVariant,
+                      progressColor: AppColors.primary,
+                    ),
                     child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            currentStage.icon,
-                            size: 32,
-                            color: const Color(
-                              0xFF8D6E63,
-                            ), // Matching brownish theme
-                          ),
-                        ],
+                      child: Container(
+                        width: 74,
+                        height: 74,
+                        decoration: BoxDecoration(
+                          color: currentStage.color.withValues(alpha: 0.35),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          currentStage.icon,
+                          size: 34,
+                          color: AppColors.textPrimary.withValues(alpha: 0.9),
+                        ),
                       ),
                     ),
                   ),
                 ),
-
                 const SizedBox(height: AppSpacing.lg),
-
-                // Text Content
-                const Text(
-                  'Current Stage',
+                Text(
+                  'Etapa atual',
                   style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -119,34 +86,29 @@ class FastingBodyStatusScreen extends ConsumerWidget {
                   currentStage.title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF5D4037),
-                    letterSpacing: -0.5,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
+                    letterSpacing: -0.3,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "Check back while fasting to see the stages your body is going through.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                      height: 1.4,
-                    ),
+                const SizedBox(height: 10),
+                Text(
+                  currentStage.description,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    height: 1.35,
+                    color: AppColors.textSecondary,
                   ),
                 ),
-
-                const SizedBox(height: 32),
-
-                // Bottom Stats Row
+                const SizedBox(height: AppSpacing.xl),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatItem(
-                      'Fat burn',
+                      'Queima de gordura',
                       _getTimeInStage(
                         fastingState.elapsed,
                         FastingStage.fatBurn,
@@ -154,7 +116,7 @@ class FastingBodyStatusScreen extends ConsumerWidget {
                       Icons.local_fire_department_rounded,
                     ),
                     _buildStatItem(
-                      'Autophagy',
+                      'Autofagia',
                       _getTimeInStage(
                         fastingState.elapsed,
                         FastingStage.autophagy,
@@ -173,10 +135,12 @@ class FastingBodyStatusScreen extends ConsumerWidget {
 
   String _getTimeInStage(Duration elapsed, FastingStage stage) {
     if (elapsed < stage.startDuration) {
-      return '0 hr 0 min';
+      return '0h 0min';
     }
     final timeInStage = elapsed - stage.startDuration;
-    return '${timeInStage.inHours} hr ${timeInStage.inMinutes % 60} min';
+    final hours = timeInStage.inHours;
+    final minutes = timeInStage.inMinutes.remainder(60);
+    return '${hours}h ${minutes}min';
   }
 
   Widget _buildStatItem(String label, String value, IconData icon) {
@@ -186,28 +150,29 @@ class FastingBodyStatusScreen extends ConsumerWidget {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: Colors.grey[500],
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
+            color: AppColors.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.grey[50],
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey[200]!),
+            color: AppColors.surfaceVariant,
+            borderRadius: BorderRadius.circular(999),
+            border: Border.all(color: AppColors.border),
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 16, color: Colors.grey[600]),
+              Icon(icon, size: 16, color: AppColors.textSecondary),
               const SizedBox(width: 6),
               Text(
                 value,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -220,24 +185,27 @@ class FastingBodyStatusScreen extends ConsumerWidget {
 
 class FastingStagesPainter extends CustomPainter {
   final double progress;
+  final Color trackColor;
+  final Color progressColor;
 
-  FastingStagesPainter({required this.progress});
+  FastingStagesPainter({
+    required this.progress,
+    required this.trackColor,
+    required this.progressColor,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = math.min(size.width, size.height) / 2 - 10;
 
-    // Draw background track (Partial Circle)
-    // Starting from -220 degrees to +40 degrees (leaving bottom open)
     const startAngle = -math.pi * 1.2;
     const sweepLength = math.pi * 1.4;
 
     final trackPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 24
-      ..color =
-          const Color(0xFFF5F5F5) // Very light grey
+      ..color = trackColor
       ..strokeCap = StrokeCap.round;
 
     canvas.drawArc(
@@ -248,14 +216,12 @@ class FastingStagesPainter extends CustomPainter {
       trackPaint,
     );
 
-    // Draw Progress
     final progressSweep = sweepLength * progress;
 
     final progressPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 24
-      ..color =
-          const Color(0xFF8D6E63) // Brownish
+      ..color = progressColor
       ..strokeCap = StrokeCap.round;
 
     canvas.drawArc(
@@ -269,6 +235,8 @@ class FastingStagesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant FastingStagesPainter oldDelegate) {
-    return oldDelegate.progress != progress;
+    return oldDelegate.progress != progress ||
+        oldDelegate.trackColor != trackColor ||
+        oldDelegate.progressColor != progressColor;
   }
 }

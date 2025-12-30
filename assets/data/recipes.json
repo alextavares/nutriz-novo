@@ -1,0 +1,1081 @@
+{
+  "version": 1,
+  "recipes": [
+    {
+      "id": "omelete-legumes",
+      "imageUrl": "https://images.unsplash.com/photo-1510693206972-df098062cb71?auto=format&fit=crop&w=800&q=80",
+      "title": "Omelete de legumes",
+      "description": "Rápida, rica em proteína e perfeita para qualquer refeição.",
+      "meal": "breakfast",
+      "diets": [
+        "lowCarb",
+        "glutenFree",
+        "highProtein"
+      ],
+      "tags": [
+        "quick",
+        "seasonal"
+      ],
+      "timeMinutes": 12,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 290,
+        "protein": 23,
+        "carbs": 8,
+        "fat": 18
+      },
+      "ingredients": [
+        "2 ovos",
+        "1/2 abobrinha em cubos",
+        "1/4 de cebola picada",
+        "1 punhado de espinafre",
+        "Sal e pimenta a gosto",
+        "1 colher (chá) de azeite"
+      ],
+      "steps": [
+        "Refogue cebola e abobrinha no azeite por 2–3 min.",
+        "Adicione o espinafre e mexa até murchar.",
+        "Bata os ovos com sal e pimenta e despeje na frigideira.",
+        "Cozinhe em fogo baixo até firmar e dobre a omelete."
+      ]
+    },
+    {
+      "id": "iogurte-frutas-aveia",
+      "imageUrl": "https://images.unsplash.com/photo-1511690656952-34342d5c2899?auto=format&fit=crop&w=800&q=80",
+      "title": "Iogurte com frutas e aveia",
+      "description": "Um café da manhã leve com fibras e saciedade.",
+      "meal": "breakfast",
+      "diets": [
+        "vegetarian"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 5,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 320,
+        "protein": 18,
+        "carbs": 44,
+        "fat": 8
+      },
+      "ingredients": [
+        "170 g de iogurte natural",
+        "1 banana em rodelas",
+        "1/2 xícara de morangos picados",
+        "2 colheres (sopa) de aveia",
+        "Canela a gosto"
+      ],
+      "steps": [
+        "Em uma tigela, coloque o iogurte.",
+        "Adicione frutas, aveia e finalize com canela."
+      ]
+    },
+    {
+      "id": "vitamina-proteica-cacau",
+      "imageUrl": "https://images.unsplash.com/photo-1574856344991-aaa31b6f4e88?auto=format&fit=crop&w=800&q=80",
+      "title": "Vitamina proteica de cacau",
+      "description": "Cremosa, prática e ótima para pós-treino.",
+      "meal": "breakfast",
+      "diets": [
+        "vegetarian",
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 6,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 360,
+        "protein": 28,
+        "carbs": 38,
+        "fat": 10
+      },
+      "ingredients": [
+        "250 ml de leite (ou bebida vegetal)",
+        "1 banana congelada",
+        "1 colher (sopa) de cacau em pó",
+        "1 colher (sopa) de pasta de amendoim",
+        "Gelo a gosto"
+      ],
+      "steps": [
+        "Bata tudo no liquidificador até ficar bem cremoso.",
+        "Sirva imediatamente."
+      ]
+    },
+    {
+      "id": "salada-grao-de-bico",
+      "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80",
+      "title": "Salada de grão-de-bico",
+      "description": "Refrescante, rica em fibras e ótima para marmita.",
+      "meal": "lunch",
+      "diets": [
+        "vegan",
+        "glutenFree"
+      ],
+      "tags": [
+        "quick",
+        "seasonal"
+      ],
+      "timeMinutes": 15,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 410,
+        "protein": 16,
+        "carbs": 58,
+        "fat": 12
+      },
+      "ingredients": [
+        "1 xícara de grão-de-bico cozido",
+        "1 tomate em cubos",
+        "1/2 pepino em cubos",
+        "Salsinha a gosto",
+        "Suco de 1/2 limão",
+        "1 colher (sopa) de azeite",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Misture grão-de-bico, tomate e pepino.",
+        "Tempere com limão, azeite, sal, pimenta e salsinha.",
+        "Leve à geladeira por 10 min (opcional) para ficar mais fresca."
+      ]
+    },
+    {
+      "id": "frango-arroz-integral",
+      "imageUrl": "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=800&q=80",
+      "title": "Frango grelhado com arroz integral",
+      "description": "Clássico equilibrado para o almoço.",
+      "meal": "lunch",
+      "diets": [
+        "glutenFree",
+        "highProtein",
+        "lowFat"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 25,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 520,
+        "protein": 42,
+        "carbs": 58,
+        "fat": 12
+      },
+      "ingredients": [
+        "150 g de peito de frango",
+        "3/4 xícara de arroz integral cozido",
+        "1 xícara de brócolis",
+        "Sal, alho e páprica a gosto",
+        "1 colher (chá) de azeite"
+      ],
+      "steps": [
+        "Tempere o frango e grelhe no azeite até dourar.",
+        "Cozinhe o brócolis no vapor por 3–4 min.",
+        "Sirva com arroz integral."
+      ]
+    },
+    {
+      "id": "bowl-quinoa-legumes",
+      "imageUrl": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=80",
+      "title": "Bowl de quinoa com legumes",
+      "description": "Colorido e nutritivo, com bom equilíbrio de macros.",
+      "meal": "lunch",
+      "diets": [
+        "vegan",
+        "glutenFree"
+      ],
+      "tags": [
+        "world",
+        "seasonal"
+      ],
+      "timeMinutes": 25,
+      "difficulty": "medium",
+      "nutrition": {
+        "calories": 480,
+        "protein": 18,
+        "carbs": 68,
+        "fat": 14
+      },
+      "ingredients": [
+        "3/4 xícara de quinoa cozida",
+        "1/2 cenoura ralada",
+        "1/2 xícara de repolho roxo fatiado",
+        "1/2 abacate em fatias",
+        "1 colher (sopa) de tahine",
+        "Suco de 1/2 limão",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Monte o bowl com quinoa, cenoura, repolho e abacate.",
+        "Misture tahine com limão e um pouco de água para virar molho.",
+        "Regue o bowl e ajuste sal/pimenta."
+      ]
+    },
+    {
+      "id": "sopa-abobora-gengibre",
+      "imageUrl": "https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?auto=format&fit=crop&w=800&q=80",
+      "title": "Sopa de abóbora com gengibre",
+      "description": "Conforto leve para o jantar, com sabor marcante.",
+      "meal": "dinner",
+      "diets": [
+        "vegan",
+        "glutenFree",
+        "lowFat"
+      ],
+      "tags": [
+        "seasonal"
+      ],
+      "timeMinutes": 35,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 280,
+        "protein": 6,
+        "carbs": 48,
+        "fat": 7
+      },
+      "ingredients": [
+        "2 xícaras de abóbora em cubos",
+        "1/2 cebola picada",
+        "1 dente de alho",
+        "1 colher (chá) de gengibre ralado",
+        "3 xícaras de água",
+        "Sal e pimenta a gosto",
+        "1 colher (chá) de azeite"
+      ],
+      "steps": [
+        "Refogue cebola e alho no azeite.",
+        "Adicione abóbora, gengibre e água e cozinhe até amaciar.",
+        "Bata no liquidificador e ajuste sal/pimenta."
+      ]
+    },
+    {
+      "id": "tacos-feijao-preto",
+      "imageUrl": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=800&q=80",
+      "title": "Tacos de feijão preto",
+      "description": "Versão prática com tempero mexicano e boa saciedade.",
+      "meal": "dinner",
+      "diets": [
+        "vegan"
+      ],
+      "tags": [
+        "mexican",
+        "world"
+      ],
+      "timeMinutes": 20,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 460,
+        "protein": 16,
+        "carbs": 72,
+        "fat": 12
+      },
+      "ingredients": [
+        "1 xícara de feijão preto cozido",
+        "4 tortilhas de milho",
+        "1/2 tomate picado",
+        "1/2 cebola picada",
+        "Coentro a gosto",
+        "Suco de 1/2 limão",
+        "Cominho e páprica a gosto"
+      ],
+      "steps": [
+        "Amasse levemente o feijão e aqueça com os temperos.",
+        "Aqueça as tortilhas em frigideira seca.",
+        "Monte com feijão, tomate, cebola, coentro e limão."
+      ]
+    },
+    {
+      "id": "wrap-atum-iogurte",
+      "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+      "title": "Wrap de atum com iogurte",
+      "description": "Rápido, proteico e ótimo para lanche reforçado.",
+      "meal": "snack",
+      "diets": [
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 10,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 390,
+        "protein": 30,
+        "carbs": 38,
+        "fat": 12
+      },
+      "ingredients": [
+        "1 lata de atum (escorrido)",
+        "2 colheres (sopa) de iogurte natural",
+        "1 colher (sopa) de milho",
+        "Folhas de alface",
+        "1 wrap (tortilha) integral",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Misture atum com iogurte, milho, sal e pimenta.",
+        "Coloque no wrap com alface e enrole."
+      ]
+    },
+    {
+      "id": "snack-banana-amendoim",
+      "imageUrl": "https://images.unsplash.com/photo-1528659106015-ab650a2e3791?auto=format&fit=crop&w=800&q=80",
+      "title": "Banana com pasta de amendoim",
+      "description": "Lanche simples com energia e saciedade.",
+      "meal": "snack",
+      "diets": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 3,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 260,
+        "protein": 7,
+        "carbs": 30,
+        "fat": 13
+      },
+      "ingredients": [
+        "1 banana",
+        "1 colher (sopa) de pasta de amendoim",
+        "Canela a gosto (opcional)"
+      ],
+      "steps": [
+        "Corte a banana e espalhe a pasta de amendoim por cima.",
+        "Finalize com canela (opcional)."
+      ]
+    },
+    {
+      "id": "salada-caprese-fit",
+      "imageUrl": "https://images.unsplash.com/photo-1529312266912-b33cf6227e2f?auto=format&fit=crop&w=800&q=80",
+      "title": "Salada caprese fit",
+      "description": "Leve e fresca, com tomate, manjericão e queijo.",
+      "meal": "dinner",
+      "diets": [
+        "vegetarian",
+        "glutenFree",
+        "lowCarb"
+      ],
+      "tags": [
+        "seasonal",
+        "quick",
+        "world"
+      ],
+      "timeMinutes": 10,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 330,
+        "protein": 18,
+        "carbs": 12,
+        "fat": 22
+      },
+      "ingredients": [
+        "2 tomates em rodelas",
+        "100 g de muçarela",
+        "Manjericão a gosto",
+        "1 colher (sopa) de azeite",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Intercale tomate e muçarela em um prato.",
+        "Finalize com manjericão, azeite, sal e pimenta."
+      ]
+    },
+    {
+      "id": "aveia-overnight-cacau",
+      "imageUrl": "https://plus.unsplash.com/premium_photo-1663852297267-827c73e7529e?auto=format&fit=crop&w=800&q=80",
+      "title": "Overnight oats de cacau",
+      "description": "Prepare à noite e tenha um café pronto pela manhã.",
+      "meal": "breakfast",
+      "diets": [
+        "vegetarian"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 8,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 370,
+        "protein": 16,
+        "carbs": 54,
+        "fat": 10
+      },
+      "ingredients": [
+        "1/2 xícara de aveia",
+        "200 ml de leite (ou bebida vegetal)",
+        "1 colher (sopa) de cacau em pó",
+        "1 colher (chá) de mel (opcional)",
+        "1/2 banana amassada"
+      ],
+      "steps": [
+        "Misture tudo em um pote com tampa.",
+        "Leve à geladeira por pelo menos 6 horas.",
+        "Sirva gelado."
+      ]
+    },
+    {
+      "id": "tapioca-queijo-tomate",
+      "imageUrl": "https://images.unsplash.com/photo-1615887023516-9b6bcd559e87?auto=format&fit=crop&w=800&q=80",
+      "title": "Tapioca com queijo e tomate",
+      "description": "Café rápido com proteínas e saciedade.",
+      "meal": "breakfast",
+      "diets": [
+        "glutenFree",
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 10,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 280,
+        "protein": 12,
+        "carbs": 42,
+        "fat": 8
+      },
+      "ingredients": [
+        "2 colheres (sopa) de goma de tapioca",
+        "40 g de queijo minas",
+        "1/2 tomate em rodelas",
+        "Sal e orégano a gosto"
+      ],
+      "steps": [
+        "Espalhe a goma na frigideira e aqueça até firmar.",
+        "Recheie com queijo e tomate.",
+        "Dobre e aqueça mais 1 minuto."
+      ]
+    },
+    {
+      "id": "mingau-aveia-maca",
+      "imageUrl": "https://images.unsplash.com/photo-1517673400267-36070605a916?auto=format&fit=crop&w=800&q=80",
+      "title": "Mingau de aveia com maçã",
+      "description": "Conforto leve e rico em fibras.",
+      "meal": "breakfast",
+      "diets": [
+        "vegetarian"
+      ],
+      "tags": [
+        "quick",
+        "seasonal"
+      ],
+      "timeMinutes": 12,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 310,
+        "protein": 12,
+        "carbs": 48,
+        "fat": 8
+      },
+      "ingredients": [
+        "1/2 xícara de aveia",
+        "250 ml de leite",
+        "1/2 maçã em cubos",
+        "Canela a gosto"
+      ],
+      "steps": [
+        "Aqueça o leite e adicione a aveia.",
+        "Cozinhe mexendo até engrossar.",
+        "Adicione a maçã e finalize com canela."
+      ]
+    },
+    {
+      "id": "panqueca-banana-aveia",
+      "imageUrl": "https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=800&q=80",
+      "title": "Panqueca de banana e aveia",
+      "description": "Doce natural e prática.",
+      "meal": "breakfast",
+      "diets": [
+        "vegetarian"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 15,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 330,
+        "protein": 14,
+        "carbs": 50,
+        "fat": 8
+      },
+      "ingredients": [
+        "1 banana madura",
+        "1 ovo",
+        "3 colheres (sopa) de aveia",
+        "Canela a gosto"
+      ],
+      "steps": [
+        "Amasse a banana e misture com o ovo e a aveia.",
+        "Despeje pequenas porções em frigideira antiaderente.",
+        "Doure dos dois lados."
+      ]
+    },
+    {
+      "id": "cuscuz-ovo",
+      "imageUrl": "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=800&q=80",
+      "title": "Cuscuz com ovos mexidos",
+      "description": "Clássico nordestino rápido.",
+      "meal": "breakfast",
+      "diets": [
+        "glutenFree",
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 15,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 360,
+        "protein": 18,
+        "carbs": 48,
+        "fat": 10
+      },
+      "ingredients": [
+        "1 xícara de cuscuz de milho cozido",
+        "2 ovos",
+        "Sal e pimenta a gosto",
+        "1 colher (chá) de azeite"
+      ],
+      "steps": [
+        "Prepare o cuscuz conforme instruções.",
+        "Mexa os ovos com sal e pimenta.",
+        "Refogue os ovos no azeite e sirva com o cuscuz."
+      ]
+    },
+    {
+      "id": "smoothie-verde",
+      "imageUrl": "https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=800&q=80",
+      "title": "Smoothie verde refrescante",
+      "description": "Leve, vegano e cheio de fibras.",
+      "meal": "breakfast",
+      "diets": [
+        "vegan",
+        "lowFat"
+      ],
+      "tags": [
+        "quick",
+        "seasonal"
+      ],
+      "timeMinutes": 6,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 220,
+        "protein": 6,
+        "carbs": 40,
+        "fat": 4
+      },
+      "ingredients": [
+        "1 maçã verde",
+        "1 punhado de couve",
+        "1/2 pepino",
+        "200 ml de água gelada",
+        "Suco de 1/2 limão"
+      ],
+      "steps": [
+        "Bata tudo no liquidificador até ficar homogêneo.",
+        "Sirva gelado."
+      ]
+    },
+    {
+      "id": "salada-lentilha",
+      "imageUrl": "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80",
+      "title": "Salada de lentilha",
+      "description": "Rica em fibras e ótima para marmita.",
+      "meal": "lunch",
+      "diets": [
+        "vegan",
+        "glutenFree"
+      ],
+      "tags": [
+        "seasonal"
+      ],
+      "timeMinutes": 20,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 420,
+        "protein": 18,
+        "carbs": 60,
+        "fat": 12
+      },
+      "ingredients": [
+        "1 xícara de lentilha cozida",
+        "1/2 cebola roxa picada",
+        "1 tomate em cubos",
+        "Salsinha a gosto",
+        "1 colher (sopa) de azeite",
+        "Suco de 1/2 limão"
+      ],
+      "steps": [
+        "Misture lentilha, cebola e tomate.",
+        "Tempere com azeite, limão e salsinha.",
+        "Sirva fria."
+      ]
+    },
+    {
+      "id": "tilapia-legumes",
+      "imageUrl": "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80",
+      "title": "Tilápia com legumes no forno",
+      "description": "Proteína leve com legumes assados.",
+      "meal": "lunch",
+      "diets": [
+        "glutenFree",
+        "lowFat",
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 30,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 390,
+        "protein": 38,
+        "carbs": 18,
+        "fat": 14
+      },
+      "ingredients": [
+        "150 g de tilápia",
+        "1/2 abobrinha em rodelas",
+        "1/2 cenoura em tiras",
+        "1 colher (chá) de azeite",
+        "Sal, limão e ervas a gosto"
+      ],
+      "steps": [
+        "Tempere a tilápia com sal, limão e ervas.",
+        "Distribua os legumes em assadeira com azeite.",
+        "Asse tudo por 20–25 min a 200°C."
+      ]
+    },
+    {
+      "id": "carne-moida-abobrinha",
+      "imageUrl": "https://images.unsplash.com/photo-1547496502-ffa222f79629?auto=format&fit=crop&w=800&q=80",
+      "title": "Carne moída com abobrinha",
+      "description": "Opção low carb rápida.",
+      "meal": "lunch",
+      "diets": [
+        "lowCarb",
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 20,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 410,
+        "protein": 32,
+        "carbs": 12,
+        "fat": 26
+      },
+      "ingredients": [
+        "150 g de carne moída",
+        "1/2 abobrinha em cubos",
+        "1/2 cebola picada",
+        "Alho, sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Refogue cebola e alho.",
+        "Adicione a carne e cozinhe até dourar.",
+        "Junte a abobrinha e cozinhe por 3–4 min."
+      ]
+    },
+    {
+      "id": "frango-mexicano",
+      "imageUrl": "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=800&q=80",
+      "title": "Frango mexicano com arroz",
+      "description": "Sabor marcante e fácil de preparar.",
+      "meal": "lunch",
+      "diets": [
+        "highProtein"
+      ],
+      "tags": [
+        "mexican",
+        "world"
+      ],
+      "timeMinutes": 25,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 470,
+        "protein": 40,
+        "carbs": 35,
+        "fat": 16
+      },
+      "ingredients": [
+        "150 g de peito de frango em cubos",
+        "1/2 xícara de arroz cozido",
+        "1/2 tomate picado",
+        "1/4 cebola roxa",
+        "Páprica e cominho a gosto"
+      ],
+      "steps": [
+        "Tempere o frango com páprica e cominho.",
+        "Grelhe o frango até dourar.",
+        "Misture com tomate e cebola e sirva com arroz."
+      ]
+    },
+    {
+      "id": "salada-caesar-light",
+      "imageUrl": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?auto=format&fit=crop&w=800&q=80",
+      "title": "Salada Caesar light",
+      "description": "Versão mais leve e proteica.",
+      "meal": "lunch",
+      "diets": [
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 15,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 430,
+        "protein": 32,
+        "carbs": 24,
+        "fat": 22
+      },
+      "ingredients": [
+        "2 xícaras de alface romana",
+        "120 g de frango grelhado",
+        "2 colheres (sopa) de iogurte natural",
+        "1 colher (sopa) de parmesão",
+        "Croutons opcionais"
+      ],
+      "steps": [
+        "Misture iogurte e parmesão para o molho.",
+        "Monte a salada com alface e frango.",
+        "Finalize com molho e croutons."
+      ]
+    },
+    {
+      "id": "arroz-feijao-legumes",
+      "imageUrl": "https://images.unsplash.com/photo-1662998634591-d8ecb05db422?auto=format&fit=crop&w=800&q=80",
+      "title": "Arroz, feijão e legumes",
+      "description": "Clássico brasileiro com legumes.",
+      "meal": "lunch",
+      "diets": [
+        "vegetarian"
+      ],
+      "tags": [
+        "seasonal"
+      ],
+      "timeMinutes": 25,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 480,
+        "protein": 16,
+        "carbs": 78,
+        "fat": 12
+      },
+      "ingredients": [
+        "1/2 xícara de arroz cozido",
+        "1/2 xícara de feijão cozido",
+        "1/2 xícara de legumes cozidos",
+        "1 colher (chá) de azeite",
+        "Sal a gosto"
+      ],
+      "steps": [
+        "Aqueça arroz e feijão.",
+        "Misture os legumes e finalize com azeite.",
+        "Sirva em seguida."
+      ]
+    },
+    {
+      "id": "bowl-salmao-legumes",
+      "imageUrl": "https://images.unsplash.com/photo-1467003909585-2f8a7270028d?auto=format&fit=crop&w=800&q=80",
+      "title": "Bowl de salmão com legumes",
+      "description": "Equilíbrio de proteína e gorduras boas.",
+      "meal": "dinner",
+      "diets": [
+        "glutenFree",
+        "highProtein"
+      ],
+      "tags": [
+        "world"
+      ],
+      "timeMinutes": 30,
+      "difficulty": "medium",
+      "nutrition": {
+        "calories": 520,
+        "protein": 35,
+        "carbs": 28,
+        "fat": 28
+      },
+      "ingredients": [
+        "150 g de salmão grelhado",
+        "1/2 xícara de quinoa cozida",
+        "1/2 xícara de legumes no vapor",
+        "Limão e sal a gosto"
+      ],
+      "steps": [
+        "Grelhe o salmão e tempere.",
+        "Monte o bowl com quinoa e legumes.",
+        "Finalize com o salmão e limão."
+      ]
+    },
+    {
+      "id": "sopa-lentilha",
+      "imageUrl": "https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=800&q=80",
+      "title": "Sopa de lentilha",
+      "description": "Jantar leve e nutritivo.",
+      "meal": "dinner",
+      "diets": [
+        "vegan",
+        "glutenFree",
+        "lowFat"
+      ],
+      "tags": [
+        "seasonal"
+      ],
+      "timeMinutes": 35,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 350,
+        "protein": 18,
+        "carbs": 54,
+        "fat": 6
+      },
+      "ingredients": [
+        "1 xícara de lentilha",
+        "1/2 cebola picada",
+        "1 cenoura em cubos",
+        "2 dentes de alho",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Refogue cebola e alho.",
+        "Adicione lentilha, cenoura e água.",
+        "Cozinhe até a lentilha amaciar."
+      ]
+    },
+    {
+      "id": "abobrinha-recheada",
+      "imageUrl": "https://images.unsplash.com/photo-1590412200988-a436970781fa?auto=format&fit=crop&w=800&q=80",
+      "title": "Abobrinha recheada",
+      "description": "Leve e saborosa para o jantar.",
+      "meal": "dinner",
+      "diets": [
+        "vegetarian",
+        "lowCarb"
+      ],
+      "tags": [
+        "seasonal"
+      ],
+      "timeMinutes": 30,
+      "difficulty": "medium",
+      "nutrition": {
+        "calories": 300,
+        "protein": 18,
+        "carbs": 18,
+        "fat": 16
+      },
+      "ingredients": [
+        "2 abobrinhas",
+        "100 g de ricota",
+        "1 tomate picado",
+        "1 colher (chá) de azeite",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Corte as abobrinhas ao meio e retire o miolo.",
+        "Misture ricota e tomate e recheie.",
+        "Asse por 20 min a 200°C."
+      ]
+    },
+    {
+      "id": "frango-desfiado-legumes",
+      "imageUrl": "https://images.unsplash.com/photo-1594998893017-361476d1e466?auto=format&fit=crop&w=800&q=80",
+      "title": "Frango desfiado com legumes",
+      "description": "Jantar proteico e rápido.",
+      "meal": "dinner",
+      "diets": [
+        "highProtein",
+        "lowFat"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 20,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 360,
+        "protein": 38,
+        "carbs": 12,
+        "fat": 10
+      },
+      "ingredients": [
+        "150 g de frango cozido desfiado",
+        "1/2 xícara de legumes cozidos",
+        "1 colher (chá) de azeite",
+        "Sal e pimenta a gosto"
+      ],
+      "steps": [
+        "Aqueça o frango com azeite.",
+        "Adicione os legumes e misture.",
+        "Ajuste sal e pimenta."
+      ]
+    },
+    {
+      "id": "sanduba-peru",
+      "imageUrl": "https://images.unsplash.com/photo-1554433607-66b5efe9d304?auto=format&fit=crop&w=800&q=80",
+      "title": "Sanduíche natural de peru",
+      "description": "Lanche rápido e proteico.",
+      "meal": "snack",
+      "diets": [
+        "highProtein"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 8,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 290,
+        "protein": 22,
+        "carbs": 28,
+        "fat": 8
+      },
+      "ingredients": [
+        "2 fatias de pão integral",
+        "60 g de peito de peru",
+        "1 colher (sopa) de ricota",
+        "Folhas de alface e tomate"
+      ],
+      "steps": [
+        "Passe a ricota no pão.",
+        "Adicione peito de peru, alface e tomate.",
+        "Feche e sirva."
+      ]
+    },
+    {
+      "id": "hummus-cenoura",
+      "imageUrl": "https://images.unsplash.com/photo-1637361890611-698ebae34808?auto=format&fit=crop&w=800&q=80",
+      "title": "Hummus com cenoura",
+      "description": "Snack vegano com fibras.",
+      "meal": "snack",
+      "diets": [
+        "vegan",
+        "glutenFree"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 10,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 240,
+        "protein": 8,
+        "carbs": 28,
+        "fat": 10
+      },
+      "ingredients": [
+        "1/2 xícara de grão-de-bico cozido",
+        "1 colher (sopa) de tahine",
+        "Suco de 1/2 limão",
+        "Palitos de cenoura"
+      ],
+      "steps": [
+        "Bata grão-de-bico, tahine e limão até virar pasta.",
+        "Sirva com palitos de cenoura."
+      ]
+    },
+    {
+      "id": "iogurte-grego-mel-nozes",
+      "imageUrl": "https://images.unsplash.com/photo-1571212515416-f786061136da?auto=format&fit=crop&w=800&q=80",
+      "title": "Iogurte grego com mel e nozes",
+      "description": "Doce equilibrado para a tarde.",
+      "meal": "snack",
+      "diets": [
+        "vegetarian"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 5,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 280,
+        "protein": 16,
+        "carbs": 26,
+        "fat": 12
+      },
+      "ingredients": [
+        "170 g de iogurte grego",
+        "1 colher (chá) de mel",
+        "1 colher (sopa) de nozes picadas"
+      ],
+      "steps": [
+        "Misture o mel ao iogurte.",
+        "Finalize com as nozes."
+      ]
+    },
+    {
+      "id": "mix-castanhas-frutas",
+      "imageUrl": "https://images.unsplash.com/photo-1596277271926-d68f77279374?auto=format&fit=crop&w=800&q=80",
+      "title": "Mix de castanhas e frutas secas",
+      "description": "Lanche prático para levar.",
+      "meal": "snack",
+      "diets": [
+        "vegan",
+        "glutenFree"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 3,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 260,
+        "protein": 6,
+        "carbs": 20,
+        "fat": 16
+      },
+      "ingredients": [
+        "1 punhado de castanhas",
+        "1 colher (sopa) de uvas passas",
+        "1 colher (sopa) de damasco seco"
+      ],
+      "steps": [
+        "Misture tudo e porcione."
+      ]
+    },
+    {
+      "id": "tapioca-doce-coco",
+      "imageUrl": "https://images.unsplash.com/photo-1558231920-d3a377061d49?auto=format&fit=crop&w=800&q=80",
+      "title": "Tapioca doce com coco",
+      "description": "Snack sem glúten e saboroso.",
+      "meal": "snack",
+      "diets": [
+        "vegetarian",
+        "glutenFree"
+      ],
+      "tags": [
+        "quick"
+      ],
+      "timeMinutes": 10,
+      "difficulty": "easy",
+      "nutrition": {
+        "calories": 310,
+        "protein": 4,
+        "carbs": 52,
+        "fat": 10
+      },
+      "ingredients": [
+        "2 colheres (sopa) de goma de tapioca",
+        "1 colher (sopa) de coco ralado",
+        "1 colher (chá) de mel"
+      ],
+      "steps": [
+        "Prepare a tapioca na frigideira.",
+        "Recheie com coco e finalize com mel."
+      ]
+    }
+  ]
+}

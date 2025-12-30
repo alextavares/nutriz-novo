@@ -1,0 +1,124 @@
+Analyzing onboarding...                                         
+
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:91:11 - omit_local_variable_types
+  error - The named parameter 'sleepDuration' isn't defined - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:111:28 - undefined_named_parameter
+  error - The named parameter 'waterIntake' isn't defined - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:115:28 - undefined_named_parameter
+  error - The named parameter 'badHabits' isn't defined - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:119:28 - undefined_named_parameter
+  error - The getter 'badHabits' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:123:45 - undefined_getter
+  error - The named parameter 'badHabits' isn't defined - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:129:28 - undefined_named_parameter
+  error - The named parameter 'motivations' isn't defined - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:133:28 - undefined_named_parameter
+  error - The getter 'motivations' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:137:45 - undefined_getter
+  error - The named parameter 'motivations' isn't defined - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:143:28 - undefined_named_parameter
+warning - Unused import: 'package:flutter_animate/flutter_animate.dart' - lib\features\onboarding\presentation\pages\onboarding_page.dart:3:8 - unused_import
+   info - The import of 'package:flutter/foundation.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\features\onboarding\presentation\pages\onboarding_page.dart:5:8 - unnecessary_import
+warning - The declaration '_proUpsellPageIndex' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:79:11 - unused_element
+warning - The declaration '_suggestFirstMealType' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:92:10 - unused_element
+warning - The declaration '_previousPage' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:110:8 - unused_element
+  error - The getter 'motivations' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:197:24 - undefined_getter
+warning - This default clause is covered by the previous cases - lib\features\onboarding\presentation\pages\onboarding_page.dart:204:7 - unreachable_switch_default
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\features\onboarding\presentation\pages\onboarding_page.dart:230:12 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:308:66 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:326:23 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:359:35 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:372:44 - unawaited_futures
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:387:37 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:401:44 - unawaited_futures
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:406:35 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:473:17 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:549:44 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:559:44 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:611:44 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:621:44 - unawaited_futures
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:676:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:687:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:698:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:711:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:725:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:748:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:760:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:761:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:772:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:773:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:784:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:785:27 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:824:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:846:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:994:32 - deprecated_member_use
+  error - The getter 'badHabits' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1145:35 - undefined_getter
+  error - The getter 'badHabits' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1151:35 - undefined_getter
+  error - The getter 'badHabits' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1157:35 - undefined_getter
+  error - The getter 'badHabits' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1163:35 - undefined_getter
+  error - The getter 'badHabits' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1169:35 - undefined_getter
+  error - The getter 'waterIntake' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1189:35 - undefined_getter
+  error - The getter 'waterIntake' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1197:35 - undefined_getter
+  error - The getter 'waterIntake' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1205:35 - undefined_getter
+  error - The getter 'waterIntake' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1213:35 - undefined_getter
+  error - The getter 'sleepDuration' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1233:35 - undefined_getter
+  error - The getter 'sleepDuration' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1242:35 - undefined_getter
+  error - The getter 'sleepDuration' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1251:35 - undefined_getter
+  error - The getter 'sleepDuration' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1260:35 - undefined_getter
+  error - The getter 'motivations' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1282:35 - undefined_getter
+  error - The getter 'motivations' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1288:35 - undefined_getter
+  error - The getter 'motivations' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1294:35 - undefined_getter
+  error - The getter 'motivations' isn't defined for the type 'UserProfile' - lib\features\onboarding\presentation\pages\onboarding_page.dart:1300:35 - undefined_getter
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1339:64 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1459:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1523:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1526:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1596:60 - deprecated_member_use
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:20:11 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:21:11 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:22:11 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:25:11 - omit_local_variable_types
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:26:9 - prefer_single_quotes
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:29:5 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:30:10 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:31:7 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:32:7 - omit_local_variable_types
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:66:56 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:79:29 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:94:23 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:105:23 - prefer_single_quotes
+   info - Unnecessary braces in a string interpolation - lib\features\onboarding\presentation\pages\prediction_screen.dart:105:35 - unnecessary_brace_in_string_interps
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:121:60 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:134:40 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:135:41 - prefer_single_quotes
+   info - Unnecessary use of string interpolation - lib\features\onboarding\presentation\pages\prediction_screen.dart:135:41 - unnecessary_string_interpolations
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:147:37 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:156:40 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:157:41 - prefer_single_quotes
+   info - Unnecessary use of string interpolation - lib\features\onboarding\presentation\pages\prediction_screen.dart:157:41 - unnecessary_string_interpolations
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:176:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:217:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:220:45 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:240:33 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:267:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:268:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:276:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:277:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:285:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:286:36 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:301:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:309:52 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:321:31 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:347:45 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:373:33 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:388:25 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:407:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:408:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:409:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:410:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:411:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:412:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:413:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:414:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:415:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:416:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:417:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:418:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:419:7 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:448:39 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:464:13 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:495:22 - deprecated_member_use
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\widgets\calculating_step.dart:29:10 - omit_local_variable_types
+

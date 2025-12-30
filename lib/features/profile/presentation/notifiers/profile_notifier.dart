@@ -12,7 +12,7 @@ class ProfileNotifier extends _$ProfileNotifier {
     _loadProfile();
     // Return default/loading state initially
     return UserProfile(
-      id: 'loading',
+      id: ProfileRepository.singleProfileId,
       gender: Gender.male,
       birthDate: DateTime(1990, 1, 1),
       height: 170,
@@ -26,6 +26,7 @@ class ProfileNotifier extends _$ProfileNotifier {
       proteinGrams: 150,
       carbsGrams: 200,
       fatGrams: 65,
+      favoriteFoodKeys: const [],
       isOnboardingCompleted: false,
     );
   }

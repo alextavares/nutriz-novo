@@ -41,25 +41,25 @@ extension MeasurementTypeExtension on MeasurementType {
   String get displayName {
     switch (this) {
       case MeasurementType.weight:
-        return 'Weight';
+        return 'Peso';
       case MeasurementType.bodyFat:
-        return 'Body Fat';
+        return 'Gordura corporal';
       case MeasurementType.bloodPressure:
-        return 'Blood Pressure';
+        return 'Pressão arterial';
       case MeasurementType.bloodGlucose:
-        return 'Blood Glucose';
+        return 'Glicose no sangue';
       case MeasurementType.muscleMass:
-        return 'Muscle Mass';
+        return 'Massa muscular';
       case MeasurementType.waist:
-        return 'Waist';
+        return 'Cintura';
       case MeasurementType.hips:
-        return 'Hips';
+        return 'Quadril';
       case MeasurementType.chest:
-        return 'Chest';
+        return 'Peito';
       case MeasurementType.thighs:
-        return 'Thighs';
+        return 'Coxas';
       case MeasurementType.upperArms:
-        return 'Upper Arms';
+        return 'Braços';
     }
   }
 

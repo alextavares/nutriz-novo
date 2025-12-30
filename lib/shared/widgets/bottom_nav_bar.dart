@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_colors.dart';
+
 class NutrizBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
@@ -14,53 +16,55 @@ class NutrizBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(24),
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
+        color: AppColors.surface.withOpacity(0.85),
+        borderRadius: BorderRadius.circular(36),
+        border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: AppColors.shadow.withOpacity(0.15),
+            blurRadius: 24,
+            offset: const Offset(0, 12),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(36),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _NavBarItem(
-                  icon: Icons.book_rounded,
-                  label: 'Diary',
+                  icon: Icons
+                      .grid_view_rounded, // Changed from book to Grid (Dashboard)
+                  label: 'Diário',
                   isSelected: currentIndex == 0,
                   onTap: () => onTap(0),
                 ),
                 _NavBarItem(
-                  icon: Icons.timer_rounded,
-                  label: 'Fasting',
+                  icon: Icons.timelapse_rounded,
+                  label: 'Jejum',
                   isSelected: currentIndex == 1,
                   onTap: () => onTap(1),
                 ),
                 _NavBarItem(
-                  icon: Icons.restaurant_menu_rounded,
-                  label: 'Recipes',
+                  icon: Icons.restaurant_rounded,
+                  label: 'Receitas',
                   isSelected: currentIndex == 2,
                   onTap: () => onTap(2),
                 ),
                 _NavBarItem(
-                  icon: Icons.person_rounded,
-                  label: 'Profile',
+                  icon: Icons.person_outline_rounded,
+                  label: 'Perfil',
                   isSelected: currentIndex == 3,
                   onTap: () => onTap(3),
                 ),
                 _NavBarItem(
-                  icon: Icons.star_rounded,
+                  icon: Icons.workspace_premium_rounded,
                   label: 'Premium',
                   isSelected: currentIndex == 4,
                   onTap: () => onTap(4),
@@ -92,9 +96,8 @@ class _NavBarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected
-        ? (isPremium ? const Color(0xFFFFD700) : const Color(0xFF8E24AA))
-        : Colors.grey[400];
+    final selectedColor = isPremium ? AppColors.premium : AppColors.primary;
+    final color = isSelected ? selectedColor : AppColors.textHint;
 
     return GestureDetector(
       onTap: onTap,
@@ -103,7 +106,9 @@ class _NavBarItem extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? color!.withValues(alpha: 0.1) : Colors.transparent,
+          color: isSelected
+              ? selectedColor.withValues(alpha: 0.12)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -115,7 +120,7 @@ class _NavBarItem extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: color,
               ),
             ),

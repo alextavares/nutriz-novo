@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/constants/app_typography.dart';
 import '../../domain/entities/meal.dart';
 
 class MealSectionImproved extends StatelessWidget {
+  final MealType mealType;
   final String title;
   final List<Meal> meals;
   final VoidCallback onAddPressed;
@@ -12,6 +15,7 @@ class MealSectionImproved extends StatelessWidget {
 
   const MealSectionImproved({
     super.key,
+    required this.mealType,
     required this.title,
     required this.meals,
     required this.onAddPressed,
@@ -28,13 +32,14 @@ class MealSectionImproved extends StatelessWidget {
     );
 
     // Determine goal based on meal type (placeholder logic)
-    var goal = 0;
-    if (title.contains('Breakfast') || title.contains('Café')) goal = 400;
-    if (title.contains('Lunch') || title.contains('Almoço')) goal = 600;
-    if (title.contains('Dinner') || title.contains('Jantar')) goal = 500;
-    if (title.contains('Snack') || title.contains('Lanche')) goal = 200;
+    final goal = switch (mealType) {
+      MealType.breakfast => 400,
+      MealType.lunch => 600,
+      MealType.dinner => 500,
+      MealType.snack => 200,
+    };
 
-    final progress = goal > 0 ? (totalCalories / goal).clamp(0.0, 1.0) : 0.0;
+    final progress = (totalCalories / goal).clamp(0.0, 1.0);
     final foodCount = meals.fold<int>(
       0,
       (sum, meal) => sum + meal.foods.length,
@@ -44,18 +49,21 @@ class MealSectionImproved extends StatelessWidget {
     final hasFoodItems = foodCount > 0;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: hasFoodItems
-            ? Border.all(color: _getMealColor(title).withValues(alpha: 0.3), width: 2)
-            : null,
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+        border: Border.all(
+          color: hasFoodItems
+              ? _getMealColor(mealType).withValues(alpha: 0.22)
+              : AppColors.border,
+          width: hasFoodItems ? 1.5 : 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: hasFoodItems
-                ? _getMealColor(title).withValues(alpha: 0.08)
-                : Colors.black.withValues(alpha: 0.03),
+                ? _getMealColor(mealType).withValues(alpha: 0.10)
+                : AppColors.shadow,
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -69,7 +77,7 @@ class MealSectionImproved extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                _getMealIcon(title),
+                _getMealIcon(mealType),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -79,10 +87,8 @@ class MealSectionImproved extends StatelessWidget {
                         children: [
                           Text(
                             title,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1A1A1A),
+                            style: AppTypography.titleMedium.copyWith(
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                           if (foodCount > 0) ...[
@@ -97,11 +103,10 @@ class MealSectionImproved extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
-                                '$foodCount ${foodCount == 1 ? 'item' : 'items'}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w600,
+                                '$foodCount ${foodCount == 1 ? 'item' : 'itens'}',
+                                style: AppTypography.labelSmall.copyWith(
                                   color: AppColors.primary,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
                             ),
@@ -113,19 +118,18 @@ class MealSectionImproved extends StatelessWidget {
                         children: [
                           Text(
                             '${totalCalories.toInt()} / $goal',
-                            style: TextStyle(
+                            style: AppTypography.caption.copyWith(
                               fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textSecondary,
                             ),
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Cal',
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey[500],
+                            'kcal',
+                            style: AppTypography.labelSmall.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.textHint,
                             ),
                           ),
                         ],
@@ -139,7 +143,7 @@ class MealSectionImproved extends StatelessWidget {
           ),
 
           // Progress Bar
-          if (meals.isNotEmpty)
+          if (hasFoodItems)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -149,7 +153,7 @@ class MealSectionImproved extends StatelessWidget {
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: 6,
-                      backgroundColor: Colors.grey[100],
+                      backgroundColor: AppColors.surfaceVariant,
                       valueColor: AlwaysStoppedAnimation<Color>(
                         _getProgressColor(progress),
                       ),
@@ -160,10 +164,9 @@ class MealSectionImproved extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       '${(progress * 100).toInt()}%',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey[500],
+                      style: AppTypography.labelSmall.copyWith(
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.textHint,
                       ),
                     ),
                   ),
@@ -172,17 +175,61 @@ class MealSectionImproved extends StatelessWidget {
             ),
 
           // Food Items List
-          if (meals.isNotEmpty) ...[
+          if (!hasFoodItems) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: InkWell(
+                onTap: onAddPressed,
+                borderRadius: BorderRadius.circular(14),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceVariant,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.add_circle_outline_rounded,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'Toque em + para adicionar alimentos',
+                          style: AppTypography.bodyMedium.copyWith(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppColors.textHint,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+
+          if (hasFoodItems) ...[
             const SizedBox(height: 8),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Divider(height: 1, color: Color(0xFFF0F0F0)),
+              child: Divider(height: 1, color: AppColors.border),
             ),
             const SizedBox(height: 8),
             ...meals.expand(
               (meal) => meal.foods.map((foodItem) {
                 return Dismissible(
-                  key: Key(meal.id),
+                  key: Key('${meal.id}_${foodItem.food.id}'),
                   direction: DismissDirection.endToStart,
                   background: Container(
                     alignment: Alignment.centerRight,
@@ -192,11 +239,11 @@ class MealSectionImproved extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.red[400],
-                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.error.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(16),
                     ),
                     child: const Icon(
-                      Icons.delete_outline,
+                      Icons.delete_outline_rounded,
                       color: Colors.white,
                     ),
                   ),
@@ -205,14 +252,8 @@ class MealSectionImproved extends StatelessWidget {
                   },
                   child: InkWell(
                     onTap: () => onFoodTap?.call(meal, foodItem),
-                    borderRadius: BorderRadius.circular(12),
-                    child: _FoodItemRow(
-                      name: foodItem.food.name,
-                      quantity: foodItem.quantity,
-                      servingSize: foodItem.food.servingSize,
-                      servingUnit: foodItem.food.servingUnit,
-                      calories: foodItem.totalCalories.value.toInt(),
-                    ),
+                    borderRadius: BorderRadius.circular(16),
+                    child: _SmartFoodItemRow(foodItem: foodItem),
                   ),
                 );
               }),
@@ -225,53 +266,51 @@ class MealSectionImproved extends StatelessWidget {
   }
 
   Color _getProgressColor(double progress) {
-    if (progress < 0.5) return Colors.green;
-    if (progress < 0.9) return Colors.orange;
-    return Colors.red;
+    if (progress < 0.5) return AppColors.success;
+    if (progress < 0.9) return AppColors.warning;
+    return AppColors.error;
   }
 
-  Color _getMealColor(String title) {
-    if (title.contains('Café') || title.contains('Breakfast')) {
-      return const Color(0xFFFF9F43); // Orange
-    } else if (title.contains('Almoço') || title.contains('Lunch')) {
-      return const Color(0xFFFF6B6B); // Red/Pink
-    } else if (title.contains('Jantar') || title.contains('Dinner')) {
-      return const Color(0xFF5F27CD); // Purple
-    } else {
-      return const Color(0xFF1DD1A1); // Green/Teal
-    }
+  Color _getMealColor(MealType type) {
+    return switch (type) {
+      MealType.breakfast => const Color(0xFFFF9F43), // Orange
+      MealType.lunch => const Color(0xFFFF6B6B), // Red/Pink
+      MealType.dinner => const Color(0xFF5F27CD), // Purple
+      MealType.snack => const Color(0xFF1DD1A1), // Green/Teal
+    };
   }
 
-  Widget _getMealIcon(String title) {
-    IconData iconData;
-    Color color;
-    Color bgColor;
-
-    if (title.contains('Café') || title.contains('Breakfast')) {
-      iconData = Icons.wb_sunny_rounded;
-      color = const Color(0xFFFF9F43);
-      bgColor = const Color(0xFFFFF3E0);
-    } else if (title.contains('Almoço') || title.contains('Lunch')) {
-      iconData = Icons.restaurant_rounded;
-      color = const Color(0xFFFF6B6B);
-      bgColor = const Color(0xFFFFEBEE);
-    } else if (title.contains('Jantar') || title.contains('Dinner')) {
-      iconData = Icons.nights_stay_rounded;
-      color = const Color(0xFF5F27CD);
-      bgColor = const Color(0xFFEDE7F6);
-    } else {
-      iconData = Icons.local_cafe_rounded;
-      color = const Color(0xFF1DD1A1);
-      bgColor = const Color(0xFFE0F2F1);
-    }
+  Widget _getMealIcon(MealType type) {
+    final (iconData, color, bgColor) = switch (type) {
+      MealType.breakfast => (
+        Icons.wb_sunny_rounded,
+        const Color(0xFFFF9F43),
+        const Color(0xFFFFF3E0),
+      ),
+      MealType.lunch => (
+        Icons.restaurant_rounded,
+        const Color(0xFFFF6B6B),
+        const Color(0xFFFFEBEE),
+      ),
+      MealType.dinner => (
+        Icons.nights_stay_rounded,
+        const Color(0xFF5F27CD),
+        const Color(0xFFEDE7F6),
+      ),
+      MealType.snack => (
+        Icons.local_cafe_rounded,
+        const Color(0xFF1DD1A1),
+        const Color(0xFFE0F2F1),
+      ),
+    };
 
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
       ),
-      child: Icon(iconData, color: color, size: 20),
+      child: Icon(iconData, color: color, size: 22),
     );
   }
 }
@@ -287,12 +326,12 @@ class _FloatingAddButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: AppColors.primary,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(14),
             boxShadow: [
               BoxShadow(
                 color: AppColors.primary.withValues(alpha: 0.3),
@@ -308,75 +347,111 @@ class _FloatingAddButton extends StatelessWidget {
   }
 }
 
-class _FoodItemRow extends StatelessWidget {
-  final String name;
-  final double quantity;
-  final double servingSize;
-  final String servingUnit;
-  final int calories;
+class _SmartFoodItemRow extends StatelessWidget {
+  final FoodItem foodItem;
 
-  const _FoodItemRow({
-    required this.name,
-    required this.quantity,
-    required this.servingSize,
-    required this.servingUnit,
-    required this.calories,
-  });
+  const _SmartFoodItemRow({required this.foodItem});
 
   @override
   Widget build(BuildContext context) {
+    final food = foodItem.food;
+    final macros = food.macros;
+    final total = macros.carbs + macros.protein + macros.fat;
+
+    // Normalize macros for visuals
+    final pC = total > 0 ? macros.carbs / total : 0.0;
+    final pP = total > 0 ? macros.protein / total : 0.0;
+    final pF = total > 0 ? macros.fat / total : 0.0;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Food Icon/Image
+          // Food Icon/Image (Rounded Square)
           Container(
-            width: 40,
-            height: 40,
+            width: 44,
+            height: 44,
             decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.grey[200]!, width: 1),
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(_getFoodIcon(name), color: Colors.grey[400], size: 20),
+            child: Icon(
+              _getFoodIcon(food.name),
+              color: AppColors.textSecondary,
+              size: 24,
+            ),
           ),
-          const SizedBox(width: 12),
-          // Food Name and Details
+          const SizedBox(width: 14),
+
+          // Details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  food.name,
+                  style: AppTypography.bodyLarge.copyWith(
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF2D3436),
+                    color: AppColors.textPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
-                  '${quantity.toStringAsFixed(0)}x $servingSize$servingUnit',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[500],
-                    fontWeight: FontWeight.w500,
-                  ),
+                  '${foodItem.quantity.toStringAsFixed(0)}x ${food.servingSize}${food.servingUnit}',
+                  style: AppTypography.caption,
                 ),
+                const SizedBox(height: 6),
+                // Macro Bar
+                if (total > 0)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(2),
+                    child: Row(
+                      children: [
+                        _BarSegment(
+                          flex: (pP * 100).toInt(),
+                          color: AppColors.protein,
+                        ),
+                        _BarSegment(
+                          flex: (pC * 100).toInt(),
+                          color: AppColors.carbs,
+                        ),
+                        _BarSegment(
+                          flex: (pF * 100).toInt(),
+                          color: AppColors.fat,
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
           ),
+
           // Calories
-          Text(
-            '$calories',
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF2D3436),
-            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${foodItem.totalCalories.value.toInt()}',
+                style: AppTypography.titleMedium.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              Text(
+                'kcal',
+                style: AppTypography.caption.copyWith(
+                  fontSize: 10,
+                  color: AppColors.textHint,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -394,9 +469,28 @@ class _FoodItemRow extends StatelessWidget {
     if (lowerName.contains('salad') || lowerName.contains('salada')) {
       return Icons.eco_rounded;
     }
-    if (lowerName.contains('bread') || lowerName.contains('pão')) {
-      return Icons.bakery_dining_rounded;
+    if (lowerName.contains('bread') ||
+        lowerName.contains('pão') ||
+        lowerName.contains('pao')) {
+      return Icons.breakfast_dining_rounded;
+    }
+    if (lowerName.contains('coffee') || lowerName.contains('café')) {
+      return Icons.local_cafe_rounded;
     }
     return Icons.restaurant_menu_rounded;
+  }
+}
+
+class _BarSegment extends StatelessWidget {
+  final int flex;
+  final Color color;
+  const _BarSegment({required this.flex, required this.color});
+  @override
+  Widget build(BuildContext context) {
+    if (flex <= 0) return const SizedBox.shrink();
+    return Flexible(
+      flex: flex,
+      child: Container(height: 3, color: color),
+    );
   }
 }

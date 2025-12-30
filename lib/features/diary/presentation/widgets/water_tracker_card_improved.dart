@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/value_objects/water_volume.dart';
 
 class WaterTrackerCardImproved extends StatelessWidget {
@@ -34,170 +36,108 @@ class WaterTrackerCardImproved extends StatelessWidget {
     // );
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: hasWater
-            ? Border.all(color: Colors.blue.withValues(alpha: 0.3), width: 2)
+            ? Border.all(
+                color: AppColors.accent.withValues(alpha: 0.22),
+                width: 1.5,
+              )
             : null,
         boxShadow: [
           BoxShadow(
-            color: hasWater
-                ? Colors.blue.withValues(alpha: 0.12)
-                : Colors.blue.withValues(alpha: 0.08),
-            blurRadius: 20,
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
             offset: const Offset(0, 8),
           ),
         ],
       ),
-      child: Column(
-        children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(10),
+                Text(
+                  'Meta: ${(goalMl / 1000).toStringAsFixed(2)} L',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
                       ),
-                      child: const Icon(
-                        Icons.water_drop_rounded,
-                        color: Colors.blue,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'Water Tracker',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xFF2D3436),
-                      ),
-                    ),
-                  ],
                 ),
                 Text(
-                  '${currentVolume.valueMl.toInt()} / $goalMl ml',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey[500],
-                  ),
+                  '${currentVolume.valueMl.toInt()} / $goalMl mL',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
               ],
             ),
-          ),
-
-          // Water Glasses Visual
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              children: [
-                // Goal Label
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Goal: ${(goalMl / 1000).toStringAsFixed(2)} Liters',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey[600],
-                    ),
-                  ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                glassesGoal,
+                (index) => _WaterGlass(
+                  isFilled: index < glassesFilled,
+                  onTap: () => onAdd(250),
                 ),
-                const SizedBox(height: 12),
-
-                // Glasses Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    glassesGoal,
-                    (index) => _WaterGlass(
-                      isFilled: index < glassesFilled,
-                      onTap: () => onAdd(250),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                // Current Volume Display
-                Text(
-                  '${(currentVolume.valueMl / 1000).toStringAsFixed(2)} L',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-
-          const SizedBox(height: 12),
-
-          // Quick Add/Remove Buttons
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              children: [
-                // Remove buttons (só mostra se tem água)
-                if (hasWater && onRemove != null) ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _QuickRemoveButton(
-                          amount: 250,
-                          label: '-250ml',
-                          onTap: () => onRemove!(250),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _QuickRemoveButton(
-                          amount: 500,
-                          label: '-500ml',
-                          onTap: () => onRemove!(500),
-                        ),
-                      ),
-                    ],
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              '${(currentVolume.valueMl / 1000).toStringAsFixed(2)} L',
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.accent,
                   ),
-                  const SizedBox(height: 8),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            if (hasWater && onRemove != null) ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: _QuickRemoveButton(
+                      label: '-250 mL',
+                      onTap: () => onRemove!(250),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Expanded(
+                    child: _QuickRemoveButton(
+                      label: '-500 mL',
+                      onTap: () => onRemove!(500),
+                    ),
+                  ),
                 ],
-
-                // Add buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: _QuickAddButton(
-                        amount: 250,
-                        label: '+250ml',
-                        icon: Icons.local_cafe_rounded,
-                        onTap: () => onAdd(250),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _QuickAddButton(
-                        amount: 500,
-                        label: '+500ml',
-                        icon: Icons.water_drop_outlined,
-                        onTap: () => onAdd(500),
-                      ),
-                    ),
-                  ],
+              ),
+              const SizedBox(height: AppSpacing.sm),
+            ],
+            Row(
+              children: [
+                Expanded(
+                  child: _QuickAddButton(
+                    label: '+250 mL',
+                    icon: Icons.local_cafe_rounded,
+                    onTap: () => onAdd(250),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Expanded(
+                  child: _QuickAddButton(
+                    label: '+500 mL',
+                    icon: Icons.water_drop_outlined,
+                    onTap: () => onAdd(500),
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -283,13 +223,13 @@ class _GlassPainter extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.fill
       ..color = isFilled
-          ? Colors.blue.withValues(alpha: 0.3)
+          ? AppColors.accent.withValues(alpha: 0.3)
           : Colors.grey.withValues(alpha: 0.1);
 
     final borderPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
-      ..color = isFilled ? Colors.blue : Colors.grey.withValues(alpha: 0.3);
+      ..color = isFilled ? AppColors.accent : Colors.grey.withValues(alpha: 0.3);
 
     // Draw glass outline (trapezoid)
     final path = Path()
@@ -329,13 +269,11 @@ class _GlassPainter extends CustomPainter {
 }
 
 class _QuickAddButton extends StatelessWidget {
-  final int amount;
   final String label;
   final IconData icon;
   final VoidCallback onTap;
 
   const _QuickAddButton({
-    required this.amount,
     required this.label,
     required this.icon,
     required this.onTap,
@@ -343,37 +281,20 @@ class _QuickAddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.blue.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: Colors.blue.withValues(alpha: 0.3),
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 18, color: Colors.blue),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.blue,
-                ),
-              ),
-            ],
-          ),
+    return FilledButton.tonalIcon(
+      onPressed: onTap,
+      icon: Icon(icon, size: 18),
+      label: Text(label),
+      style: FilledButton.styleFrom(
+        backgroundColor: AppColors.accent.withValues(alpha: 0.12),
+        foregroundColor: AppColors.accent,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
+        textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w700,
+            ),
       ),
     );
   }
@@ -381,45 +302,30 @@ class _QuickAddButton extends StatelessWidget {
 
 // Remove Button Widget (Discrete/Ghost style)
 class _QuickRemoveButton extends StatelessWidget {
-  final int amount;
   final String label;
   final VoidCallback onTap;
 
   const _QuickRemoveButton({
-    required this.amount,
     required this.label,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.remove_circle_outline,
-                size: 16,
-                color: Colors.grey[400],
-              ),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[400],
-                ),
-              ),
-            ],
-          ),
+    return TextButton.icon(
+      onPressed: onTap,
+      icon: const Icon(Icons.remove_circle_outline, size: 18),
+      label: Text(label),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        foregroundColor: AppColors.textSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: AppColors.border),
         ),
+        textStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
       ),
     );
   }

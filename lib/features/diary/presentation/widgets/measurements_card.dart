@@ -58,7 +58,7 @@ class MeasurementsCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Weight',
+                      'Peso',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -85,7 +85,7 @@ class MeasurementsCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Current',
+                      'Atual',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[500],
@@ -159,11 +159,11 @@ class MeasurementsCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Start: ${startWeight.toStringAsFixed(1)}',
+                      'Início: ${startWeight.toStringAsFixed(1)}',
                       style: TextStyle(fontSize: 11, color: Colors.grey[400]),
                     ),
                     Text(
-                      'Goal: ${goalWeight.toStringAsFixed(1)}',
+                      'Meta: ${goalWeight.toStringAsFixed(1)}',
                       style: TextStyle(fontSize: 11, color: Colors.grey[400]),
                     ),
                   ],

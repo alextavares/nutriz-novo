@@ -1,4 +1,4 @@
-package com.nutriz.nutriz
+package com.nutriz.app
 
 import io.flutter.embedding.android.FlutterActivity
 

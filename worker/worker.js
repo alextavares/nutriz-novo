@@ -7,6 +7,22 @@ export default {
             return new Response("Missing API Key", { status: 500 });
         }
 
+        const corsHeaders = {
+            "Access-Control-Allow-Origin": "*",
+        };
+
+        const jsonResponse = (payload, status = 200) =>
+            new Response(JSON.stringify(payload), {
+                status,
+                headers: {
+                    ...corsHeaders,
+                    "Content-Type": "application/json",
+                },
+            });
+
+        const model = "gemini-2.5-flash";
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+
         // Handle CORS
         if (request.method === "OPTIONS") {
             return new Response(null, {
@@ -26,12 +42,12 @@ export default {
             }
 
             try {
-                const model = "gemini-2.0-flash";
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
+                const prompt = `Responda SEMPRE em português (pt-BR) e use nomes comuns no Brasil (não use inglês).
 
-                const prompt = `Search for food items matching "${query}". Return a JSON LIST of at least 5 items. Each item must have: name, calories (integer), protein (number), carbs (number), fat (number), servingSize (string, e.g. "100g"), servingUnit (string, e.g. "g").
+Busque alimentos que correspondam a: "${query}".
+Retorne uma LISTA JSON com no mínimo 5 itens. Cada item deve ter: name, calories (integer), protein (number), carbs (number), fat (number), servingSize (string, ex: "100g"), servingUnit (string, ex: "g").
                 Example: [{"name": "Apple", "calories": 52, "protein": 0.3, "carbs": 14, "fat": 0.2, "servingSize": "1 medium", "servingUnit": "medium"}]
-                Return ONLY the JSON list.`;
+Retorne APENAS a lista JSON (sem texto extra, sem markdown).`;
 
                 const response = await fetch(geminiUrl, {
                     method: "POST",
@@ -42,10 +58,15 @@ export default {
                 });
 
                 const data = await response.json();
+                if (!response.ok) {
+                    console.error("Gemini search error", response.status, data);
+                    return jsonResponse({ error: "Gemini API error", status: response.status, details: data }, 502);
+                }
                 let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
                 if (!text) {
-                    return new Response("Failed to generate content", { status: 500 });
+                    console.error("Gemini search missing text", data);
+                    return jsonResponse({ error: "Failed to generate content", details: data }, 502);
                 }
 
                 // Clean up markdown code blocks if present
@@ -58,7 +79,8 @@ export default {
                     },
                 });
             } catch (e) {
-                return new Response(`Error: ${e.message}`, { status: 500 });
+                console.error("Search worker error", e);
+                return jsonResponse({ error: e?.message ?? String(e) }, 500);
             }
         }
 
@@ -80,9 +102,6 @@ export default {
                     )
                 );
 
-                const model = "gemini-2.0-flash";
-                const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${GEMINI_API_KEY}`;
-
                 let mimeType = imageFile.type;
                 if (!mimeType || mimeType === "application/octet-stream") {
                     mimeType = "image/jpeg";
@@ -93,13 +112,10 @@ export default {
                         {
                             parts: [
                                 {
-                                    text: 'Identify this food and estimate its calories and macros (protein, carbs, fat) for a standard serving. Return ONLY valid JSON in this format: { "name": "Food Name", "calories": 100, "protein": 10, "carbs": 20, "fat": 5, "servingSize": "100g", "servingUnit": "g" }',
+                                    text: 'Responda SEMPRE em português (pt-BR) e use o nome mais comum no Brasil (não use inglês).\n\nIdentifique o alimento desta imagem e estime calorias e macros (proteína, carboidratos, gordura) para uma porção padrão.\nRetorne APENAS JSON válido no formato: { "name": "Nome do alimento", "calories": 100, "protein": 10, "carbs": 20, "fat": 5, "servingSize": "100g", "servingUnit": "g" }',
                                 },
                                 {
-                                    inline_data: {
-                                        mime_type: mimeType,
-                                        data: base64Image,
-                                    },
+                                    inlineData: { mimeType, data: base64Image },
                                 },
                             ],
                         },
@@ -113,10 +129,15 @@ export default {
                 });
 
                 const data = await geminiResponse.json();
+                if (!geminiResponse.ok) {
+                    console.error("Gemini analyze error", geminiResponse.status, data);
+                    return jsonResponse({ error: "Gemini API error", status: geminiResponse.status, details: data }, 502);
+                }
                 let text = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
                 if (!text) {
-                    return new Response("Failed to generate content", { status: 500 });
+                    console.error("Gemini analyze missing text", data);
+                    return jsonResponse({ error: "Failed to generate content", details: data }, 502);
                 }
 
                 text = text.replace(/```json/g, "").replace(/```/g, "").trim();
@@ -129,7 +150,8 @@ export default {
                 });
 
             } catch (error) {
-                return new Response(`Worker Error: ${error.message}`, { status: 500 });
+                console.error("Analyze worker error", error);
+                return jsonResponse({ error: error?.message ?? String(error) }, 500);
             }
         }
 

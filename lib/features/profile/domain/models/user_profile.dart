@@ -16,6 +16,10 @@ enum MainGoal { loseWeight, maintain, buildMuscle }
 
 enum DietaryPreference { classic, pescetarian, vegetarian, vegan }
 
+enum SleepDuration { lessThan5, fiveToSix, sevenToEight, moreThan8 }
+
+enum WaterIntake { lessThan1L, oneToTwoL, twoToThreeL, moreThan3L }
+
 @freezed
 class UserProfile with _$UserProfile {
   const factory UserProfile({
@@ -34,6 +38,11 @@ class UserProfile with _$UserProfile {
     required MainGoal mainGoal,
     required DietaryPreference dietaryPreference,
 
+    @Default(SleepDuration.sevenToEight) SleepDuration sleepDuration,
+    @Default(WaterIntake.oneToTwoL) WaterIntake waterIntake,
+    @Default(<String>[]) List<String> badHabits,
+    @Default(<String>[]) List<String> motivations,
+
     // Calculated values
     required int calculatedCalories,
     required int proteinGrams,
@@ -43,6 +52,19 @@ class UserProfile with _$UserProfile {
     // Time estimate fields
     int? weeksToGoal,
     DateTime? estimatedGoalDate,
+
+    // Favoritos (para sync futura)
+    @Default(<String>[]) List<String> favoriteFoodKeys,
+
+    // Monetization / gating (bootstrapped growth)
+    @Default(1) int freeMealsRemaining,
+    DateTime? challengeStartedAt,
+    DateTime? challengeLastMealAt,
+    @Default(0) int challengeMealsRemaining,
+    @Default(0) int paywallDismissCount,
+
+    // Onboarding commitment
+    @Default(false) bool committedToLogDaily,
 
     @Default(false) bool isOnboardingCompleted,
   }) = _UserProfile;

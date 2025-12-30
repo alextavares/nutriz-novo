@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Brand Colors (Vibrant & Premium)
-  static const Color primary = Color(0xFF4CAF50); // Green - Health/Growth
-  static const Color primaryDark = Color(0xFF388E3C);
-  static const Color primaryLight = Color(0xFFC8E6C9);
+  // Primary Brand Colors (Fresh Green - clean/modern)
+  static const Color primary = Color(0xFF2FBF71); // Main action green
+  static const Color primaryDark = Color(0xFF24975A);
+  static const Color primaryLight = Color(0xFF6FE6A8);
 
-  static const Color secondary = Color(0xFFFF9800); // Orange - Energy/Activity
-  static const Color secondaryDark = Color(0xFFF57C00);
-  static const Color secondaryLight = Color(0xFFFFE0B2);
+  // Secondary Action (Warm Orange - highlights/fasting)
+  static const Color secondary = Color(0xFFFF7A45);
+  static const Color secondaryDark = Color(0xFFE65F2A);
+  static const Color secondaryLight = Color(0xFFFFB090);
 
-  static const Color accent = Color(0xFF2196F3); // Blue - Water/Calm
+  // Accent (Hydration Blue)
+  static const Color accent = Color(0xFF2F80ED);
   static const Color premium = Color(0xFFFFD700); // Gold - Premium/Pro
 
-  // Backgrounds
-  static const Color background = Color(0xFFFAFAFA); // Off-white
+  // Backgrounds (Neutral light)
+  static const Color background = Color(0xFFF7F8FA);
   static const Color surface = Colors.white;
-  static const Color surfaceVariant = Color(0xFFF5F5F5);
+  static const Color surfaceVariant = Color(0xFFF0F2F5);
+
+  // UI chrome
+  static const Color border = Color(0x14000000);
+  static const Color shadow = Color(0x14000000);
 
   // Text
-  static const Color textPrimary = Color(0xFF212121);
-  static const Color textSecondary = Color(0xFF757575);
-  static const Color textHint = Color(0xFFBDBDBD);
+  static const Color textPrimary = Color(0xFF111827);
+  static const Color textSecondary = Color(0xFF6B7280);
+  static const Color textHint = Color(0xFF9CA3AF);
 
   // Status
-  static const Color success = Color(0xFF4CAF50);
-  static const Color error = Color(0xFFE53935);
-  static const Color warning = Color(0xFFFFA000);
-  static const Color info = Color(0xFF1976D2);
+  static const Color success = Color(0xFF22C55E);
+  static const Color error = Color(0xFFEF4444);
+  static const Color warning = Color(0xFFF59E0B);
+  static const Color info = Color(0xFF2F80ED);
 
-  // Macros
-  static const Color carbs = Color(0xFFFFC107);
-  static const Color protein = Color(0xFF2196F3);
-  static const Color fat = Color(0xFFF44336);
+  // Macros (Readable, distinct)
+  static const Color carbs = Color(0xFFFBBF24);
+  static const Color protein = Color(0xFF6366F1);
+  static const Color fat = Color(0xFFF97316);
 }

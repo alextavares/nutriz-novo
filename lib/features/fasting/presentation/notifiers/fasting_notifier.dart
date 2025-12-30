@@ -8,6 +8,8 @@ class FastingState {
   final Duration elapsed;
   final Duration goal;
 
+  static const Object _unset = Object();
+
   const FastingState({
     this.isFasting = false,
     this.startTime,
@@ -19,13 +21,13 @@ class FastingState {
 
   FastingState copyWith({
     bool? isFasting,
-    DateTime? startTime,
+    Object? startTime = _unset,
     Duration? elapsed,
     Duration? goal,
   }) {
     return FastingState(
       isFasting: isFasting ?? this.isFasting,
-      startTime: startTime ?? this.startTime,
+      startTime: startTime == _unset ? this.startTime : startTime as DateTime?,
       elapsed: elapsed ?? this.elapsed,
       goal: goal ?? this.goal,
     );
@@ -35,13 +37,7 @@ class FastingState {
 class FastingNotifier extends StateNotifier<FastingState> {
   Timer? _timer;
 
-  FastingNotifier() : super(const FastingState()) {
-    // Auto-start for demo purposes if needed, or check local storage
-    // For now, we start with a mock active fast
-    startFasting(
-      initialElapsed: const Duration(hours: 14, minutes: 25, seconds: 18),
-    );
-  }
+  FastingNotifier() : super(const FastingState());
 
   void startFasting({Duration? initialElapsed}) {
     if (state.isFasting) return;
@@ -86,6 +82,11 @@ class FastingNotifier extends StateNotifier<FastingState> {
     }
 
     final newGoal = newEnd.difference(state.startTime!);
+    state = state.copyWith(goal: newGoal);
+  }
+
+  void updateGoal(Duration newGoal) {
+    if (newGoal <= Duration.zero) return;
     state = state.copyWith(goal: newGoal);
   }
 

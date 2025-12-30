@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../notifiers/fasting_notifier.dart';
+import 'package:nutriz/core/analytics/analytics_providers.dart';
 
 import '../widgets/fasting_timer_widget.dart';
 import 'fasting_body_status_screen.dart';
@@ -15,10 +17,21 @@ class FastingScreen extends ConsumerStatefulWidget {
 
 class _FastingScreenState extends ConsumerState<FastingScreen> {
   int _selectedIndex = 0;
+  bool _loggedView = false;
 
-  // Modern Yazio-like Palette
-  static const Color _primaryColor = Color(0xFF00BFA5); // Teal/Turquoise
-  static const Color _backgroundColor = Color(0xFFFAFAFA); // Almost white
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_loggedView) return;
+    _loggedView = true;
+
+    final s = ref.read(fastingNotifierProvider);
+    ref.read(analyticsServiceProvider).logEvent('fasting_view', {
+      'screen': 'fasting',
+      'fasting_plan': _fastingPlanSlug(s.goal),
+      'is_fasting': s.isFasting,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         );
 
     return Scaffold(
-      backgroundColor: _backgroundColor,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -44,39 +57,44 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Fasting Tracker",
+                    'Jejum',
                     style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimary,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _primaryColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "16:8", // Placeholder for dynamic protocol
-                          style: TextStyle(
-                            color: _primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                  InkWell(
+                    onTap: () => _showProtocolPicker(context, fastingState.goal),
+                    borderRadius: BorderRadius.circular(999),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            _protocolLabel(fastingState.goal),
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.edit_outlined,
-                          size: 14,
-                          color: _primaryColor,
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          const Icon(
+                            Icons.tune_rounded,
+                            size: 16,
+                            color: AppColors.primary,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -88,13 +106,14 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
               margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(25),
+                color: AppColors.surfaceVariant,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: AppColors.border),
               ),
               child: Row(
                 children: [
-                  Expanded(child: _buildSegmentOption(0, "Timer")),
-                  Expanded(child: _buildSegmentOption(1, "Body Status")),
+                  Expanded(child: _buildSegmentOption(0, 'Timer')),
+                  Expanded(child: _buildSegmentOption(1, 'Etapas')),
                 ],
               ),
             ),
@@ -103,18 +122,47 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
 
             // Main Content Area
             Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.lg,
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 180),
+                  switchInCurve: Curves.easeOut,
+                  switchOutCurve: Curves.easeIn,
                   child: _selectedIndex == 0
                       ? FastingTimerWidget(
+                          key: const ValueKey('timer'),
                           progress: progress,
                           elapsed: fastingState.elapsed,
                           goal: fastingState.goal,
                           startTime: fastingState.startTime,
+                          onStart: () {
+                            ref.read(analyticsServiceProvider).logEvent(
+                              'fasting_start',
+                              {
+                                'screen': 'fasting',
+                                'fasting_plan': _fastingPlanSlug(
+                                  fastingState.goal,
+                                ),
+                                'source': 'button',
+                              },
+                            );
+                            ref
+                                .read(fastingNotifierProvider.notifier)
+                                .startFasting();
+                          },
                           onStop: () {
+                            ref.read(analyticsServiceProvider).logEvent(
+                              'fasting_end',
+                              {
+                                'screen': 'fasting',
+                                'fasting_plan': _fastingPlanSlug(
+                                  fastingState.goal,
+                                ),
+                                'duration_minutes':
+                                    fastingState.elapsed.inMinutes,
+                                'source': 'button',
+                              },
+                            );
                             ref
                                 .read(fastingNotifierProvider.notifier)
                                 .stopFasting();
@@ -135,7 +183,7 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
                                 )
                               : null,
                         )
-                      : const FastingBodyStatusScreen(),
+                      : const FastingBodyStatusScreen(key: ValueKey('stages')),
                 ),
               ),
             ),
@@ -153,14 +201,14 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(20),
+          color: isSelected ? AppColors.surface : Colors.transparent,
+          borderRadius: BorderRadius.circular(999),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
+                    color: AppColors.shadow,
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
                   ),
                 ]
               : null,
@@ -169,12 +217,117 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
           label,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected ? Colors.black87 : Colors.grey[600],
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
+            fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
             fontSize: 14,
           ),
         ),
       ),
+    );
+  }
+
+  String _protocolLabel(Duration goal) {
+    final hours = goal.inHours;
+    final fastingHours = hours < 0 ? 0 : (hours > 24 ? 24 : hours);
+    final eatingHours = 24 - fastingHours;
+    return '$fastingHours:$eatingHours';
+  }
+
+  String _fastingPlanSlug(Duration goal) {
+    final hours = goal.inHours;
+    final fastingHours = hours < 0 ? 0 : (hours > 24 ? 24 : hours);
+    final eatingHours = 24 - fastingHours;
+    return '${fastingHours}_$eatingHours';
+  }
+
+  void _showProtocolPicker(BuildContext context, Duration currentGoal) {
+    final selectedHours = currentGoal.inHours;
+    const presets = [12, 14, 16, 18, 20];
+
+    showModalBottomSheet<void>(
+      context: context,
+      useSafeArea: true,
+      showDragHandle: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.sm,
+            AppSpacing.lg,
+            AppSpacing.xl,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Protocolo',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Escolha um protocolo padrão. Você pode ajustar início e fim no Timer.',
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.35,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: presets.map((hours) {
+                  final selected = hours == selectedHours;
+                  return ChoiceChip(
+                    selected: selected,
+                    label: Text(_protocolLabel(Duration(hours: hours))),
+                    onSelected: (_) {
+                      ref.read(analyticsServiceProvider).logEvent(
+                        'fasting_plan_set',
+                        {
+                          'screen': 'fasting',
+                          'from': _fastingPlanSlug(currentGoal),
+                          'to': _fastingPlanSlug(Duration(hours: hours)),
+                        },
+                      );
+                      ref
+                          .read(fastingNotifierProvider.notifier)
+                          .updateGoal(Duration(hours: hours));
+                      Navigator.of(context).pop();
+                    },
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: selected
+                          ? AppColors.primaryDark
+                          : AppColors.textSecondary,
+                    ),
+                    side: BorderSide(color: AppColors.border),
+                    backgroundColor: AppColors.surfaceVariant,
+                    selectedColor: AppColors.primaryLight.withValues(alpha: 0.65),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -192,9 +345,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: _primaryColor,
+              primary: AppColors.primary,
               onPrimary: Colors.white,
-              onSurface: Color(0xFF424242),
+              onSurface: AppColors.textPrimary,
             ),
           ),
           child: child!,
@@ -210,9 +363,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
           return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: const ColorScheme.light(
-                primary: _primaryColor,
+                primary: AppColors.primary,
                 onPrimary: Colors.white,
-                onSurface: Color(0xFF424242),
+                onSurface: AppColors.textPrimary,
               ),
             ),
             child: child!,
@@ -249,9 +402,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: _primaryColor,
+              primary: AppColors.primary,
               onPrimary: Colors.white,
-              onSurface: Color(0xFF424242),
+              onSurface: AppColors.textPrimary,
             ),
           ),
           child: child!,
@@ -267,9 +420,9 @@ class _FastingScreenState extends ConsumerState<FastingScreen> {
           return Theme(
             data: Theme.of(context).copyWith(
               colorScheme: const ColorScheme.light(
-                primary: _primaryColor,
+                primary: AppColors.primary,
                 onPrimary: Colors.white,
-                onSurface: Color(0xFF424242),
+                onSurface: AppColors.textPrimary,
               ),
             ),
             child: child!,

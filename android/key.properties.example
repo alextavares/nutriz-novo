@@ -1,0 +1,16 @@
+## Exemplo (NÃO COMMITAR): android/key.properties
+#
+# 1) Gere um keystore (upload key):
+#    keytool -genkey -v -keystore upload-keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+#
+# 2) Crie um arquivo `android/key.properties` com os dados abaixo.
+#    (Este repo já ignora `key.properties` e `*.jks` no git.)
+#
+# 3) Depois rode:
+#    flutter build appbundle --release
+#
+storePassword=COLOQUE_SUA_SENHA_AQUI
+keyPassword=COLOQUE_SUA_SENHA_AQUI
+keyAlias=upload
+storeFile=upload-keystore.jks
+

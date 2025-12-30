@@ -51,7 +51,7 @@ class WaterTrackerConnected extends ConsumerWidget {
       ),
       error: (error, stack) => Container(
         padding: const EdgeInsets.all(16),
-        child: Text('Error loading water data: $error'),
+        child: Text('Erro ao carregar dados de água: $error'),
       ),
     );
   }

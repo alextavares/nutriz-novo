@@ -27,19 +27,19 @@ class MacroRingsRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _MacroRingItem(
-          label: 'Carbs',
+          label: 'Carbo',
           value: carbs,
           goal: carbsGoal,
           color: AppColors.carbs,
         ),
         _MacroRingItem(
-          label: 'Protein',
+          label: 'Proteína',
           value: protein,
           goal: proteinGoal,
           color: AppColors.protein,
         ),
         _MacroRingItem(
-          label: 'Fat',
+          label: 'Gordura',
           value: fat,
           goal: fatGoal,
           color: AppColors.fat,

@@ -79,8 +79,7 @@ class DiaryNotifier extends StateNotifier<DiaryState> {
 // print('➕ Adding food: ${food.name} to ${type.name} (qty: $servingAmount)');
       final foodItem = FoodItem(food: food, quantity: servingAmount);
       final meal = Meal(
-        id: DateTime.now().millisecondsSinceEpoch
-            .toString(), // Simple ID generation
+        id: DateTime.now().microsecondsSinceEpoch.toString(),
         type: type,
         foods: [foodItem],
         timestamp: DateTime.now(),

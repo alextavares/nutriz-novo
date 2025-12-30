@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/debug/debug_flags.dart';
 import 'bottom_nav_bar.dart';
 
 /// MainScaffold with WidgetsBindingObserver to intercept the back button
@@ -33,7 +34,9 @@ class _MainScaffoldState extends State<MainScaffold>
     final currentIndex = _calculateSelectedIndex(context);
 
     // Debug print to verify this is being called
-    debugPrint('DEBUG: didPopRoute called, currentIndex=$currentIndex');
+    if (DebugFlags.canVerbose) {
+      debugPrint('DEBUG: didPopRoute called, currentIndex=$currentIndex');
+    }
 
     // If we're NOT on the home/diary tab, navigate to diary instead of exiting
     if (currentIndex != 0) {

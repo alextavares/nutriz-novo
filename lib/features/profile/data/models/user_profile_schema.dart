@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:isar/isar.dart';
 import '../../domain/models/user_profile.dart';
 
@@ -33,6 +34,15 @@ class UserProfileEntity {
   late int carbsGrams;
   late int fatGrams;
   late bool isOnboardingCompleted;
+  String? favoriteFoodKeysJson;
+
+  // Monetization / gating (nullable for smooth upgrades from older DBs)
+  int? freeMealsRemaining;
+  DateTime? challengeStartedAt;
+  DateTime? challengeLastMealAt;
+  int? challengeMealsRemaining;
+  int? paywallDismissCount;
+  bool? committedToLogDaily;
 
   // Mapper methods
   static UserProfileEntity fromDomain(UserProfile profile) {
@@ -51,7 +61,14 @@ class UserProfileEntity {
       ..proteinGrams = profile.proteinGrams
       ..carbsGrams = profile.carbsGrams
       ..fatGrams = profile.fatGrams
-      ..isOnboardingCompleted = profile.isOnboardingCompleted;
+      ..isOnboardingCompleted = profile.isOnboardingCompleted
+      ..favoriteFoodKeysJson = _encodeFavorites(profile.favoriteFoodKeys)
+      ..freeMealsRemaining = profile.freeMealsRemaining
+      ..challengeStartedAt = profile.challengeStartedAt
+      ..challengeLastMealAt = profile.challengeLastMealAt
+      ..challengeMealsRemaining = profile.challengeMealsRemaining
+      ..paywallDismissCount = profile.paywallDismissCount
+      ..committedToLogDaily = profile.committedToLogDaily;
   }
 
   UserProfile toDomain() {
@@ -70,7 +87,30 @@ class UserProfileEntity {
       proteinGrams: proteinGrams,
       carbsGrams: carbsGrams,
       fatGrams: fatGrams,
+      favoriteFoodKeys: _decodeFavorites(favoriteFoodKeysJson),
+      freeMealsRemaining: freeMealsRemaining ?? 1,
+      challengeStartedAt: challengeStartedAt,
+      challengeLastMealAt: challengeLastMealAt,
+      challengeMealsRemaining: challengeMealsRemaining ?? 0,
+      paywallDismissCount: paywallDismissCount ?? 0,
+      committedToLogDaily: committedToLogDaily ?? false,
       isOnboardingCompleted: isOnboardingCompleted,
     );
+  }
+
+  static String? _encodeFavorites(List<String> keys) {
+    if (keys.isEmpty) return null;
+    return jsonEncode(keys);
+  }
+
+  static List<String> _decodeFavorites(String? raw) {
+    if (raw == null || raw.trim().isEmpty) return const [];
+    try {
+      final data = jsonDecode(raw);
+      if (data is List) {
+        return data.whereType<String>().toList();
+      }
+    } catch (_) {}
+    return const [];
   }
 }

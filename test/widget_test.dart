@@ -1,25 +1,31 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter_test/flutter_test.dart';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:nutriz/app.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:nutriz/features/diary/domain/entities/diary_day.dart';
+import 'package:nutriz/features/diary/presentation/widgets/daily_summary_header_improved.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const ProviderScope(child: NutrizApp()));
+  testWidgets('Daily summary renders key info', (WidgetTester tester) async {
+    final day = DiaryDay(date: DateTime(2025, 1, 1));
 
-    // Verify that our counter starts at 0.
-    expect(
-      find.text('0'),
-      findsNothing,
-    ); // Changed to findsNothing as we don't have a counter anymore
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: DailySummaryHeaderImproved(
+                diaryDay: day,
+                calorieGoal: 2000,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    expect(find.text('Restantes'), findsOneWidget);
+    expect(find.text('2000'), findsOneWidget);
+    expect(find.text('Carbo'), findsOneWidget);
   });
 }
+

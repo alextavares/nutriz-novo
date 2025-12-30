@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nutriz/core/monetization/meal_log_gate.dart';
+import 'package:nutriz/core/analytics/analytics_providers.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../domain/entities/food.dart';
 import '../../domain/entities/food_item.dart';
@@ -39,12 +41,12 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
     super.dispose();
   }
 
-  void _showFoodConfirmationDialog(BuildContext context, Food food) {
+  void _showFoodConfirmationDialog(BuildContext rootContext, Food food) {
     showModalBottomSheet(
-      context: context,
+      context: rootContext,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => FoodDetailSheet(
+      builder: (sheetContext) => FoodDetailSheet(
         foodItem: FoodItem(
           id: food.id,
           name: food.name,
@@ -57,16 +59,51 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
           imageUrl: null, // AI might not give image URL immediately
         ),
         onAdd: (quantity) {
-          ref
-              .read(diaryNotifierProvider.notifier)
-              .addFoodToMeal(
-                MealType.values.firstWhere((e) => e.name == widget.mealType),
-                food,
-                quantity,
-              );
-          ref.read(aiFoodNotifierProvider.notifier).clearResult();
-          context.pop(); // Close sheet
-          context.pop(); // Close screen
+          () async {
+            final decision = await ref
+                .read(mealLogGateProvider)
+                .tryConsumeAllowance();
+            if (!decision.allowed) {
+              if (sheetContext.mounted) sheetContext.pop(); // Close sheet
+              if (!mounted) return;
+              if (decision.blockReason ==
+                  MealLogBlockReason.challengeUsedToday) {
+                await ref.read(analyticsServiceProvider).logEvent(
+                  'challenge_used_today_blocked',
+                  {'source': 'food_search_ai'},
+                );
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text(
+                      'Você já registrou a refeição do desafio hoje. Volte amanhã.',
+                    ),
+                    action: SnackBarAction(
+                      label: 'Premium',
+                      onPressed: () {
+                        context.push('/premium');
+                      },
+                    ),
+                  ),
+                );
+                return;
+              }
+              await context.push('/premium');
+              return;
+            }
+
+            await ref
+                .read(diaryNotifierProvider.notifier)
+                .addFoodToMeal(
+                  MealType.values.firstWhere((e) => e.name == widget.mealType),
+                  food,
+                  quantity,
+                );
+            ref.read(aiFoodNotifierProvider.notifier).clearResult();
+            if (sheetContext.mounted) sheetContext.pop(); // Close sheet
+            if (!mounted) return;
+            context.pop(); // Close screen
+          }();
         },
       ),
     );
@@ -78,14 +115,16 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
     final aiState = ref.watch(aiFoodNotifierProvider);
 
     ref.listen(aiFoodNotifierProvider, (previous, next) {
-      // Silenced AI error - API not configured yet
-      // if (next.error != null) {
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(content: Text('Error: ${next.error}')),
-      //   );
-      // }
       if (next.analyzedFood != null && !next.isLoading) {
         _showFoodConfirmationDialog(context, next.analyzedFood!);
+      }
+      if (next.error != null &&
+          next.error != previous?.error &&
+          mounted &&
+          !next.isLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(next.error!)),
+        );
       }
     });
 
@@ -110,7 +149,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               ref.read(foodSearchNotifierProvider.notifier).search(value);
             },
             decoration: InputDecoration(
-              hintText: 'Search for food...',
+              hintText: 'Buscar alimento...',
               hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
               prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
               border: InputBorder.none,
@@ -136,12 +175,12 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
           else ...[
             IconButton(
               icon: const Icon(Icons.camera_alt, color: Colors.black),
-              tooltip: 'AI Food Recognition',
+              tooltip: 'Reconhecimento por IA',
               onPressed: () => _showImageSourceSheet(context),
             ),
             IconButton(
               icon: const Icon(Icons.qr_code_scanner, color: Colors.black),
-              tooltip: 'Scan Barcode',
+              tooltip: 'Ler código de barras',
               onPressed: () {
                 // TODO: Implement Barcode Scanner
               },
@@ -166,10 +205,10 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               fontSize: 14,
             ),
             tabs: const [
-              Tab(text: 'History'),
-              Tab(text: 'Favorites'),
-              Tab(text: 'Frequent'),
-              Tab(text: 'New'),
+              Tab(text: 'Histórico'),
+              Tab(text: 'Favoritos'),
+              Tab(text: 'Frequentes'),
+              Tab(text: 'Novos'),
             ],
           ),
         ),
@@ -237,7 +276,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                           Row(
                             children: [
                               const Text(
-                                'AI Food Recognition',
+                                'Reconhecimento por IA',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -267,7 +306,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                           ),
                           const SizedBox(height: 4),
                           const Text(
-                            'Take a photo to add food instantly',
+                            'Tire uma foto para adicionar alimentos rapidamente',
                             style: TextStyle(
                               fontSize: 13,
                               color: AppColors.textSecondary,
@@ -291,9 +330,9 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               controller: _tabController,
               children: [
                 _buildSearchResults(state),
-                _buildPlaceholder('Favorites'),
-                _buildPlaceholder('Frequent'),
-                _buildPlaceholder('New'),
+                _buildPlaceholder('Favoritos'),
+                _buildPlaceholder('Frequentes'),
+                _buildPlaceholder('Novos'),
               ],
             ),
           ),
@@ -302,9 +341,9 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
     );
   }
 
-  void _showImageSourceSheet(BuildContext context) {
+  void _showImageSourceSheet(BuildContext sheetContext) {
     showModalBottomSheet(
-      context: context,
+      context: sheetContext,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         decoration: const BoxDecoration(
@@ -317,9 +356,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text('Take Photo'),
+                title: const Text('Tirar foto'),
                 onTap: () {
                   Navigator.pop(context);
+                  if (!ref.read(mealLogGateProvider).canUseAiPhoto()) {
+                    if (mounted) this.context.push('/premium');
+                    return;
+                  }
                   ref
                       .read(aiFoodNotifierProvider.notifier)
                       .pickAndAnalyzeImage(ImageSource.camera);
@@ -327,9 +370,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library),
-                title: const Text('Choose from Gallery'),
+                title: const Text('Escolher da galeria'),
                 onTap: () {
                   Navigator.pop(context);
+                  if (!ref.read(mealLogGateProvider).canUseAiPhoto()) {
+                    if (mounted) this.context.push('/premium');
+                    return;
+                  }
                   ref
                       .read(aiFoodNotifierProvider.notifier)
                       .pickAndAnalyzeImage(ImageSource.gallery);
@@ -359,7 +406,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             Icon(Icons.search_off, size: 64, color: Colors.grey[300]),
             const SizedBox(height: 16),
             Text(
-              'No food found',
+              'Nenhum alimento encontrado',
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
@@ -375,7 +422,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             Icon(Icons.search, size: 64, color: Colors.grey[300]),
             const SizedBox(height: 16),
             Text(
-              'Start typing to search',
+              'Digite para buscar',
               style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],

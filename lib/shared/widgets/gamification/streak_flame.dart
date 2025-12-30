@@ -16,6 +16,7 @@ class _StreakFlameState extends State<StreakFlame>
   late AnimationController _pulseController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _glowAnimation;
+  int _lastStreakDays = 0;
 
   @override
   void initState() {
@@ -23,6 +24,7 @@ class _StreakFlameState extends State<StreakFlame>
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 1),
     );
+    _lastStreakDays = widget.streakDays;
 
     _pulseController = AnimationController(
       vsync: this,
@@ -37,12 +39,16 @@ class _StreakFlameState extends State<StreakFlame>
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
 
-    // Trigger confetti if streak > 0
-    if (widget.streakDays > 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _confettiController.play();
-      });
+    // Confetti is triggered only when streak increases (see didUpdateWidget).
+  }
+
+  @override
+  void didUpdateWidget(covariant StreakFlame oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.streakDays > _lastStreakDays) {
+      _confettiController.play();
     }
+    _lastStreakDays = widget.streakDays;
   }
 
   @override

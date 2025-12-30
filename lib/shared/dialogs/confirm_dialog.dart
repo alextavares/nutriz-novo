@@ -4,12 +4,16 @@ class ConfirmDialog extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback onConfirm;
+  final String cancelLabel;
+  final String confirmLabel;
 
   const ConfirmDialog({
     super.key,
     required this.title,
     required this.message,
     required this.onConfirm,
+    this.cancelLabel = 'Cancelar',
+    this.confirmLabel = 'Confirmar',
   });
 
   @override
@@ -20,9 +24,9 @@ class ConfirmDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(cancelLabel),
         ),
-        TextButton(onPressed: onConfirm, child: const Text('Confirm')),
+        TextButton(onPressed: onConfirm, child: Text(confirmLabel)),
       ],
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:nutriz/core/monetization/meal_log_gate.dart';
+import 'package:nutriz/core/analytics/analytics_providers.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_typography.dart';
@@ -90,15 +92,46 @@ class _FoodSearchPageState extends ConsumerState<FoodSearchPage> {
                       Icons.add_circle,
                       color: AppColors.primary,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       // Adiciona o alimento e volta
-                      ref
+                      final decision = await ref
+                          .read(mealLogGateProvider)
+                          .tryConsumeAllowance();
+                      if (!decision.allowed) {
+                        if (!context.mounted) return;
+                        if (decision.blockReason ==
+                            MealLogBlockReason.challengeUsedToday) {
+                          await ref.read(analyticsServiceProvider).logEvent(
+                            'challenge_used_today_blocked',
+                            {'source': 'food_search_list'},
+                          );
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: const Text(
+                                'Você já registrou a refeição do desafio hoje. Volte amanhã.',
+                              ),
+                              action: SnackBarAction(
+                                label: 'Premium',
+                                onPressed: () {
+                                  context.push('/premium');
+                                },
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                        await context.push('/premium');
+                        return;
+                      }
+                      await ref
                           .read(diaryNotifierProvider.notifier)
                           .addFoodToMeal(
                             widget.mealType,
                             food.toDomain(),
                             1.0, // Default 1 serving for now
                           );
+                      if (!context.mounted) return;
                       context.pop();
                     },
                   ),

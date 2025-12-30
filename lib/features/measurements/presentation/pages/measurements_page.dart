@@ -18,7 +18,7 @@ class MeasurementsPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Measurements',
+          'Medidas',
           style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w600,

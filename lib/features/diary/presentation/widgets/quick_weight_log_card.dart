@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_spacing.dart';
 
 class QuickWeightLogCard extends StatefulWidget {
   final double currentWeight;
@@ -43,25 +44,26 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
         weightDiff.abs() > 0.05; // Changed if difference > 0.05kg
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
         border: hasChanged
-            ? Border.all(color: Colors.purple.withValues(alpha: 0.3), width: 2)
+            ? Border.all(
+                color: AppColors.primary.withValues(alpha: 0.22),
+                width: 1.5,
+              )
             : null,
         boxShadow: [
           BoxShadow(
-            color: hasChanged
-                ? Colors.purple.withValues(alpha: 0.12)
-                : Colors.purple.withValues(alpha: 0.08),
-            blurRadius: 20,
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
             offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -73,18 +75,18 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Colors.purple.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
+                      color: AppColors.surfaceVariant,
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
                       Icons.monitor_weight_rounded,
-                      color: Colors.purple,
+                      color: AppColors.textSecondary,
                       size: 20,
                     ),
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    'Weight',
+                    'Peso',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -92,18 +94,22 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
                     ),
                   ),
                   const Spacer(),
-                  Icon(Icons.chevron_right_rounded, color: Colors.grey[400]),
+                  if (widget.onTapMore != null)
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: AppColors.textHint,
+                    ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.md),
 
             // Current Weight Display
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'Current',
+                  'Atual',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -163,7 +169,7 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
                           ),
                           const SizedBox(width: 2),
                           Text(
-                            '${weightDiff.abs().toStringAsFixed(1)}kg',
+                            '${weightDiff.abs().toStringAsFixed(1)} kg',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
@@ -195,8 +201,9 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 6,
-                backgroundColor: Colors.grey[200],
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.purple),
+                backgroundColor: AppColors.surfaceVariant,
+                valueColor:
+                    const AlwaysStoppedAnimation<Color>(AppColors.primary),
               ),
             ),
             const SizedBox(height: 8),
@@ -205,8 +212,8 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _WeightLabel(label: 'Start', value: widget.startWeight),
-                _WeightLabel(label: 'Goal', value: widget.goalWeight),
+                _WeightLabel(label: 'Inicial', value: widget.startWeight),
+                _WeightLabel(label: 'Meta', value: widget.goalWeight),
               ],
             ),
             const SizedBox(height: 16),
@@ -232,7 +239,7 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
                     elevation: 0,
                   ),
                   child: Text(
-                    'Save Weight',
+                    'Salvar peso',
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -259,15 +266,16 @@ class _AdjustButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(999),
         child: Container(
-          padding: const EdgeInsets.all(8),
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey[300]!),
+            color: AppColors.surface,
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.border),
           ),
-          child: Icon(icon, size: 20, color: Colors.grey[700]),
+          child: Icon(icon, size: 20, color: AppColors.textPrimary),
         ),
       ),
     );
@@ -294,7 +302,7 @@ class _WeightLabel extends StatelessWidget {
           ),
         ),
         Text(
-          '${value.toStringAsFixed(1)}kg',
+          '${value.toStringAsFixed(1)} kg',
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,

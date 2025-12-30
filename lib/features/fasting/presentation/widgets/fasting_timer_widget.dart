@@ -1,7 +1,10 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import '../../../../shared/widgets/gamification/streak_flame.dart';
+
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../shared/widgets/progress/animated_progress_ring.dart';
+import '../../../../shared/widgets/section_header.dart';
 import 'fasting_history_chart.dart';
 
 class FastingTimerWidget extends StatelessWidget {
@@ -9,6 +12,7 @@ class FastingTimerWidget extends StatelessWidget {
   final Duration elapsed;
   final Duration goal;
   final DateTime? startTime;
+  final VoidCallback? onStart;
   final VoidCallback? onStop;
   final VoidCallback? onEditStart;
   final VoidCallback? onEditEnd;
@@ -19,14 +23,11 @@ class FastingTimerWidget extends StatelessWidget {
     required this.elapsed,
     required this.goal,
     this.startTime,
+    this.onStart,
     this.onStop,
     this.onEditStart,
     this.onEditEnd,
   });
-
-  // Modern Yazio-like Palette
-  static const Color _primaryColor = Color(0xFF00BFA5); // Teal/Turquoise
-  static const Color _secondaryColor = Color(0xFF1DE9B6); // Lighter Teal
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -49,6 +50,8 @@ class FastingTimerWidget extends StatelessWidget {
       builder: (context, constraints) {
         final availableWidth = constraints.maxWidth;
         final ringSize = math.min(availableWidth * 0.85, 320.0);
+        final isFasting = startTime != null;
+        final statusLabel = isFasting ? 'Em jejum' : 'Pronto';
 
         return SingleChildScrollView(
           child: Column(
@@ -69,7 +72,7 @@ class FastingTimerWidget extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: _primaryColor.withValues(alpha: 0.1),
+                            color: AppColors.primary.withValues(alpha: 0.12),
                             blurRadius: 20,
                             spreadRadius: 5,
                             offset: const Offset(0, 8),
@@ -84,7 +87,7 @@ class FastingTimerWidget extends StatelessWidget {
                       child: CircularProgressIndicator(
                         value: 1.0,
                         strokeWidth: 22,
-                        color: Colors.grey[100],
+                        color: AppColors.surfaceVariant,
                         strokeCap: StrokeCap.round,
                       ),
                     ),
@@ -98,7 +101,7 @@ class FastingTimerWidget extends StatelessWidget {
                       gradient: const SweepGradient(
                         startAngle: -math.pi / 2,
                         endAngle: 3 * math.pi / 2,
-                        colors: [_secondaryColor, _primaryColor],
+                        colors: [AppColors.primaryDark, AppColors.primary],
                         tileMode: TileMode.clamp,
                       ),
                     ),
@@ -113,7 +116,7 @@ class FastingTimerWidget extends StatelessWidget {
                         Icon(
                           Icons.bolt_rounded,
                           size: 32,
-                          color: _primaryColor,
+                          color: AppColors.primary,
                         ),
                         const SizedBox(height: 8),
 
@@ -122,8 +125,8 @@ class FastingTimerWidget extends StatelessWidget {
                           _formatDuration(elapsed),
                           style: TextStyle(
                             fontSize: 40,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black87,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.textPrimary,
                             fontFeatures: const [FontFeature.tabularFigures()],
                             height: 1.0,
                             letterSpacing: -1.0,
@@ -138,15 +141,15 @@ class FastingTimerWidget extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: _primaryColor.withValues(alpha: 0.1),
+                            color: AppColors.primary.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            'Fasting',
+                            statusLabel,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: _primaryColor,
+                              color: AppColors.primary,
                               letterSpacing: 0.5,
                             ),
                           ),
@@ -157,23 +160,24 @@ class FastingTimerWidget extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: AppSpacing.lg),
 
               // 2. Stats Card
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8),
+                margin: EdgeInsets.zero,
                 padding: const EdgeInsets.symmetric(
                   vertical: 20,
                   horizontal: 16,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.03),
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
+                      color: AppColors.shadow,
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),
@@ -185,7 +189,7 @@ class FastingTimerWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildStatItem(
-                          'Start',
+                          'Início',
                           _formatTime(start),
                           icon: Icons.play_arrow_rounded,
                           onEdit: onEditStart,
@@ -193,10 +197,10 @@ class FastingTimerWidget extends StatelessWidget {
                         Container(
                           width: 1,
                           height: 40,
-                          color: Colors.grey[200],
+                          color: AppColors.border,
                         ),
                         _buildStatItem(
-                          'End',
+                          'Fim',
                           _formatTime(end),
                           icon: Icons.stop_rounded,
                           onEdit: onEditEnd,
@@ -204,10 +208,10 @@ class FastingTimerWidget extends StatelessWidget {
                         Container(
                           width: 1,
                           height: 40,
-                          color: Colors.grey[200],
+                          color: AppColors.border,
                         ),
                         _buildStatItem(
-                          'Goal',
+                          'Meta',
                           '${goal.inHours}h',
                           icon: Icons.flag_rounded,
                         ),
@@ -217,58 +221,56 @@ class FastingTimerWidget extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.lg),
 
-              // 3. End Fasting Button
-              Container(
+              // 3. Start/Stop Button
+              SizedBox(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: ElevatedButton(
-                  onPressed: onStop,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: _primaryColor,
+                child: FilledButton.icon(
+                  onPressed: isFasting ? onStop : onStart,
+                  icon: Icon(
+                    isFasting ? Icons.stop_rounded : Icons.play_arrow_rounded,
+                    size: 20,
+                  ),
+                  label: Text(isFasting ? 'Encerrar jejum' : 'Iniciar jejum'),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
                     ),
-                    elevation: 2,
-                    shadowColor: _primaryColor.withValues(alpha: 0.3),
-                  ),
-                  child: const Text(
-                    'End Fasting',
-                    style: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: AppSpacing.xl),
 
               // 4. Streak & History
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Last 7 Days',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black87,
-                        fontSize: 16,
-                      ),
+              const SectionHeader(title: 'Últimos 7 dias'),
+              const SizedBox(height: AppSpacing.md),
+              Container(
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 16,
+                      offset: const Offset(0, 8),
                     ),
-                    SizedBox(height: 16),
-                    SizedBox(height: 150, child: FastingHistoryChart()),
                   ],
                 ),
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: const SizedBox(height: 150, child: FastingHistoryChart()),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 220),
             ],
           ),
         );
@@ -291,19 +293,20 @@ class FastingTimerWidget extends StatelessWidget {
           children: [
             Row(
               children: [
-                if (icon != null) Icon(icon, size: 14, color: Colors.grey[400]),
+                if (icon != null)
+                  Icon(icon, size: 14, color: AppColors.textHint),
                 const SizedBox(width: 4),
                 Text(
                   label,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[500],
-                    fontWeight: FontWeight.w500,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 if (onEdit != null) ...[
                   const SizedBox(width: 4),
-                  Icon(Icons.edit, size: 12, color: _primaryColor),
+                  const Icon(Icons.edit, size: 12, color: AppColors.primary),
                 ],
               ],
             ),
@@ -312,8 +315,8 @@ class FastingTimerWidget extends StatelessWidget {
               value,
               style: const TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                fontWeight: FontWeight.w900,
+                color: AppColors.textPrimary,
               ),
             ),
           ],

@@ -19,15 +19,27 @@ class AppTheme {
         onSurface: AppColors.textPrimary,
         onError: Colors.white,
       ),
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         displayLarge: AppTypography.displayLarge,
         displayMedium: AppTypography.displayMedium,
         headlineLarge: AppTypography.headlineLarge,
         headlineMedium: AppTypography.headlineMedium,
+        titleLarge: AppTypography.titleLarge,
+        titleMedium: AppTypography.titleMedium,
+        titleSmall: AppTypography.titleSmall,
         bodyLarge: AppTypography.bodyLarge,
         bodyMedium: AppTypography.bodyMedium,
+        labelMedium: AppTypography.labelMedium,
+        labelSmall: AppTypography.labelSmall,
         labelLarge: AppTypography.labelLarge,
         bodySmall: AppTypography.caption,
+      ),
+      cardTheme: CardThemeData(
+        color: AppColors.surface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        ),
       ),
       // cardTheme: CardTheme(
       //   color: AppColors.surface,

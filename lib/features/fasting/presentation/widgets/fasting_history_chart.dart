@@ -1,11 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/app_colors.dart';
+
 class FastingHistoryChart extends StatelessWidget {
   const FastingHistoryChart({super.key});
 
-  static const Color _primaryColor = Color(0xFF00BFA5); // Teal
-  static const Color _lightColor = Color(0xFFB2DFDB); // Light Teal
+  static const Color _primaryColor = AppColors.primary;
+  static const Color _lightColor = AppColors.primaryLight;
 
   @override
   Widget build(BuildContext context) {
@@ -23,32 +25,32 @@ class FastingHistoryChart extends StatelessWidget {
                 showTitles: true,
                 getTitlesWidget: (double value, TitleMeta meta) {
                   const style = TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w800,
                     fontSize: 12,
                   );
                   Widget text;
                   switch (value.toInt()) {
                     case 0:
-                      text = const Text('M', style: style);
+                      text = const Text('S', style: style); // Seg
                       break;
                     case 1:
                       text = const Text('T', style: style);
                       break;
                     case 2:
-                      text = const Text('W', style: style);
+                      text = const Text('Q', style: style);
                       break;
                     case 3:
-                      text = const Text('T', style: style);
+                      text = const Text('Q', style: style);
                       break;
                     case 4:
-                      text = const Text('F', style: style);
+                      text = const Text('S', style: style); // Sex
                       break;
                     case 5:
                       text = const Text('S', style: style);
                       break;
                     case 6:
-                      text = const Text('S', style: style);
+                      text = const Text('D', style: style);
                       break;
                     default:
                       text = const Text('', style: style);
@@ -110,7 +112,7 @@ class FastingHistoryChart extends StatelessWidget {
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 24,
-            color: Colors.grey[100],
+            color: AppColors.surfaceVariant,
           ),
         ),
       ],

@@ -1,37 +1,158 @@
 Analyzing nutriz...                                             
 
-warning - The value of the field '_dio' isn't used - lib\core\network\api_client.dart:4:13 - unused_field
-warning - The value of the field '_isar' isn't used - lib\core\storage\local_storage.dart:4:14 - unused_field
-  error - Target of URI doesn't exist: '../../domain/entities/calories.dart' - lib\features\diary\data\services\ai_food_service.dart:6:8 - uri_does_not_exist
-  error - Target of URI doesn't exist: '../../domain/entities/macro_nutrients.dart' - lib\features\diary\data\services\ai_food_service.dart:7:8 - uri_does_not_exist
-  error - The method 'Calories' isn't defined for the type 'AiFoodService' - lib\features\diary\data\services\ai_food_service.dart:47:19 - undefined_method
-  error - The method 'MacroNutrients' isn't defined for the type 'AiFoodService' - lib\features\diary\data\services\ai_food_service.dart:48:17 - undefined_method
-   info - Don't invoke 'print' in production code - lib\features\diary\data\services\food_service.dart:29:9 - avoid_print
-   info - Don't invoke 'print' in production code - lib\features\diary\data\services\food_service.dart:33:7 - avoid_print
-   info - Don't invoke 'print' in production code - lib\features\diary\data\services\food_service.dart:57:7 - avoid_print
-   info - Unnecessary type annotation on a local variable - lib\features\diary\domain\entities\food_item.dart:30:5 - omit_local_variable_types
-   info - Unnecessary type annotation on a local variable - lib\features\diary\domain\entities\food_item.dart:31:5 - omit_local_variable_types
-   info - Unnecessary type annotation on a local variable - lib\features\diary\presentation\notifiers\ai_food_notifier.dart:30:13 - omit_local_variable_types
-warning - Unused import: '../../../../core/constants/app_spacing.dart' - lib\features\diary\presentation\pages\food_search_screen.dart:5:8 - unused_import
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:27:17 - prefer_single_quotes
-   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:61:39 - deprecated_member_use
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:95:19 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:118:23 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:126:23 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:145:14 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_body_status_screen.dart:148:12 - prefer_single_quotes
-   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\fasting\presentation\pages\fasting_screen.dart:125:47 - deprecated_member_use
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:153:25 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:167:31 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:168:31 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:169:31 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:173:31 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:174:31 - prefer_single_quotes
-   info - Unnecessary use of double quotes - lib\features\fasting\presentation\pages\fasting_screen.dart:175:31 - prefer_single_quotes
-   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\fasting\presentation\pages\fasting_screen.dart:221:33 - deprecated_member_use
-   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\profile\presentation\pages\profile_screen.dart:69:46 - deprecated_member_use
-   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\profile\presentation\pages\profile_screen.dart:109:33 - deprecated_member_use
-   info - Unnecessary use of string interpolation - lib\features\profile\presentation\pages\profile_screen.dart:156:17 - unnecessary_string_interpolations
-   info - Unnecessary use of string interpolation - lib\features\profile\presentation\pages\profile_screen.dart:164:17 - unnecessary_string_interpolations
-   info - Unnecessary type annotation on a local variable - lib\shared\widgets\main_scaffold.dart:50:11 - omit_local_variable_types
+warning - The '!' will have no effect because the receiver can't be null - lib\features\diary\data\services\favorite_food_service.dart:84:45 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\features\diary\data\services\favorite_food_service.dart:87:29 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\features\diary\data\services\food_service.dart:77:32 - unnecessary_non_null_assertion
+warning - The '!' will have no effect because the receiver can't be null - lib\features\diary\data\services\food_service.dart:149:32 - unnecessary_non_null_assertion
+warning - The value of the local variable 'food' isn't used - lib\features\diary\presentation\notifiers\diary_notifier.dart:53:20 - unused_local_variable
+warning - The stack trace variable 'st' isn't used and can be removed - lib\features\diary\presentation\notifiers\diary_notifier.dart:90:17 - unused_catch_stack
+warning - The stack trace variable 'st' isn't used and can be removed - lib\features\diary\presentation\notifiers\diary_notifier.dart:102:17 - unused_catch_stack
+warning - The stack trace variable 'st' isn't used and can be removed - lib\features\diary\presentation\notifiers\diary_notifier.dart:118:17 - unused_catch_stack
+warning - The declaration '_estimateMacroGoals' isn't referenced - lib\features\diary\presentation\pages\nutrition_detail_screen.dart:227:22 - unused_element
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\bento_daily_summary.dart:109:38 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\bento_daily_summary.dart:257:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\bento_daily_summary.dart:277:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\bento_daily_summary.dart:278:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\bento_daily_summary.dart:339:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\bento_daily_summary.dart:406:34 - deprecated_member_use
+   info - Unnecessary braces in a string interpolation - lib\features\diary\presentation\widgets\edit_quantity_sheet.dart:190:30 - unnecessary_brace_in_string_interps
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\diary\presentation\widgets\meal_section_improved.dart:242:46 - deprecated_member_use
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\notifiers\onboarding_notifier.dart:91:11 - omit_local_variable_types
+warning - Unused import: 'package:flutter_animate/flutter_animate.dart' - lib\features\onboarding\presentation\pages\onboarding_page.dart:3:8 - unused_import
+   info - The import of 'package:flutter/foundation.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\features\onboarding\presentation\pages\onboarding_page.dart:5:8 - unnecessary_import
+warning - The declaration '_proUpsellPageIndex' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:87:11 - unused_element
+warning - The declaration '_suggestFirstMealType' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:100:10 - unused_element
+warning - The declaration '_previousPage' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:118:8 - unused_element
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\features\onboarding\presentation\pages\onboarding_page.dart:236:12 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:319:66 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:338:23 - curly_braces_in_flow_control_structures
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:377:35 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:390:44 - unawaited_futures
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:397:37 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:411:44 - unawaited_futures
+   info - Statements in an if should be enclosed in a block - lib\features\onboarding\presentation\pages\onboarding_page.dart:416:35 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:483:17 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:559:44 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:569:44 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:621:44 - unawaited_futures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\onboarding\presentation\pages\onboarding_page.dart:631:44 - unawaited_futures
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:713:43 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:730:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:743:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:794:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:801:31 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:967:17 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:979:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:980:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:991:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:992:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:1003:24 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\onboarding_page.dart:1004:27 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1044:62 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1066:50 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1183:32 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1528:64 - deprecated_member_use
+warning - The declaration '_GenderCard' isn't referenced - lib\features\onboarding\presentation\pages\onboarding_page.dart:1623:7 - unused_element
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1650:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1714:49 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1717:35 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1787:60 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\onboarding_page.dart:1848:40 - deprecated_member_use
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:20:11 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:21:11 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:22:11 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:25:11 - omit_local_variable_types
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:26:9 - prefer_single_quotes
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:29:5 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:30:10 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:31:7 - omit_local_variable_types
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\pages\prediction_screen.dart:32:7 - omit_local_variable_types
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:66:56 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:79:29 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:94:23 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:105:23 - prefer_single_quotes
+   info - Unnecessary braces in a string interpolation - lib\features\onboarding\presentation\pages\prediction_screen.dart:105:35 - unnecessary_brace_in_string_interps
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:121:60 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:134:40 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:135:41 - prefer_single_quotes
+   info - Unnecessary use of string interpolation - lib\features\onboarding\presentation\pages\prediction_screen.dart:135:41 - unnecessary_string_interpolations
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:147:37 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:156:40 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:157:41 - prefer_single_quotes
+   info - Unnecessary use of string interpolation - lib\features\onboarding\presentation\pages\prediction_screen.dart:157:41 - unnecessary_string_interpolations
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:176:56 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:217:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:220:45 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:240:33 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:267:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:268:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:276:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:277:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:285:36 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:286:36 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:301:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:309:52 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:321:31 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:347:45 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:373:33 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:388:25 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:407:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:408:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:409:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:410:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:411:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:412:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:413:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:414:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:415:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:416:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:417:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:418:7 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:419:7 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:448:39 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\onboarding\presentation\pages\prediction_screen.dart:464:13 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\onboarding\presentation\pages\prediction_screen.dart:495:22 - deprecated_member_use
+   info - Unnecessary type annotation on a local variable - lib\features\onboarding\presentation\widgets\calculating_step.dart:29:10 - omit_local_variable_types
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:33:69 - prefer_single_quotes
+   info - 'WillPopScope' is deprecated and shouldn't be used. Use PopScope instead. The Android predictive back feature will not work with WillPopScope. This feature was deprecated after v3.12.0-1.0.pre - lib\features\premium\presentation\pages\hard_paywall_screen.dart:35:12 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:53:23 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:61:23 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:79:25 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:89:25 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:99:39 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:100:39 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:101:39 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:102:39 - prefer_single_quotes
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\premium\presentation\pages\hard_paywall_screen.dart:115:58 - deprecated_member_use
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:130:33 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:150:41 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:157:41 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:177:41 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:224:33 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:235:23 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:272:13 - prefer_single_quotes
+warning - The value of 'refresh' should be used - lib\features\premium\presentation\pages\hard_paywall_screen.dart:277:11 - unused_result
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:295:27 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:303:45 - prefer_single_quotes
+   info - Unnecessary use of double quotes - lib\features\premium\presentation\pages\hard_paywall_screen.dart:308:25 - prefer_single_quotes
+   info - Statements in an if should be enclosed in a block - lib\features\premium\presentation\providers\subscription_provider.dart:22:5 - curly_braces_in_flow_control_structures
+   info - Missing an 'await' for the 'Future' computed by this expression - lib\features\premium\presentation\providers\subscription_provider.dart:38:17 - unawaited_futures
+   info - Unnecessary type annotation on a local variable - lib\features\premium\presentation\providers\subscription_provider.dart:123:11 - omit_local_variable_types
+warning - Unused import: '../../domain/entities/subscription_status.dart' - lib\features\premium\presentation\widgets\premium_feature_wrapper.dart:5:8 - unused_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\recipes\presentation\pages\recipe_detail_screen.dart:46:46 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\recipes\presentation\pages\recipe_detail_screen.dart:64:45 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\recipes\presentation\pages\recipe_detail_screen.dart:68:47 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\recipes\presentation\pages\recipe_detail_screen.dart:78:44 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\recipes\presentation\pages\recipe_detail_screen.dart:80:44 - deprecated_member_use
+   info - Statements in an if should be enclosed in a block - lib\features\recipes\presentation\pages\recipes_list_screen.dart:90:19 - curly_braces_in_flow_control_structures
+   info - Unnecessary use of multiple underscores - lib\features\recipes\presentation\pages\recipes_list_screen.dart:332:49 - unnecessary_underscores
+   info - Unnecessary use of multiple underscores - lib\features\recipes\presentation\pages\recipes_list_screen.dart:332:53 - unnecessary_underscores
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\features\recipes\presentation\pages\recipes_list_screen.dart:467:25 - deprecated_member_use
+warning - The declaration '_SmallPill' isn't referenced - lib\features\recipes\presentation\pages\recipes_screen.dart:528:7 - unused_element
+   info - The import of 'package:flutter/foundation.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' - lib\routing\app_router.dart:2:8 - unnecessary_import
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\bottom_nav_bar.dart:21:34 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\bottom_nav_bar.dart:23:48 - deprecated_member_use
+   info - 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss - lib\shared\widgets\bottom_nav_bar.dart:26:37 - deprecated_member_use
+warning - Unused import: 'package:flutter/services.dart' - lib\shared\widgets\main_scaffold.dart:2:8 - unused_import
 
+154 issues found. (ran in 3.8s)

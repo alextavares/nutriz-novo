@@ -1,0 +1,5 @@
+storePassword=Y*mare2020
+keyPassword=Y*mare2020
+keyAlias=upload
+storeFile=../upload-keystore.jks
+

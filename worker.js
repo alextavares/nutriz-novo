@@ -23,9 +23,33 @@ export default {
             }
 
             if (path === "/analyze-food" && request.method === "POST") {
-                const { image } = await request.json(); // Expecting base64 image
-                if (!image) return new Response("Missing image", { status: 400 });
-                return await analyzeImageWithGemini(image, env.GEMINI_API_KEY);
+                // Accept both multipart/form-data (preferred) and legacy JSON {image: base64}
+                const contentType = request.headers.get("content-type") || "";
+                if (contentType.includes("multipart/form-data")) {
+                    const form = await request.formData();
+                    const imageFile = form.get("image");
+                    if (!imageFile) return new Response("Missing image file", { status: 400 });
+                    const arrayBuffer = await imageFile.arrayBuffer();
+                    const base64Image = btoa(
+                        new Uint8Array(arrayBuffer).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            ""
+                        )
+                    );
+                    let mimeType = imageFile.type;
+                    if (!mimeType || mimeType === "application/octet-stream") {
+                        mimeType = "image/jpeg";
+                    }
+                    return await analyzeImageWithGemini(
+                        base64Image,
+                        env.GEMINI_API_KEY,
+                        mimeType,
+                    );
+                } else {
+                    const { image } = await request.json(); // legacy base64 image
+                    if (!image) return new Response("Missing image", { status: 400 });
+                    return await analyzeImageWithGemini(image, env.GEMINI_API_KEY, "image/jpeg");
+                }
             }
 
             if (path === "/list-models" && request.method === "GET") {
@@ -52,27 +76,31 @@ export default {
 
 async function searchFoodWithGemini(query, apiKey) {
     const prompt = `
-    Search for food items matching "${query}". 
-    Return a JSON list of 5 items. 
-    Format: [{"name": "Food Name", "calories": 100, "protein": 10, "carbs": 20, "fat": 5, "servingSize": "100g"}]
-    Only return the JSON.
+    Responda SEMPRE em português (pt-BR) e use nomes comuns no Brasil (não use inglês).
+
+    Busque alimentos que correspondam a "${query}". 
+    Retorne uma lista JSON com 5 itens. 
+    Formato: [{"name": "Nome do alimento", "calories": 100, "protein": 10, "carbs": 20, "fat": 5, "servingSize": "100g"}]
+    Retorne APENAS o JSON.
   `;
     return callGemini(prompt, apiKey);
 }
 
-async function analyzeImageWithGemini(base64Image, apiKey) {
+async function analyzeImageWithGemini(base64Image, apiKey, mimeType = "image/jpeg") {
     const prompt = `
-    Identify the food in this image. Estimate the portion size.
-    Return a JSON object.
-    Format: {"name": "Food Name", "calories": 100, "protein": 10, "carbs": 20, "fat": 5, "servingSize": "100g"}
-    Only return the JSON.
+    Responda SEMPRE em português (pt-BR) e use o nome mais comum no Brasil (não use inglês).
+
+    Identifique o alimento nesta imagem. Estime o tamanho da porção.
+    Retorne um objeto JSON.
+    Formato: {"name": "Nome do alimento", "calories": 100, "protein": 10, "carbs": 20, "fat": 5, "servingSize": "100g"}
+    Retorne APENAS o JSON.
   `;
 
     const payload = {
         contents: [{
             parts: [
                 { text: prompt },
-                { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                { inlineData: { mimeType, data: base64Image } }
             ]
         }]
     };
@@ -90,7 +118,7 @@ async function callGemini(textPrompt, apiKey) {
 }
 
 async function callGeminiPayload(payload, apiKey) {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
         method: "POST",

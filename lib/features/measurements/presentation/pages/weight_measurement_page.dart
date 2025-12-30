@@ -60,7 +60,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Weight saved successfully'),
+          content: Text('Peso salvo com sucesso'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -87,7 +87,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Measurements',
+          'Medidas',
           style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -132,7 +132,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                     child: Column(
                       children: [
                         Text(
-                          'Weight',
+                          'Peso',
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -141,7 +141,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Goal: ${_goalWeight.toStringAsFixed(1)} $unit',
+                          'Meta: ${_goalWeight.toStringAsFixed(1)} $unit',
                           style: GoogleFonts.inter(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
@@ -222,7 +222,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Track your progress\nregularly, but don\'t go too\ncrazy.',
+                    'Acompanhe seu progresso\ncom frequência, mas sem\nneura.',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 14,
@@ -257,7 +257,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                         elevation: 0,
                       ),
                       child: Text(
-                        'SAVE WEIGHT',
+                        'SALVAR PESO',
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
@@ -281,7 +281,7 @@ class _WeightMeasurementPageState extends ConsumerState<WeightMeasurementPage> {
                     },
                     icon: const Icon(Icons.add_circle_outline, size: 20),
                     label: Text(
-                      'ADD MORE',
+                      'ADICIONAR MAIS',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

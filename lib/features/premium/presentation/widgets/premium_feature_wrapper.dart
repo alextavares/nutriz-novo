@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/subscription_status.dart';
 import '../providers/subscription_provider.dart';
@@ -32,15 +33,7 @@ class PremiumFeatureWrapper extends ConsumerWidget {
             color: Colors.transparent,
             child: InkWell(
               onTap: () {
-                // TODO: Navegar para tela de Paywall
-                // context.push('/paywall');
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Feature "$featureName" disponível apenas no PRO!',
-                    ),
-                  ),
-                );
+                context.push('/premium');
               },
               child: Center(
                 child: Column(
@@ -58,15 +51,7 @@ class PremiumFeatureWrapper extends ConsumerWidget {
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () {
-                        // TODO: Navegar para tela de Paywall
-                        // context.push('/paywall');
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Feature "$featureName" disponível apenas no PRO!',
-                            ),
-                          ),
-                        );
+                        context.push('/premium');
                       },
                       child: const Text('Ver Planos'),
                     ),

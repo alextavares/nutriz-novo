@@ -9,22 +9,39 @@ class AiFoodService {
   // TODO: Update this URL after deploying your worker
   static const _workerUrl =
       'https://nutriz-food-ai.alexandretmoraes110.workers.dev';
-  final Dio _dio = Dio();
+  static const _analyzePath = '/analyze-food';
+  final Dio _dio = Dio(
+    BaseOptions(
+      connectTimeout: const Duration(seconds: 15),
+      sendTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 45),
+    ),
+  );
 
   Future<Food> analyzeFoodImage(XFile imageFile) async {
     try {
+      // Use XFile.readAsBytes() to support content:// URIs (common on Android
+      // gallery/photo picker). Using dart:io File(path) can fail on device.
+      final bytes = await imageFile.readAsBytes();
       final formData = FormData.fromMap({
-        'image': await MultipartFile.fromFile(imageFile.path),
+        'image': MultipartFile.fromBytes(
+          bytes,
+          filename: imageFile.name.isNotEmpty ? imageFile.name : 'image.jpg',
+        ),
       });
 
       final response = await _dio.post(
-        _workerUrl,
+        '$_workerUrl$_analyzePath',
         data: formData,
-        options: Options(responseType: ResponseType.plain),
+        options: Options(
+          responseType: ResponseType.plain,
+        ),
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Failed to analyze image: ${response.statusMessage}');
+        throw Exception(
+          'Não foi possível analisar a imagem (${response.statusMessage}).',
+        );
       }
 
       var responseBody = response.data.toString();
@@ -38,7 +55,7 @@ class AiFoodService {
 
       return Food(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: json['name'] ?? 'Unknown',
+        name: json['name'] ?? 'Alimento desconhecido',
         calories: Calories(_parseValue(json['calories'])),
         macros: MacroNutrients(
           protein: _parseValue(json['protein']),
@@ -52,14 +69,37 @@ class AiFoodService {
       );
     } catch (e) {
       if (e is DioException) {
-// print('DioError Type: ${e.type}');
-// print('DioError Message: ${e.message}');
-// print('DioError Error: ${e.error}');
-// print('Worker Error Status: ${e.response?.statusCode}');
-// print('Worker Error Data: ${e.response?.data}');
+        final status = e.response?.statusCode;
+        final raw = e.response?.data;
+        final body = raw == null
+            ? null
+            : (() {
+                final s = raw.toString();
+                if (s.length <= 300) return s;
+                return '${s.substring(0, 300)}…';
+              })();
+        if (status == 413) {
+          throw Exception(
+            'A foto ficou grande demais para enviar. Tente aproximar, usar a galeria ou reduzir a resolução.',
+          );
+        }
+        if (status == 404) {
+          throw Exception(
+            'Serviço de IA não encontrado (404). Verifique o Worker em $_workerUrl$_analyzePath',
+          );
+        }
+        final suffix = body == null ? '' : '\n$body';
+        throw Exception(
+          'Erro ao analisar a foto (${status ?? 'sem status'}): ${e.message ?? e.toString()}$suffix',
+        );
+        // print('DioError Type: ${e.type}');
+        // print('DioError Message: ${e.message}');
+        // print('DioError Error: ${e.error}');
+        // print('Worker Error Status: ${e.response?.statusCode}');
+        // print('Worker Error Data: ${e.response?.data}');
       }
-// print('Full Exception: $e');
-      throw Exception('Failed to analyze food: $e');
+      // print('Full Exception: $e');
+      throw Exception('Não foi possível analisar o alimento: $e');
     }
   }
 

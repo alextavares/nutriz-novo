@@ -25,6 +25,9 @@ subprojects {
             if (android.namespace == null) {
                 android.namespace = "dev.isar.isar_flutter_libs"
             }
+            // isar_flutter_libs may reference Android 12+ attrs (e.g. lStar).
+            // Ensure library resource linking runs against a modern compile SDK.
+            android.compileSdkVersion(36)
         }
     }
 }

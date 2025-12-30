@@ -37,30 +37,30 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
 
   String? _validateInput(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter a value';
+      return 'Digite um valor';
     }
 
     final numValue = double.tryParse(value);
     if (numValue == null) {
-      return 'Please enter a valid number';
+      return 'Digite um número válido';
     }
 
     // Type-specific validation
     switch (widget.type) {
       case MeasurementType.weight:
         if (numValue < 20 || numValue > 300) {
-          return 'Weight must be between 20-300 ${widget.unit}';
+          return 'O peso deve estar entre 20–300 ${widget.unit}';
         }
         break;
       case MeasurementType.bodyFat:
       case MeasurementType.muscleMass:
         if (numValue < 0 || numValue > 100) {
-          return 'Percentage must be between 0-100%';
+          return 'A porcentagem deve estar entre 0–100%';
         }
         break;
       case MeasurementType.bloodGlucose:
         if (numValue < 40 || numValue > 600) {
-          return 'Blood glucose must be between 40-600 mg/dL';
+          return 'A glicose deve estar entre 40–600 mg/dL';
         }
         break;
       case MeasurementType.waist:
@@ -69,12 +69,12 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
       case MeasurementType.thighs:
       case MeasurementType.upperArms:
         if (numValue < 10 || numValue > 200) {
-          return 'Measurement must be between 10-200 cm';
+          return 'A medida deve estar entre 10–200 cm';
         }
         break;
       default:
         if (numValue < 0) {
-          return 'Value must be positive';
+          return 'O valor deve ser positivo';
         }
     }
 
@@ -236,7 +236,7 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Recent History',
+                              'Histórico recente',
                               style: GoogleFonts.inter(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -283,7 +283,7 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                                     ),
                                     subtitle: Text(
                                       DateFormat(
-                                        'MMM dd, yyyy',
+                                        'dd/MM/yyyy',
                                       ).format(measurement.date),
                                       style: GoogleFonts.inter(
                                         fontSize: 12,
@@ -339,7 +339,7 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
                   elevation: 0,
                 ),
                 child: Text(
-                  'SAVE',
+                  'SALVAR',
                   style: GoogleFonts.inter(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
@@ -358,16 +358,16 @@ class _MeasurementInputPageState extends ConsumerState<MeasurementInputPage> {
   String _getHelperText() {
     switch (widget.type) {
       case MeasurementType.weight:
-        return 'Enter your current weight (20-300 ${widget.unit})';
+        return 'Digite seu peso atual (20–300 ${widget.unit})';
       case MeasurementType.bodyFat:
       case MeasurementType.muscleMass:
-        return 'Enter percentage (0-100%)';
+        return 'Digite a porcentagem (0–100%)';
       case MeasurementType.bloodGlucose:
-        return 'Normal range: 70-100 mg/dL (fasting)';
+        return 'Faixa normal: 70–100 mg/dL (em jejum)';
       case MeasurementType.bloodPressure:
-        return 'Normal range: 120/80 mmHg';
+        return 'Referência: 120/80 mmHg';
       default:
-        return 'Enter your measurement';
+        return 'Digite sua medida';
     }
   }
 }

@@ -19,6 +19,20 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
       mainGoal: $enumDecode(_$MainGoalEnumMap, json['mainGoal']),
       dietaryPreference:
           $enumDecode(_$DietaryPreferenceEnumMap, json['dietaryPreference']),
+      sleepDuration:
+          $enumDecodeNullable(_$SleepDurationEnumMap, json['sleepDuration']) ??
+              SleepDuration.sevenToEight,
+      waterIntake:
+          $enumDecodeNullable(_$WaterIntakeEnumMap, json['waterIntake']) ??
+              WaterIntake.oneToTwoL,
+      badHabits: (json['badHabits'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
+      motivations: (json['motivations'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
       calculatedCalories: (json['calculatedCalories'] as num).toInt(),
       proteinGrams: (json['proteinGrams'] as num).toInt(),
       carbsGrams: (json['carbsGrams'] as num).toInt(),
@@ -27,6 +41,21 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
       estimatedGoalDate: json['estimatedGoalDate'] == null
           ? null
           : DateTime.parse(json['estimatedGoalDate'] as String),
+      favoriteFoodKeys: (json['favoriteFoodKeys'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const <String>[],
+      freeMealsRemaining: (json['freeMealsRemaining'] as num?)?.toInt() ?? 1,
+      challengeStartedAt: json['challengeStartedAt'] == null
+          ? null
+          : DateTime.parse(json['challengeStartedAt'] as String),
+      challengeLastMealAt: json['challengeLastMealAt'] == null
+          ? null
+          : DateTime.parse(json['challengeLastMealAt'] as String),
+      challengeMealsRemaining:
+          (json['challengeMealsRemaining'] as num?)?.toInt() ?? 0,
+      paywallDismissCount: (json['paywallDismissCount'] as num?)?.toInt() ?? 0,
+      committedToLogDaily: json['committedToLogDaily'] as bool? ?? false,
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
     );
 
@@ -43,12 +72,23 @@ Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
       'mainGoal': _$MainGoalEnumMap[instance.mainGoal]!,
       'dietaryPreference':
           _$DietaryPreferenceEnumMap[instance.dietaryPreference]!,
+      'sleepDuration': _$SleepDurationEnumMap[instance.sleepDuration]!,
+      'waterIntake': _$WaterIntakeEnumMap[instance.waterIntake]!,
+      'badHabits': instance.badHabits,
+      'motivations': instance.motivations,
       'calculatedCalories': instance.calculatedCalories,
       'proteinGrams': instance.proteinGrams,
       'carbsGrams': instance.carbsGrams,
       'fatGrams': instance.fatGrams,
       'weeksToGoal': instance.weeksToGoal,
       'estimatedGoalDate': instance.estimatedGoalDate?.toIso8601String(),
+      'favoriteFoodKeys': instance.favoriteFoodKeys,
+      'freeMealsRemaining': instance.freeMealsRemaining,
+      'challengeStartedAt': instance.challengeStartedAt?.toIso8601String(),
+      'challengeLastMealAt': instance.challengeLastMealAt?.toIso8601String(),
+      'challengeMealsRemaining': instance.challengeMealsRemaining,
+      'paywallDismissCount': instance.paywallDismissCount,
+      'committedToLogDaily': instance.committedToLogDaily,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
     };
 
@@ -75,4 +115,18 @@ const _$DietaryPreferenceEnumMap = {
   DietaryPreference.pescetarian: 'pescetarian',
   DietaryPreference.vegetarian: 'vegetarian',
   DietaryPreference.vegan: 'vegan',
+};
+
+const _$SleepDurationEnumMap = {
+  SleepDuration.lessThan5: 'lessThan5',
+  SleepDuration.fiveToSix: 'fiveToSix',
+  SleepDuration.sevenToEight: 'sevenToEight',
+  SleepDuration.moreThan8: 'moreThan8',
+};
+
+const _$WaterIntakeEnumMap = {
+  WaterIntake.lessThan1L: 'lessThan1L',
+  WaterIntake.oneToTwoL: 'oneToTwoL',
+  WaterIntake.twoToThreeL: 'twoToThreeL',
+  WaterIntake.moreThan3L: 'moreThan3L',
 };

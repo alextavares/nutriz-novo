@@ -32,7 +32,11 @@ mixin _$UserProfile {
   double get weeklyGoal => throw _privateConstructorUsedError;
   ActivityLevel get activityLevel => throw _privateConstructorUsedError;
   MainGoal get mainGoal => throw _privateConstructorUsedError;
-  DietaryPreference get dietaryPreference =>
+  DietaryPreference get dietaryPreference => throw _privateConstructorUsedError;
+  SleepDuration get sleepDuration => throw _privateConstructorUsedError;
+  WaterIntake get waterIntake => throw _privateConstructorUsedError;
+  List<String> get badHabits => throw _privateConstructorUsedError;
+  List<String> get motivations =>
       throw _privateConstructorUsedError; // Calculated values
   int get calculatedCalories => throw _privateConstructorUsedError;
   int get proteinGrams => throw _privateConstructorUsedError;
@@ -40,7 +44,17 @@ mixin _$UserProfile {
   int get fatGrams =>
       throw _privateConstructorUsedError; // Time estimate fields
   int? get weeksToGoal => throw _privateConstructorUsedError;
-  DateTime? get estimatedGoalDate => throw _privateConstructorUsedError;
+  DateTime? get estimatedGoalDate =>
+      throw _privateConstructorUsedError; // Favoritos (para sync futura)
+  List<String> get favoriteFoodKeys =>
+      throw _privateConstructorUsedError; // Monetization / gating (bootstrapped growth)
+  int get freeMealsRemaining => throw _privateConstructorUsedError;
+  DateTime? get challengeStartedAt => throw _privateConstructorUsedError;
+  DateTime? get challengeLastMealAt => throw _privateConstructorUsedError;
+  int get challengeMealsRemaining => throw _privateConstructorUsedError;
+  int get paywallDismissCount =>
+      throw _privateConstructorUsedError; // Onboarding commitment
+  bool get committedToLogDaily => throw _privateConstructorUsedError;
   bool get isOnboardingCompleted => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -66,12 +80,23 @@ abstract class $UserProfileCopyWith<$Res> {
       ActivityLevel activityLevel,
       MainGoal mainGoal,
       DietaryPreference dietaryPreference,
+      SleepDuration sleepDuration,
+      WaterIntake waterIntake,
+      List<String> badHabits,
+      List<String> motivations,
       int calculatedCalories,
       int proteinGrams,
       int carbsGrams,
       int fatGrams,
       int? weeksToGoal,
       DateTime? estimatedGoalDate,
+      List<String> favoriteFoodKeys,
+      int freeMealsRemaining,
+      DateTime? challengeStartedAt,
+      DateTime? challengeLastMealAt,
+      int challengeMealsRemaining,
+      int paywallDismissCount,
+      bool committedToLogDaily,
       bool isOnboardingCompleted});
 }
 
@@ -98,12 +123,23 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? activityLevel = null,
     Object? mainGoal = null,
     Object? dietaryPreference = null,
+    Object? sleepDuration = null,
+    Object? waterIntake = null,
+    Object? badHabits = null,
+    Object? motivations = null,
     Object? calculatedCalories = null,
     Object? proteinGrams = null,
     Object? carbsGrams = null,
     Object? fatGrams = null,
     Object? weeksToGoal = freezed,
     Object? estimatedGoalDate = freezed,
+    Object? favoriteFoodKeys = null,
+    Object? freeMealsRemaining = null,
+    Object? challengeStartedAt = freezed,
+    Object? challengeLastMealAt = freezed,
+    Object? challengeMealsRemaining = null,
+    Object? paywallDismissCount = null,
+    Object? committedToLogDaily = null,
     Object? isOnboardingCompleted = null,
   }) {
     return _then(_value.copyWith(
@@ -147,6 +183,22 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.dietaryPreference
           : dietaryPreference // ignore: cast_nullable_to_non_nullable
               as DietaryPreference,
+      sleepDuration: null == sleepDuration
+          ? _value.sleepDuration
+          : sleepDuration // ignore: cast_nullable_to_non_nullable
+              as SleepDuration,
+      waterIntake: null == waterIntake
+          ? _value.waterIntake
+          : waterIntake // ignore: cast_nullable_to_non_nullable
+              as WaterIntake,
+      badHabits: null == badHabits
+          ? _value.badHabits
+          : badHabits // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      motivations: null == motivations
+          ? _value.motivations
+          : motivations // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       calculatedCalories: null == calculatedCalories
           ? _value.calculatedCalories
           : calculatedCalories // ignore: cast_nullable_to_non_nullable
@@ -171,6 +223,34 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.estimatedGoalDate
           : estimatedGoalDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      favoriteFoodKeys: null == favoriteFoodKeys
+          ? _value.favoriteFoodKeys
+          : favoriteFoodKeys // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      freeMealsRemaining: null == freeMealsRemaining
+          ? _value.freeMealsRemaining
+          : freeMealsRemaining // ignore: cast_nullable_to_non_nullable
+              as int,
+      challengeStartedAt: freezed == challengeStartedAt
+          ? _value.challengeStartedAt
+          : challengeStartedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      challengeLastMealAt: freezed == challengeLastMealAt
+          ? _value.challengeLastMealAt
+          : challengeLastMealAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      challengeMealsRemaining: null == challengeMealsRemaining
+          ? _value.challengeMealsRemaining
+          : challengeMealsRemaining // ignore: cast_nullable_to_non_nullable
+              as int,
+      paywallDismissCount: null == paywallDismissCount
+          ? _value.paywallDismissCount
+          : paywallDismissCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      committedToLogDaily: null == committedToLogDaily
+          ? _value.committedToLogDaily
+          : committedToLogDaily // ignore: cast_nullable_to_non_nullable
+              as bool,
       isOnboardingCompleted: null == isOnboardingCompleted
           ? _value.isOnboardingCompleted
           : isOnboardingCompleted // ignore: cast_nullable_to_non_nullable
@@ -198,12 +278,23 @@ abstract class _$$UserProfileImplCopyWith<$Res>
       ActivityLevel activityLevel,
       MainGoal mainGoal,
       DietaryPreference dietaryPreference,
+      SleepDuration sleepDuration,
+      WaterIntake waterIntake,
+      List<String> badHabits,
+      List<String> motivations,
       int calculatedCalories,
       int proteinGrams,
       int carbsGrams,
       int fatGrams,
       int? weeksToGoal,
       DateTime? estimatedGoalDate,
+      List<String> favoriteFoodKeys,
+      int freeMealsRemaining,
+      DateTime? challengeStartedAt,
+      DateTime? challengeLastMealAt,
+      int challengeMealsRemaining,
+      int paywallDismissCount,
+      bool committedToLogDaily,
       bool isOnboardingCompleted});
 }
 
@@ -228,12 +319,23 @@ class __$$UserProfileImplCopyWithImpl<$Res>
     Object? activityLevel = null,
     Object? mainGoal = null,
     Object? dietaryPreference = null,
+    Object? sleepDuration = null,
+    Object? waterIntake = null,
+    Object? badHabits = null,
+    Object? motivations = null,
     Object? calculatedCalories = null,
     Object? proteinGrams = null,
     Object? carbsGrams = null,
     Object? fatGrams = null,
     Object? weeksToGoal = freezed,
     Object? estimatedGoalDate = freezed,
+    Object? favoriteFoodKeys = null,
+    Object? freeMealsRemaining = null,
+    Object? challengeStartedAt = freezed,
+    Object? challengeLastMealAt = freezed,
+    Object? challengeMealsRemaining = null,
+    Object? paywallDismissCount = null,
+    Object? committedToLogDaily = null,
     Object? isOnboardingCompleted = null,
   }) {
     return _then(_$UserProfileImpl(
@@ -277,6 +379,22 @@ class __$$UserProfileImplCopyWithImpl<$Res>
           ? _value.dietaryPreference
           : dietaryPreference // ignore: cast_nullable_to_non_nullable
               as DietaryPreference,
+      sleepDuration: null == sleepDuration
+          ? _value.sleepDuration
+          : sleepDuration // ignore: cast_nullable_to_non_nullable
+              as SleepDuration,
+      waterIntake: null == waterIntake
+          ? _value.waterIntake
+          : waterIntake // ignore: cast_nullable_to_non_nullable
+              as WaterIntake,
+      badHabits: null == badHabits
+          ? _value._badHabits
+          : badHabits // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      motivations: null == motivations
+          ? _value._motivations
+          : motivations // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       calculatedCalories: null == calculatedCalories
           ? _value.calculatedCalories
           : calculatedCalories // ignore: cast_nullable_to_non_nullable
@@ -301,6 +419,34 @@ class __$$UserProfileImplCopyWithImpl<$Res>
           ? _value.estimatedGoalDate
           : estimatedGoalDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      favoriteFoodKeys: null == favoriteFoodKeys
+          ? _value._favoriteFoodKeys
+          : favoriteFoodKeys // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      freeMealsRemaining: null == freeMealsRemaining
+          ? _value.freeMealsRemaining
+          : freeMealsRemaining // ignore: cast_nullable_to_non_nullable
+              as int,
+      challengeStartedAt: freezed == challengeStartedAt
+          ? _value.challengeStartedAt
+          : challengeStartedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      challengeLastMealAt: freezed == challengeLastMealAt
+          ? _value.challengeLastMealAt
+          : challengeLastMealAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      challengeMealsRemaining: null == challengeMealsRemaining
+          ? _value.challengeMealsRemaining
+          : challengeMealsRemaining // ignore: cast_nullable_to_non_nullable
+              as int,
+      paywallDismissCount: null == paywallDismissCount
+          ? _value.paywallDismissCount
+          : paywallDismissCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      committedToLogDaily: null == committedToLogDaily
+          ? _value.committedToLogDaily
+          : committedToLogDaily // ignore: cast_nullable_to_non_nullable
+              as bool,
       isOnboardingCompleted: null == isOnboardingCompleted
           ? _value.isOnboardingCompleted
           : isOnboardingCompleted // ignore: cast_nullable_to_non_nullable
@@ -323,13 +469,27 @@ class _$UserProfileImpl implements _UserProfile {
       required this.activityLevel,
       required this.mainGoal,
       required this.dietaryPreference,
+      this.sleepDuration = SleepDuration.sevenToEight,
+      this.waterIntake = WaterIntake.oneToTwoL,
+      final List<String> badHabits = const <String>[],
+      final List<String> motivations = const <String>[],
       required this.calculatedCalories,
       required this.proteinGrams,
       required this.carbsGrams,
       required this.fatGrams,
       this.weeksToGoal,
       this.estimatedGoalDate,
-      this.isOnboardingCompleted = false});
+      final List<String> favoriteFoodKeys = const <String>[],
+      this.freeMealsRemaining = 1,
+      this.challengeStartedAt,
+      this.challengeLastMealAt,
+      this.challengeMealsRemaining = 0,
+      this.paywallDismissCount = 0,
+      this.committedToLogDaily = false,
+      this.isOnboardingCompleted = false})
+      : _badHabits = badHabits,
+        _motivations = motivations,
+        _favoriteFoodKeys = favoriteFoodKeys;
 
   factory _$UserProfileImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserProfileImplFromJson(json);
@@ -360,6 +520,30 @@ class _$UserProfileImpl implements _UserProfile {
   final MainGoal mainGoal;
   @override
   final DietaryPreference dietaryPreference;
+  @override
+  @JsonKey()
+  final SleepDuration sleepDuration;
+  @override
+  @JsonKey()
+  final WaterIntake waterIntake;
+  final List<String> _badHabits;
+  @override
+  @JsonKey()
+  List<String> get badHabits {
+    if (_badHabits is EqualUnmodifiableListView) return _badHabits;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_badHabits);
+  }
+
+  final List<String> _motivations;
+  @override
+  @JsonKey()
+  List<String> get motivations {
+    if (_motivations is EqualUnmodifiableListView) return _motivations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_motivations);
+  }
+
 // Calculated values
   @override
   final int calculatedCalories;
@@ -374,13 +558,43 @@ class _$UserProfileImpl implements _UserProfile {
   final int? weeksToGoal;
   @override
   final DateTime? estimatedGoalDate;
+// Favoritos (para sync futura)
+  final List<String> _favoriteFoodKeys;
+// Favoritos (para sync futura)
+  @override
+  @JsonKey()
+  List<String> get favoriteFoodKeys {
+    if (_favoriteFoodKeys is EqualUnmodifiableListView)
+      return _favoriteFoodKeys;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_favoriteFoodKeys);
+  }
+
+// Monetization / gating (bootstrapped growth)
+  @override
+  @JsonKey()
+  final int freeMealsRemaining;
+  @override
+  final DateTime? challengeStartedAt;
+  @override
+  final DateTime? challengeLastMealAt;
+  @override
+  @JsonKey()
+  final int challengeMealsRemaining;
+  @override
+  @JsonKey()
+  final int paywallDismissCount;
+// Onboarding commitment
+  @override
+  @JsonKey()
+  final bool committedToLogDaily;
   @override
   @JsonKey()
   final bool isOnboardingCompleted;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, isOnboardingCompleted: $isOnboardingCompleted)';
+    return 'UserProfile(id: $id, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted)';
   }
 
   @override
@@ -405,6 +619,14 @@ class _$UserProfileImpl implements _UserProfile {
                 other.mainGoal == mainGoal) &&
             (identical(other.dietaryPreference, dietaryPreference) ||
                 other.dietaryPreference == dietaryPreference) &&
+            (identical(other.sleepDuration, sleepDuration) ||
+                other.sleepDuration == sleepDuration) &&
+            (identical(other.waterIntake, waterIntake) ||
+                other.waterIntake == waterIntake) &&
+            const DeepCollectionEquality()
+                .equals(other._badHabits, _badHabits) &&
+            const DeepCollectionEquality()
+                .equals(other._motivations, _motivations) &&
             (identical(other.calculatedCalories, calculatedCalories) ||
                 other.calculatedCalories == calculatedCalories) &&
             (identical(other.proteinGrams, proteinGrams) ||
@@ -417,31 +639,58 @@ class _$UserProfileImpl implements _UserProfile {
                 other.weeksToGoal == weeksToGoal) &&
             (identical(other.estimatedGoalDate, estimatedGoalDate) ||
                 other.estimatedGoalDate == estimatedGoalDate) &&
+            const DeepCollectionEquality()
+                .equals(other._favoriteFoodKeys, _favoriteFoodKeys) &&
+            (identical(other.freeMealsRemaining, freeMealsRemaining) ||
+                other.freeMealsRemaining == freeMealsRemaining) &&
+            (identical(other.challengeStartedAt, challengeStartedAt) ||
+                other.challengeStartedAt == challengeStartedAt) &&
+            (identical(other.challengeLastMealAt, challengeLastMealAt) ||
+                other.challengeLastMealAt == challengeLastMealAt) &&
+            (identical(
+                    other.challengeMealsRemaining, challengeMealsRemaining) ||
+                other.challengeMealsRemaining == challengeMealsRemaining) &&
+            (identical(other.paywallDismissCount, paywallDismissCount) ||
+                other.paywallDismissCount == paywallDismissCount) &&
+            (identical(other.committedToLogDaily, committedToLogDaily) ||
+                other.committedToLogDaily == committedToLogDaily) &&
             (identical(other.isOnboardingCompleted, isOnboardingCompleted) ||
                 other.isOnboardingCompleted == isOnboardingCompleted));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      gender,
-      birthDate,
-      height,
-      currentWeight,
-      targetWeight,
-      weeklyGoal,
-      activityLevel,
-      mainGoal,
-      dietaryPreference,
-      calculatedCalories,
-      proteinGrams,
-      carbsGrams,
-      fatGrams,
-      weeksToGoal,
-      estimatedGoalDate,
-      isOnboardingCompleted);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        gender,
+        birthDate,
+        height,
+        currentWeight,
+        targetWeight,
+        weeklyGoal,
+        activityLevel,
+        mainGoal,
+        dietaryPreference,
+        sleepDuration,
+        waterIntake,
+        const DeepCollectionEquality().hash(_badHabits),
+        const DeepCollectionEquality().hash(_motivations),
+        calculatedCalories,
+        proteinGrams,
+        carbsGrams,
+        fatGrams,
+        weeksToGoal,
+        estimatedGoalDate,
+        const DeepCollectionEquality().hash(_favoriteFoodKeys),
+        freeMealsRemaining,
+        challengeStartedAt,
+        challengeLastMealAt,
+        challengeMealsRemaining,
+        paywallDismissCount,
+        committedToLogDaily,
+        isOnboardingCompleted
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -469,12 +718,23 @@ abstract class _UserProfile implements UserProfile {
       required final ActivityLevel activityLevel,
       required final MainGoal mainGoal,
       required final DietaryPreference dietaryPreference,
+      final SleepDuration sleepDuration,
+      final WaterIntake waterIntake,
+      final List<String> badHabits,
+      final List<String> motivations,
       required final int calculatedCalories,
       required final int proteinGrams,
       required final int carbsGrams,
       required final int fatGrams,
       final int? weeksToGoal,
       final DateTime? estimatedGoalDate,
+      final List<String> favoriteFoodKeys,
+      final int freeMealsRemaining,
+      final DateTime? challengeStartedAt,
+      final DateTime? challengeLastMealAt,
+      final int challengeMealsRemaining,
+      final int paywallDismissCount,
+      final bool committedToLogDaily,
       final bool isOnboardingCompleted}) = _$UserProfileImpl;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
@@ -503,6 +763,14 @@ abstract class _UserProfile implements UserProfile {
   MainGoal get mainGoal;
   @override
   DietaryPreference get dietaryPreference;
+  @override
+  SleepDuration get sleepDuration;
+  @override
+  WaterIntake get waterIntake;
+  @override
+  List<String> get badHabits;
+  @override
+  List<String> get motivations;
   @override // Calculated values
   int get calculatedCalories;
   @override
@@ -515,6 +783,20 @@ abstract class _UserProfile implements UserProfile {
   int? get weeksToGoal;
   @override
   DateTime? get estimatedGoalDate;
+  @override // Favoritos (para sync futura)
+  List<String> get favoriteFoodKeys;
+  @override // Monetization / gating (bootstrapped growth)
+  int get freeMealsRemaining;
+  @override
+  DateTime? get challengeStartedAt;
+  @override
+  DateTime? get challengeLastMealAt;
+  @override
+  int get challengeMealsRemaining;
+  @override
+  int get paywallDismissCount;
+  @override // Onboarding commitment
+  bool get committedToLogDaily;
   @override
   bool get isOnboardingCompleted;
   @override
