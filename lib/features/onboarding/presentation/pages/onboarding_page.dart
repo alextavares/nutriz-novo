@@ -632,26 +632,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       }
       if (_currentStepKey != _StepKey.calculating) return;
       if (_logOnboarding) {
-        debugPrint('DEBUG: PIVOT - Redirecionando para PredictionScreen...');
+        debugPrint('DEBUG: Calculation complete -> allDone');
       }
-      // _animateToPage(_resultsPageIndex);
-      // NEW FLOW: Go to Prediction Screen
-      final profile = ref.read(onboardingNotifierProvider);
-      if (mounted) {
-        if (_logOnboarding) {
-          debugPrint(
-            'DEBUG: PIVOT - Push para /onboarding/prediction com dados: ${profile.currentWeight} -> ${profile.targetWeight}',
-          );
-        }
-        context.push(
-          '/onboarding/prediction',
-          extra: {
-            'currentWeight': profile.currentWeight,
-            'goalWeight': profile.targetWeight,
-            'age': (DateTime.now().year - profile.birthDate.year),
-          },
-        );
-      }
+      _goToStep(_StepKey.allDone);
     } catch (e, stack) {
       if (_logOnboarding) {
         debugPrint('DEBUG: _startCalculation error: $e\n$stack');
