@@ -269,7 +269,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.realisticGoal &&
         _currentStepKey != _StepKey.weeklyGoal &&
         _currentStepKey != _StepKey.dietAiBoost &&
-        _currentStepKey != _StepKey.dietaryPreference;
+        _currentStepKey != _StepKey.dietaryPreference &&
+        _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
         : (_currentPage - 1).clamp(0, totalSteps - 1) + 1;
@@ -301,7 +302,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.realisticGoal &&
         _currentStepKey != _StepKey.weeklyGoal &&
         _currentStepKey != _StepKey.dietAiBoost &&
-        _currentStepKey != _StepKey.dietaryPreference;
+        _currentStepKey != _StepKey.dietaryPreference &&
+        _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
       onWillPop: () async {
@@ -374,7 +376,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.realisticGoal ||
                                       _currentStepKey == _StepKey.weeklyGoal ||
                                       _currentStepKey == _StepKey.dietAiBoost ||
-                                      _currentStepKey == _StepKey.dietaryPreference)
+                                      _currentStepKey == _StepKey.dietaryPreference ||
+                                      _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
                                       onPressed: _finishInProgress
@@ -2970,40 +2973,156 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   Widget _buildBadHabitsStep(OnboardingNotifier notifier, UserProfile profile) {
-    return OnboardingStepContainer(
-      title: 'Maus hábitos',
-      subtitle: 'O que te impede de atingir seu objetivo?',
-      child: SingleChildScrollView(
+    final restrictions = profile.badHabits;
+    final noneSelected = restrictions.isEmpty;
+
+    void setNone() => notifier.updateBadHabits(const []);
+
+    void toggle(String id) {
+      final next = List<String>.from(restrictions);
+      if (next.contains(id)) {
+        next.remove(id);
+      } else {
+        next.add(id);
+      }
+      notifier.updateBadHabits(next);
+    }
+
+    const items = <_RestrictionItem>[
+      _RestrictionItem(
+        id: 'vegetarian',
+        emoji: '🥗',
+        title: 'Vegetariano',
+        info:
+            'Evita carnes. Pode incluir ovos e laticínios dependendo do seu padrão alimentar.',
+      ),
+      _RestrictionItem(
+        id: 'vegan',
+        emoji: '🌿',
+        title: 'Vegano',
+        info: 'Evita todos os alimentos de origem animal.',
+      ),
+      _RestrictionItem(
+        id: 'gluten_free',
+        emoji: '🚫🌾',
+        title: 'Sem glúten',
+        info:
+            'Evita alimentos com trigo, cevada e centeio. Importante para intolerância ou doença celíaca.',
+      ),
+      _RestrictionItem(
+        id: 'dairy_free',
+        emoji: '🚫🥛',
+        title: 'Sem lactose',
+        info:
+            'Evita leite e derivados. Pode ser útil para intolerância à lactose.',
+      ),
+      _RestrictionItem(
+        id: 'no_red_meat',
+        emoji: '🥩',
+        title: 'Evito carne vermelha',
+        info: 'Evita carne bovina/suína e similares.',
+      ),
+      _RestrictionItem(
+        id: 'nut_allergy',
+        emoji: '🥜',
+        title: 'Alergia a nozes',
+        info: 'Evita amendoim, castanhas e derivados por segurança.',
+      ),
+    ];
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _MultiSelectCard(
-              title: 'Doces e Açúcar',
-              isSelected: profile.badHabits.contains('sugar'),
-              onTap: () => notifier.toggleBadHabit('sugar'),
+            const SizedBox(height: 6),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.no_food_rounded,
+                  color: Color(0xFF111827),
+                  size: 18,
+                ),
+              ),
             ),
-            const SizedBox(height: 12),
-            _MultiSelectCard(
-              title: 'Refrigerante',
-              isSelected: profile.badHabits.contains('soda'),
-              onTap: () => notifier.toggleBadHabit('soda'),
+            const SizedBox(height: 14),
+            Text(
+              'Você tem alguma restrição\nalimentar, alergia ou algo\na evitar?',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
+              ),
             ),
-            const SizedBox(height: 12),
-            _MultiSelectCard(
-              title: 'Lanche Noturno',
-              isSelected: profile.badHabits.contains('night_snack'),
-              onTap: () => notifier.toggleBadHabit('night_snack'),
+            const SizedBox(height: 18),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _DietAiRestrictionCard(
+                      title: 'Nenhuma',
+                      emoji: '✅',
+                      isSelected: noneSelected,
+                      onTap: setNone,
+                      infoText:
+                          'Sem restrições. Você pode ajustar isso depois no Perfil.',
+                    ),
+                    const SizedBox(height: 10),
+                    for (final item in items) ...[
+                      _DietAiRestrictionCard(
+                        title: item.title,
+                        emoji: item.emoji,
+                        isSelected: restrictions.contains(item.id),
+                        onTap: () => toggle(item.id),
+                        infoText: item.info,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(height: 12),
-            _MultiSelectCard(
-              title: 'Comer por ansiedade',
-              isSelected: profile.badHabits.contains('anxiety'),
-              onTap: () => notifier.toggleBadHabit('anxiety'),
-            ),
-            const SizedBox(height: 12),
-            _MultiSelectCard(
-              title: 'Massas e Pães',
-              isSelected: profile.badHabits.contains('carbs'),
-              onTap: () => notifier.toggleBadHabit('carbs'),
+            const SizedBox(height: 18),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  _nextPage();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continuar',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -3792,6 +3911,136 @@ class _DietAiOptionCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _DietAiRestrictionCard extends StatelessWidget {
+  final String title;
+  final String emoji;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final String infoText;
+
+  const _DietAiRestrictionCard({
+    required this.title,
+    required this.emoji,
+    required this.isSelected,
+    required this.onTap,
+    required this.infoText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const green = Color(0xFF4CAF50);
+    final backgroundColor = isSelected ? green : const Color(0xFFE5E7EB);
+    final textColor = isSelected ? Colors.white : const Color(0xFF111827);
+    final iconColor = isSelected ? Colors.white : const Color(0xFF16A34A);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        height: 76,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: Row(
+            children: [
+              Text(emoji, style: TextStyle(fontSize: 14, color: textColor)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: textColor,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              InkWell(
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    showDragHandle: true,
+                    builder: (context) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 28),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: GoogleFonts.inter(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                                color: const Color(0xFF111827),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              infoText,
+                              style: GoogleFonts.inter(
+                                fontSize: 14,
+                                height: 1.4,
+                                color: const Color(0xFF374151),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                borderRadius: BorderRadius.circular(999),
+                child: Container(
+                  width: 18,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: iconColor, width: 1.5),
+                  ),
+                  child: Icon(
+                    Icons.info_outline_rounded,
+                    size: 12,
+                    color: iconColor,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Icon(
+                isSelected
+                    ? Icons.check_circle_rounded
+                    : Icons.radio_button_unchecked_rounded,
+                color: isSelected ? Colors.white : const Color(0xFF9CA3AF),
+                size: 18,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RestrictionItem {
+  final String id;
+  final String emoji;
+  final String title;
+  final String info;
+
+  const _RestrictionItem({
+    required this.id,
+    required this.emoji,
+    required this.title,
+    required this.info,
+  });
 }
 
 class _BetterMeGoalCard extends StatelessWidget {
