@@ -263,7 +263,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.currentWeight &&
         _currentStepKey != _StepKey.targetWeight &&
         _currentStepKey != _StepKey.realisticGoal &&
-        _currentStepKey != _StepKey.weeklyGoal;
+        _currentStepKey != _StepKey.weeklyGoal &&
+        _currentStepKey != _StepKey.dietaryPreference;
     final stepNumber = totalSteps == 0
         ? 0
         : (_currentPage - 1).clamp(0, totalSteps - 1) + 1;
@@ -293,7 +294,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.currentWeight &&
         _currentStepKey != _StepKey.targetWeight &&
         _currentStepKey != _StepKey.realisticGoal &&
-        _currentStepKey != _StepKey.weeklyGoal;
+        _currentStepKey != _StepKey.weeklyGoal &&
+        _currentStepKey != _StepKey.dietaryPreference;
 
     return WillPopScope(
       onWillPop: () async {
@@ -364,7 +366,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.currentWeight ||
                                       _currentStepKey == _StepKey.targetWeight ||
                                       _currentStepKey == _StepKey.realisticGoal ||
-                                      _currentStepKey == _StepKey.weeklyGoal)
+                                      _currentStepKey == _StepKey.weeklyGoal ||
+                                      _currentStepKey == _StepKey.dietaryPreference)
                                   ? const SizedBox.shrink()
                                   : TextButton(
                                       onPressed: _finishInProgress
@@ -2696,51 +2699,123 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     OnboardingNotifier notifier,
     UserProfile profile,
   ) {
-    return OnboardingStepContainer(
-      title: 'Preferência alimentar',
-      subtitle: 'Escolha seu estilo de alimentação',
-      child: SingleChildScrollView(
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ActivityLevelCard(
-              emoji: '🥩',
-              title: 'Clássico',
-              description: 'Todos os tipos de alimentos',
-              isSelected:
-                  profile.dietaryPreference == DietaryPreference.classic,
-              onTap: () =>
-                  notifier.updateDietaryPreference(DietaryPreference.classic),
-            ),
-            const SizedBox(height: 12),
-            ActivityLevelCard(
-              emoji: '🐟',
-              title: 'Pescetariano',
-              description: 'Vegetais, ovos, laticínios e peixes',
-              isSelected:
-                  profile.dietaryPreference == DietaryPreference.pescetarian,
-              onTap: () => notifier.updateDietaryPreference(
-                DietaryPreference.pescetarian,
+            const SizedBox(height: 6),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.restaurant_menu_rounded,
+                  color: Color(0xFF111827),
+                  size: 18,
+                ),
               ),
             ),
-            const SizedBox(height: 12),
-            ActivityLevelCard(
-              emoji: '🥦',
-              title: 'Vegetariano',
-              description: 'Vegetais, ovos e laticínios',
-              isSelected:
-                  profile.dietaryPreference == DietaryPreference.vegetarian,
-              onTap: () => notifier.updateDietaryPreference(
-                DietaryPreference.vegetarian,
+            const SizedBox(height: 14),
+            Text(
+              'Qual é sua\npreferência alimentar?',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
               ),
             ),
-            const SizedBox(height: 12),
-            ActivityLevelCard(
-              emoji: '🥑',
-              title: 'Vegano',
-              description: 'Apenas alimentos de origem vegetal',
-              isSelected: profile.dietaryPreference == DietaryPreference.vegan,
-              onTap: () =>
-                  notifier.updateDietaryPreference(DietaryPreference.vegan),
+            const SizedBox(height: 18),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _DietAiOptionCard(
+                      emoji: '🥩',
+                      title: 'Clássico',
+                      subtitle: 'Todos os tipos de alimentos',
+                      isSelected:
+                          profile.dietaryPreference == DietaryPreference.classic,
+                      onTap: () => notifier.updateDietaryPreference(
+                        DietaryPreference.classic,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _DietAiOptionCard(
+                      emoji: '🐟',
+                      title: 'Pescetariano',
+                      subtitle: 'Vegetais, ovos, laticínios e peixes',
+                      isSelected: profile.dietaryPreference ==
+                          DietaryPreference.pescetarian,
+                      onTap: () => notifier.updateDietaryPreference(
+                        DietaryPreference.pescetarian,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _DietAiOptionCard(
+                      emoji: '🥦',
+                      title: 'Vegetariano',
+                      subtitle: 'Vegetais, ovos e laticínios',
+                      isSelected: profile.dietaryPreference ==
+                          DietaryPreference.vegetarian,
+                      onTap: () => notifier.updateDietaryPreference(
+                        DietaryPreference.vegetarian,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _DietAiOptionCard(
+                      emoji: '🥑',
+                      title: 'Vegano',
+                      subtitle: 'Apenas alimentos de origem vegetal',
+                      isSelected:
+                          profile.dietaryPreference == DietaryPreference.vegan,
+                      onTap: () => notifier.updateDietaryPreference(
+                        DietaryPreference.vegan,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  _nextPage();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continuar',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -3480,6 +3555,88 @@ class _DietAiMainGoalCard extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DietAiOptionCard extends StatelessWidget {
+  final String emoji;
+  final String title;
+  final String subtitle;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _DietAiOptionCard({
+    required this.emoji,
+    required this.title,
+    required this.subtitle,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const green = Color(0xFF4CAF50);
+    final backgroundColor = isSelected ? green : const Color(0xFFE5E7EB);
+    final titleColor = isSelected ? Colors.white : const Color(0xFF111827);
+    final subtitleColor = isSelected
+        ? Colors.white.withOpacity(0.85)
+        : const Color(0xFF6B7280);
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        height: 76,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Row(
+          children: [
+            Text(emoji, style: TextStyle(fontSize: 16, color: titleColor)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                      color: titleColor,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    subtitle,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      height: 1.2,
+                      fontWeight: FontWeight.w700,
+                      color: subtitleColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            Icon(
+              isSelected
+                  ? Icons.check_circle_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              color: isSelected ? Colors.white : const Color(0xFF9CA3AF),
+              size: 18,
             ),
           ],
         ),
