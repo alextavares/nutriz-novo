@@ -31,27 +31,35 @@ Future<void> main() async {
   ];
 
   late final Isar isar;
-  try {
-    isar = await Isar.open(schemas, directory: dir.path);
-  } catch (_) {
-    // Isar doesn't support migrations; schema changes can prevent opening an
-    // existing database. In beta, prefer a clean start over crashing on boot.
+  // Hot restart keeps the native Android process alive, so an Isar instance may
+  // already be open. Reuse it to avoid noisy "already open"/initialization
+  // errors during development.
+  final existingIsar = Isar.getInstance();
+  if (existingIsar != null) {
+    isar = existingIsar;
+  } else {
     try {
-      final folder = Directory(dir.path);
-      if (await folder.exists()) {
-        await for (final entity in folder.list()) {
-          final name = entity.uri.pathSegments.isEmpty
-              ? ''
-              : entity.uri.pathSegments.last;
-          if (name.startsWith('${Isar.defaultName}.isar')) {
-            try {
-              await entity.delete(recursive: true);
-            } catch (_) {}
+      isar = await Isar.open(schemas, directory: dir.path);
+    } catch (_) {
+      // Isar doesn't support migrations; schema changes can prevent opening an
+      // existing database. In beta, prefer a clean start over crashing on boot.
+      try {
+        final folder = Directory(dir.path);
+        if (await folder.exists()) {
+          await for (final entity in folder.list()) {
+            final name = entity.uri.pathSegments.isEmpty
+                ? ''
+                : entity.uri.pathSegments.last;
+            if (name.startsWith('${Isar.defaultName}.isar')) {
+              try {
+                await entity.delete(recursive: true);
+              } catch (_) {}
+            }
           }
         }
-      }
-    } catch (_) {}
-    isar = await Isar.open(schemas, directory: dir.path);
+      } catch (_) {}
+      isar = await Isar.open(schemas, directory: dir.path);
+    }
   }
 
   final analyticsPath = '${dir.path}/analytics_events.jsonl';

@@ -23,10 +23,11 @@ class OnboardingNotifier extends _$OnboardingNotifier {
     // causing the PageView to reset to page 0.
     ref.keepAlive();
 
+    final now = DateTime.now();
     final initial = UserProfile(
       id: ProfileRepository.singleProfileId,
       gender: Gender.male,
-      birthDate: DateTime(1990, 1, 1),
+      birthDate: DateTime(now.year - 30, 1, 1),
       height: 170,
       currentWeight: 70,
       targetWeight: 70,

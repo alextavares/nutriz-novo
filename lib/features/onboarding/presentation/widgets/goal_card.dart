@@ -109,9 +109,10 @@ class GoalCard extends StatelessWidget {
   }
 }
 
-/// Card horizontal para seleção de nível de atividade
+/// Card horizontal para seleção de nível de atividade (com suporte a Emoji ou Icon)
 class ActivityLevelCard extends StatelessWidget {
-  final IconData icon;
+  final IconData? icon;
+  final String? emoji; // New: Emoji support
   final String title;
   final String description;
   final bool isSelected;
@@ -119,12 +120,13 @@ class ActivityLevelCard extends StatelessWidget {
 
   const ActivityLevelCard({
     super.key,
-    required this.icon,
+    this.icon,
+    this.emoji,
     required this.title,
     required this.description,
     required this.isSelected,
     required this.onTap,
-  });
+  }) : assert(icon != null || emoji != null, 'Provide either icon or emoji');
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +153,7 @@ class ActivityLevelCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Icon
+            // Icon or Emoji
             Container(
               width: 56,
               height: 56,
@@ -170,12 +172,18 @@ class ActivityLevelCard extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: Icon(
-                icon,
-                size: 28,
-                color: isSelected
-                    ? Colors.white
-                    : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              child: Center(
+                child: emoji != null
+                    ? Text(emoji!, style: const TextStyle(fontSize: 28))
+                    : Icon(
+                        icon,
+                        size: 28,
+                        color: isSelected
+                            ? Colors.white
+                            : theme.colorScheme.onSurface.withValues(
+                                alpha: 0.6,
+                              ),
+                      ),
               ),
             ),
             const SizedBox(width: 16),

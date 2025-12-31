@@ -9,8 +9,8 @@ class RulerPicker extends StatefulWidget {
   final String unit;
   final String label;
   final Axis direction;
-  final bool
-  showValue; // Option to hide built-in value display if we want to custom render it
+  final bool showValue;
+  final bool showIndicator;
 
   const RulerPicker({
     super.key,
@@ -22,6 +22,7 @@ class RulerPicker extends StatefulWidget {
     required this.label,
     this.direction = Axis.horizontal,
     this.showValue = true,
+    this.showIndicator = true,
   });
 
   @override
@@ -223,35 +224,35 @@ class _RulerPickerState extends State<RulerPicker> {
           ),
 
           // Central Indicator (Pointer)
-          Align(
-            alignment: isHorizontal
-                ? Alignment.topCenter
-                : Alignment.centerRight, // Vertical: line on right
-            child: Container(
-              width: isHorizontal
-                  ? 4
-                  : 40, // Vertical: pointer is a line cutting across? Or just a marker?
-              height: isHorizontal ? 80 : 3,
-              color: theme.colorScheme.primary,
-              margin: isHorizontal
-                  ? null
-                  : const EdgeInsets.only(right: 0), // Adjust as needed
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primary,
-                borderRadius: BorderRadius.circular(2),
-                boxShadow: isHorizontal
-                    ? [
-                        BoxShadow(
-                          color: theme.colorScheme.primary.withOpacity(0.4),
-                          blurRadius: 10,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 2),
-                        ),
-                      ]
-                    : [],
+          if (widget.showIndicator)
+            Align(
+              alignment: isHorizontal
+                  ? Alignment.topCenter
+                  : Alignment.centerRight, // Vertical: line on right
+              child: Container(
+                width: isHorizontal
+                    ? 4
+                    : 40, // Vertical: pointer is a line cutting across? Or just a marker?
+                height: isHorizontal ? 80 : 3,
+                margin: isHorizontal
+                    ? null
+                    : const EdgeInsets.only(right: 0), // Adjust as needed
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(2),
+                  boxShadow: isHorizontal
+                      ? [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withOpacity(0.4),
+                            blurRadius: 10,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [],
+                ),
               ),
             ),
-          ),
 
           // Gradients
           _buildGradients(theme, isHorizontal),
