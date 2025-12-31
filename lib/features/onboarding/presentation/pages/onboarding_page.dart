@@ -76,6 +76,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.targetWeight,
           _StepKey.realisticGoal,
           _StepKey.weeklyGoal,
+          _StepKey.dietAiBoost,
           _StepKey.dietaryPreference,
           _StepKey.badHabits,
           _StepKey.water,
@@ -219,6 +220,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return true;
       case _StepKey.weeklyGoal:
         return true;
+      case _StepKey.dietAiBoost:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -264,6 +267,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.targetWeight &&
         _currentStepKey != _StepKey.realisticGoal &&
         _currentStepKey != _StepKey.weeklyGoal &&
+        _currentStepKey != _StepKey.dietAiBoost &&
         _currentStepKey != _StepKey.dietaryPreference;
     final stepNumber = totalSteps == 0
         ? 0
@@ -295,6 +299,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.targetWeight &&
         _currentStepKey != _StepKey.realisticGoal &&
         _currentStepKey != _StepKey.weeklyGoal &&
+        _currentStepKey != _StepKey.dietAiBoost &&
         _currentStepKey != _StepKey.dietaryPreference;
 
     return WillPopScope(
@@ -367,6 +372,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.targetWeight ||
                                       _currentStepKey == _StepKey.realisticGoal ||
                                       _currentStepKey == _StepKey.weeklyGoal ||
+                                      _currentStepKey == _StepKey.dietAiBoost ||
                                       _currentStepKey == _StepKey.dietaryPreference)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -2695,6 +2701,145 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
+  Widget _buildDietAiBoostStep(OnboardingNotifier notifier) {
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 18, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 28),
+            Text(
+              'Perca 2x mais peso\ncom DietAI do que\nsozinho',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 28),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Sem\nDietAI',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF111827),
+                    ),
+                  ),
+                  Text(
+                    'Com\nDietAI',
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF111827),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 70,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE5E7EB),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      '20%',
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        color: const Color(0xFF111827),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Container(
+                    height: 110,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF2563EB),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Text(
+                      '2X',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+            Text(
+              'O DietAI torna mais simples alcançar suas metas\ne ajuda você a manter consistência.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                height: 1.4,
+                color: const Color(0xFF6B7280),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  _nextPage();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continuar',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDietaryPreferenceStep(
     OnboardingNotifier notifier,
     UserProfile profile,
@@ -3082,6 +3227,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildScienceAiStep(notifier);
       case _StepKey.weeklyGoal:
         return _buildWeeklyGoalStep(notifier, profile);
+      case _StepKey.dietAiBoost:
+        return _buildDietAiBoostStep(notifier);
       case _StepKey.dietaryPreference:
         return _buildDietaryPreferenceStep(notifier, profile);
       case _StepKey.badHabits:
@@ -3116,6 +3263,7 @@ enum _StepKey {
   activityLevel,
   scienceAi,
   weeklyGoal,
+  dietAiBoost,
   dietaryPreference,
   badHabits,
   water,
