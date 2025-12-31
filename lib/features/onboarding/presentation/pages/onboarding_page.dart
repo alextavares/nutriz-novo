@@ -100,6 +100,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.calculating,
           _StepKey.results,
           _StepKey.allDone,
+          _StepKey.foodLoggingMethod,
         ]
       : const [
           _StepKey.welcome,
@@ -130,6 +131,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.results,
           _StepKey.proUpsell,
           _StepKey.allDone,
+          _StepKey.foodLoggingMethod,
         ];
 
   int get _totalPages => _stepKeys.length;
@@ -260,6 +262,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return true;
       case _StepKey.allDone:
         return true;
+      case _StepKey.foodLoggingMethod:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -314,6 +318,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.name &&
         _currentStepKey != _StepKey.rating &&
         _currentStepKey != _StepKey.allDone &&
+        _currentStepKey != _StepKey.foodLoggingMethod &&
         _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
@@ -354,6 +359,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.name &&
         _currentStepKey != _StepKey.rating &&
         _currentStepKey != _StepKey.allDone &&
+        _currentStepKey != _StepKey.foodLoggingMethod &&
         _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
@@ -435,6 +441,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.name ||
                                       _currentStepKey == _StepKey.rating ||
                                       _currentStepKey == _StepKey.allDone ||
+                                      _currentStepKey == _StepKey.foodLoggingMethod ||
                                       _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -3715,6 +3722,185 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               child: ElevatedButton(
                 onPressed: () async {
                   notifier.saveDraft();
+                  _goToStep(_StepKey.foodLoggingMethod);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFoodLoggingMethodStep(OnboardingNotifier notifier, UserProfile profile) {
+    final selected = profile.foodLoggingMethod;
+
+    Widget option({
+      required String title,
+      required FoodLoggingMethod method,
+      required String assetPath,
+      bool highlighted = false,
+    }) {
+      final isSelected = selected == method;
+      final bg = isSelected || highlighted ? const Color(0xFF22C55E) : const Color(0xFFE5E7EB);
+      final fg = isSelected || highlighted ? Colors.white : const Color(0xFF111827);
+
+      return InkWell(
+        onTap: () {
+          notifier.updateFoodLoggingMethod(method);
+          notifier.saveDraft();
+        },
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          padding: const EdgeInsets.only(left: 16, right: 12),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w800,
+                    color: fg,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 56,
+                height: 40,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    assetPath,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: (isSelected || highlighted)
+                            ? Colors.white.withOpacity(0.2)
+                            : const Color(0xFFF3F4F6),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.image_outlined,
+                          size: 20,
+                          color: (isSelected || highlighted)
+                              ? Colors.white.withOpacity(0.9)
+                              : const Color(0xFF9CA3AF),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 8),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.menu_book_outlined,
+                  color: Color(0xFF111827),
+                  size: 18,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              'How do you want to log\nyour food?',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1.12,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 18),
+            option(
+              title: 'Not now',
+              method: FoodLoggingMethod.notNow,
+              assetPath: 'assets/images/log_method_not_now.png',
+              highlighted: true,
+            ),
+            const SizedBox(height: 12),
+            option(
+              title: 'Select from your gallery',
+              method: FoodLoggingMethod.gallery,
+              assetPath: 'assets/images/log_method_gallery.png',
+            ),
+            const SizedBox(height: 10),
+            option(
+              title: 'Take a photo of your food',
+              method: FoodLoggingMethod.photo,
+              assetPath: 'assets/images/log_method_photo.png',
+            ),
+            const SizedBox(height: 10),
+            option(
+              title: 'Scan the food barcode',
+              method: FoodLoggingMethod.barcode,
+              assetPath: 'assets/images/log_method_barcode.png',
+            ),
+            const SizedBox(height: 10),
+            option(
+              title: 'Type what you ate',
+              method: FoodLoggingMethod.type,
+              assetPath: 'assets/images/log_method_type.png',
+            ),
+            const SizedBox(height: 10),
+            option(
+              title: 'Say what you ate',
+              method: FoodLoggingMethod.voice,
+              assetPath: 'assets/images/log_method_voice.png',
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () async {
+                  notifier.saveDraft();
                   await _finishOnboarding(nextRoute: '/diary?firstRun=1');
                 },
                 style: ElevatedButton.styleFrom(
@@ -4459,6 +4645,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildRatingStep(notifier);
       case _StepKey.allDone:
         return _buildAllDoneStep(notifier, profile);
+      case _StepKey.foodLoggingMethod:
+        return _buildFoodLoggingMethodStep(notifier, profile);
       case _StepKey.badHabits:
         return _buildBadHabitsStep(notifier, profile);
       case _StepKey.water:
@@ -4500,6 +4688,7 @@ enum _StepKey {
   name,
   rating,
   allDone,
+  foodLoggingMethod,
   badHabits,
   water,
   sleep,

@@ -31,6 +31,9 @@ class UserProfileEntity {
   @enumerated
   late DietaryPreference dietaryPreference;
 
+  @enumerated
+  late FoodLoggingMethod foodLoggingMethod;
+
   late int calculatedCalories;
   late int proteinGrams;
   late int carbsGrams;
@@ -60,6 +63,7 @@ class UserProfileEntity {
       ..activityLevel = profile.activityLevel
       ..mainGoal = profile.mainGoal
       ..dietaryPreference = profile.dietaryPreference
+      ..foodLoggingMethod = profile.foodLoggingMethod
       ..calculatedCalories = profile.calculatedCalories
       ..proteinGrams = profile.proteinGrams
       ..carbsGrams = profile.carbsGrams
@@ -87,6 +91,7 @@ class UserProfileEntity {
       activityLevel: activityLevel,
       mainGoal: mainGoal,
       dietaryPreference: dietaryPreference,
+      foodLoggingMethod: foodLoggingMethod,
       calculatedCalories: calculatedCalories,
       proteinGrams: proteinGrams,
       carbsGrams: carbsGrams,

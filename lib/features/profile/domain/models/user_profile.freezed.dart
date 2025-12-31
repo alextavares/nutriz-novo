@@ -57,6 +57,7 @@ mixin _$UserProfile {
       throw _privateConstructorUsedError; // Onboarding commitment
   bool get committedToLogDaily => throw _privateConstructorUsedError;
   bool get isOnboardingCompleted => throw _privateConstructorUsedError;
+  FoodLoggingMethod get foodLoggingMethod => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -99,7 +100,8 @@ abstract class $UserProfileCopyWith<$Res> {
       int challengeMealsRemaining,
       int paywallDismissCount,
       bool committedToLogDaily,
-      bool isOnboardingCompleted});
+      bool isOnboardingCompleted,
+      FoodLoggingMethod foodLoggingMethod});
 }
 
 /// @nodoc
@@ -144,6 +146,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? paywallDismissCount = null,
     Object? committedToLogDaily = null,
     Object? isOnboardingCompleted = null,
+    Object? foodLoggingMethod = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -262,6 +265,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
           ? _value.isOnboardingCompleted
           : isOnboardingCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      foodLoggingMethod: null == foodLoggingMethod
+          ? _value.foodLoggingMethod
+          : foodLoggingMethod // ignore: cast_nullable_to_non_nullable
+              as FoodLoggingMethod,
     ) as $Val);
   }
 }
@@ -303,7 +310,8 @@ abstract class _$$UserProfileImplCopyWith<$Res>
       int challengeMealsRemaining,
       int paywallDismissCount,
       bool committedToLogDaily,
-      bool isOnboardingCompleted});
+      bool isOnboardingCompleted,
+      FoodLoggingMethod foodLoggingMethod});
 }
 
 /// @nodoc
@@ -346,6 +354,7 @@ class __$$UserProfileImplCopyWithImpl<$Res>
     Object? paywallDismissCount = null,
     Object? committedToLogDaily = null,
     Object? isOnboardingCompleted = null,
+    Object? foodLoggingMethod = null,
   }) {
     return _then(_$UserProfileImpl(
       id: null == id
@@ -464,6 +473,10 @@ class __$$UserProfileImplCopyWithImpl<$Res>
           ? _value.isOnboardingCompleted
           : isOnboardingCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      foodLoggingMethod: null == foodLoggingMethod
+          ? _value.foodLoggingMethod
+          : foodLoggingMethod // ignore: cast_nullable_to_non_nullable
+              as FoodLoggingMethod,
     ));
   }
 }
@@ -500,7 +513,8 @@ class _$UserProfileImpl implements _UserProfile {
       this.challengeMealsRemaining = 0,
       this.paywallDismissCount = 0,
       this.committedToLogDaily = false,
-      this.isOnboardingCompleted = false})
+      this.isOnboardingCompleted = false,
+      this.foodLoggingMethod = FoodLoggingMethod.notNow})
       : _badHabits = badHabits,
         _motivations = motivations,
         _favoriteFoodKeys = favoriteFoodKeys;
@@ -608,10 +622,13 @@ class _$UserProfileImpl implements _UserProfile {
   @override
   @JsonKey()
   final bool isOnboardingCompleted;
+  @override
+  @JsonKey()
+  final FoodLoggingMethod foodLoggingMethod;
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted)';
+    return 'UserProfile(id: $id, name: $name, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted, foodLoggingMethod: $foodLoggingMethod)';
   }
 
   @override
@@ -673,7 +690,9 @@ class _$UserProfileImpl implements _UserProfile {
             (identical(other.committedToLogDaily, committedToLogDaily) ||
                 other.committedToLogDaily == committedToLogDaily) &&
             (identical(other.isOnboardingCompleted, isOnboardingCompleted) ||
-                other.isOnboardingCompleted == isOnboardingCompleted));
+                other.isOnboardingCompleted == isOnboardingCompleted) &&
+            (identical(other.foodLoggingMethod, foodLoggingMethod) ||
+                other.foodLoggingMethod == foodLoggingMethod));
   }
 
   @JsonKey(ignore: true)
@@ -708,7 +727,8 @@ class _$UserProfileImpl implements _UserProfile {
         challengeMealsRemaining,
         paywallDismissCount,
         committedToLogDaily,
-        isOnboardingCompleted
+        isOnboardingCompleted,
+        foodLoggingMethod
       ]);
 
   @JsonKey(ignore: true)
@@ -755,7 +775,8 @@ abstract class _UserProfile implements UserProfile {
       final int challengeMealsRemaining,
       final int paywallDismissCount,
       final bool committedToLogDaily,
-      final bool isOnboardingCompleted}) = _$UserProfileImpl;
+      final bool isOnboardingCompleted,
+      final FoodLoggingMethod foodLoggingMethod}) = _$UserProfileImpl;
 
   factory _UserProfile.fromJson(Map<String, dynamic> json) =
       _$UserProfileImpl.fromJson;
@@ -821,6 +842,8 @@ abstract class _UserProfile implements UserProfile {
   bool get committedToLogDaily;
   @override
   bool get isOnboardingCompleted;
+  @override
+  FoodLoggingMethod get foodLoggingMethod;
   @override
   @JsonKey(ignore: true)
   _$$UserProfileImplCopyWith<_$UserProfileImpl> get copyWith =>

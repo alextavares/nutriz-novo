@@ -79,60 +79,66 @@ const UserProfileEntitySchema = CollectionSchema(
       name: r'favoriteFoodKeysJson',
       type: IsarType.string,
     ),
-    r'freeMealsRemaining': PropertySchema(
+    r'foodLoggingMethod': PropertySchema(
       id: 12,
+      name: r'foodLoggingMethod',
+      type: IsarType.byte,
+      enumMap: _UserProfileEntityfoodLoggingMethodEnumValueMap,
+    ),
+    r'freeMealsRemaining': PropertySchema(
+      id: 13,
       name: r'freeMealsRemaining',
       type: IsarType.long,
     ),
     r'gender': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'gender',
       type: IsarType.byte,
       enumMap: _UserProfileEntitygenderEnumValueMap,
     ),
     r'height': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'height',
       type: IsarType.long,
     ),
     r'isOnboardingCompleted': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'isOnboardingCompleted',
       type: IsarType.bool,
     ),
     r'mainGoal': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'mainGoal',
       type: IsarType.byte,
       enumMap: _UserProfileEntitymainGoalEnumValueMap,
     ),
     r'name': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'name',
       type: IsarType.string,
     ),
     r'paywallDismissCount': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'paywallDismissCount',
       type: IsarType.long,
     ),
     r'profileId': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'profileId',
       type: IsarType.string,
     ),
     r'proteinGrams': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'proteinGrams',
       type: IsarType.long,
     ),
     r'targetWeight': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'targetWeight',
       type: IsarType.double,
     ),
     r'weeklyGoal': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'weeklyGoal',
       type: IsarType.double,
     )
@@ -205,17 +211,18 @@ void _userProfileEntitySerialize(
   writer.writeByte(offsets[9], object.dietaryPreference.index);
   writer.writeLong(offsets[10], object.fatGrams);
   writer.writeString(offsets[11], object.favoriteFoodKeysJson);
-  writer.writeLong(offsets[12], object.freeMealsRemaining);
-  writer.writeByte(offsets[13], object.gender.index);
-  writer.writeLong(offsets[14], object.height);
-  writer.writeBool(offsets[15], object.isOnboardingCompleted);
-  writer.writeByte(offsets[16], object.mainGoal.index);
-  writer.writeString(offsets[17], object.name);
-  writer.writeLong(offsets[18], object.paywallDismissCount);
-  writer.writeString(offsets[19], object.profileId);
-  writer.writeLong(offsets[20], object.proteinGrams);
-  writer.writeDouble(offsets[21], object.targetWeight);
-  writer.writeDouble(offsets[22], object.weeklyGoal);
+  writer.writeByte(offsets[12], object.foodLoggingMethod.index);
+  writer.writeLong(offsets[13], object.freeMealsRemaining);
+  writer.writeByte(offsets[14], object.gender.index);
+  writer.writeLong(offsets[15], object.height);
+  writer.writeBool(offsets[16], object.isOnboardingCompleted);
+  writer.writeByte(offsets[17], object.mainGoal.index);
+  writer.writeString(offsets[18], object.name);
+  writer.writeLong(offsets[19], object.paywallDismissCount);
+  writer.writeString(offsets[20], object.profileId);
+  writer.writeLong(offsets[21], object.proteinGrams);
+  writer.writeDouble(offsets[22], object.targetWeight);
+  writer.writeDouble(offsets[23], object.weeklyGoal);
 }
 
 UserProfileEntity _userProfileEntityDeserialize(
@@ -241,22 +248,25 @@ UserProfileEntity _userProfileEntityDeserialize(
       DietaryPreference.classic;
   object.fatGrams = reader.readLong(offsets[10]);
   object.favoriteFoodKeysJson = reader.readStringOrNull(offsets[11]);
-  object.freeMealsRemaining = reader.readLongOrNull(offsets[12]);
+  object.foodLoggingMethod = _UserProfileEntityfoodLoggingMethodValueEnumMap[
+          reader.readByteOrNull(offsets[12])] ??
+      FoodLoggingMethod.notNow;
+  object.freeMealsRemaining = reader.readLongOrNull(offsets[13]);
   object.gender = _UserProfileEntitygenderValueEnumMap[
-          reader.readByteOrNull(offsets[13])] ??
+          reader.readByteOrNull(offsets[14])] ??
       Gender.male;
-  object.height = reader.readLong(offsets[14]);
+  object.height = reader.readLong(offsets[15]);
   object.id = id;
-  object.isOnboardingCompleted = reader.readBool(offsets[15]);
+  object.isOnboardingCompleted = reader.readBool(offsets[16]);
   object.mainGoal = _UserProfileEntitymainGoalValueEnumMap[
-          reader.readByteOrNull(offsets[16])] ??
+          reader.readByteOrNull(offsets[17])] ??
       MainGoal.loseWeight;
-  object.name = reader.readStringOrNull(offsets[17]);
-  object.paywallDismissCount = reader.readLongOrNull(offsets[18]);
-  object.profileId = reader.readString(offsets[19]);
-  object.proteinGrams = reader.readLong(offsets[20]);
-  object.targetWeight = reader.readDouble(offsets[21]);
-  object.weeklyGoal = reader.readDouble(offsets[22]);
+  object.name = reader.readStringOrNull(offsets[18]);
+  object.paywallDismissCount = reader.readLongOrNull(offsets[19]);
+  object.profileId = reader.readString(offsets[20]);
+  object.proteinGrams = reader.readLong(offsets[21]);
+  object.targetWeight = reader.readDouble(offsets[22]);
+  object.weeklyGoal = reader.readDouble(offsets[23]);
   return object;
 }
 
@@ -296,30 +306,34 @@ P _userProfileEntityDeserializeProp<P>(
     case 11:
       return (reader.readStringOrNull(offset)) as P;
     case 12:
-      return (reader.readLongOrNull(offset)) as P;
+      return (_UserProfileEntityfoodLoggingMethodValueEnumMap[
+              reader.readByteOrNull(offset)] ??
+          FoodLoggingMethod.notNow) as P;
     case 13:
+      return (reader.readLongOrNull(offset)) as P;
+    case 14:
       return (_UserProfileEntitygenderValueEnumMap[
               reader.readByteOrNull(offset)] ??
           Gender.male) as P;
-    case 14:
-      return (reader.readLong(offset)) as P;
     case 15:
-      return (reader.readBool(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 16:
+      return (reader.readBool(offset)) as P;
+    case 17:
       return (_UserProfileEntitymainGoalValueEnumMap[
               reader.readByteOrNull(offset)] ??
           MainGoal.loseWeight) as P;
-    case 17:
-      return (reader.readStringOrNull(offset)) as P;
     case 18:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 19:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 20:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 21:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 22:
+      return (reader.readDouble(offset)) as P;
+    case 23:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -349,6 +363,22 @@ const _UserProfileEntitydietaryPreferenceValueEnumMap = {
   1: DietaryPreference.pescetarian,
   2: DietaryPreference.vegetarian,
   3: DietaryPreference.vegan,
+};
+const _UserProfileEntityfoodLoggingMethodEnumValueMap = {
+  'notNow': 0,
+  'gallery': 1,
+  'photo': 2,
+  'barcode': 3,
+  'type': 4,
+  'voice': 5,
+};
+const _UserProfileEntityfoodLoggingMethodValueEnumMap = {
+  0: FoodLoggingMethod.notNow,
+  1: FoodLoggingMethod.gallery,
+  2: FoodLoggingMethod.photo,
+  3: FoodLoggingMethod.barcode,
+  4: FoodLoggingMethod.type,
+  5: FoodLoggingMethod.voice,
 };
 const _UserProfileEntitygenderEnumValueMap = {
   'male': 0,
@@ -1368,6 +1398,62 @@ extension UserProfileEntityQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'favoriteFoodKeysJson',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      foodLoggingMethodEqualTo(FoodLoggingMethod value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'foodLoggingMethod',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      foodLoggingMethodGreaterThan(
+    FoodLoggingMethod value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'foodLoggingMethod',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      foodLoggingMethodLessThan(
+    FoodLoggingMethod value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'foodLoggingMethod',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      foodLoggingMethodBetween(
+    FoodLoggingMethod lower,
+    FoodLoggingMethod upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'foodLoggingMethod',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2410,6 +2496,20 @@ extension UserProfileEntityQuerySortBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByFoodLoggingMethod() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'foodLoggingMethod', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByFoodLoggingMethodDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'foodLoggingMethod', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       sortByFreeMealsRemaining() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'freeMealsRemaining', Sort.asc);
@@ -2735,6 +2835,20 @@ extension UserProfileEntityQuerySortThenBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByFoodLoggingMethod() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'foodLoggingMethod', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByFoodLoggingMethodDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'foodLoggingMethod', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       thenByFreeMealsRemaining() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'freeMealsRemaining', Sort.asc);
@@ -2990,6 +3104,13 @@ extension UserProfileEntityQueryWhereDistinct
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByFoodLoggingMethod() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'foodLoggingMethod');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
       distinctByFreeMealsRemaining() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'freeMealsRemaining');
@@ -3154,6 +3275,13 @@ extension UserProfileEntityQueryProperty
       favoriteFoodKeysJsonProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'favoriteFoodKeysJson');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, FoodLoggingMethod, QQueryOperations>
+      foodLoggingMethodProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'foodLoggingMethod');
     });
   }
 

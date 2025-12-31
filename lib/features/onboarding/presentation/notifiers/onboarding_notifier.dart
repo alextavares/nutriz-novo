@@ -76,6 +76,10 @@ class OnboardingNotifier extends _$OnboardingNotifier {
     state = state.copyWith(name: name);
   }
 
+  void updateFoodLoggingMethod(FoodLoggingMethod method) {
+    state = state.copyWith(foodLoggingMethod: method);
+  }
+
   void updateBiometrics({
     DateTime? birthDate,
     int? height,

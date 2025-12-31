@@ -20,6 +20,15 @@ enum SleepDuration { lessThan5, fiveToSix, sevenToEight, moreThan8 }
 
 enum WaterIntake { lessThan1L, oneToTwoL, twoToThreeL, moreThan3L }
 
+enum FoodLoggingMethod {
+  notNow,
+  gallery,
+  photo,
+  barcode,
+  type,
+  voice,
+}
+
 @freezed
 class UserProfile with _$UserProfile {
   const factory UserProfile({
@@ -68,6 +77,8 @@ class UserProfile with _$UserProfile {
     @Default(false) bool committedToLogDaily,
 
     @Default(false) bool isOnboardingCompleted,
+
+    @Default(FoodLoggingMethod.notNow) FoodLoggingMethod foodLoggingMethod,
   }) = _UserProfile;
 
   factory UserProfile.fromJson(Map<String, dynamic> json) =>

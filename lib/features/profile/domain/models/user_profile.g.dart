@@ -58,6 +58,9 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
       paywallDismissCount: (json['paywallDismissCount'] as num?)?.toInt() ?? 0,
       committedToLogDaily: json['committedToLogDaily'] as bool? ?? false,
       isOnboardingCompleted: json['isOnboardingCompleted'] as bool? ?? false,
+      foodLoggingMethod: $enumDecodeNullable(
+              _$FoodLoggingMethodEnumMap, json['foodLoggingMethod']) ??
+          FoodLoggingMethod.notNow,
     );
 
 Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
@@ -92,6 +95,8 @@ Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
       'paywallDismissCount': instance.paywallDismissCount,
       'committedToLogDaily': instance.committedToLogDaily,
       'isOnboardingCompleted': instance.isOnboardingCompleted,
+      'foodLoggingMethod':
+          _$FoodLoggingMethodEnumMap[instance.foodLoggingMethod]!,
     };
 
 const _$GenderEnumMap = {
@@ -131,4 +136,13 @@ const _$WaterIntakeEnumMap = {
   WaterIntake.oneToTwoL: 'oneToTwoL',
   WaterIntake.twoToThreeL: 'twoToThreeL',
   WaterIntake.moreThan3L: 'moreThan3L',
+};
+
+const _$FoodLoggingMethodEnumMap = {
+  FoodLoggingMethod.notNow: 'notNow',
+  FoodLoggingMethod.gallery: 'gallery',
+  FoodLoggingMethod.photo: 'photo',
+  FoodLoggingMethod.barcode: 'barcode',
+  FoodLoggingMethod.type: 'type',
+  FoodLoggingMethod.voice: 'voice',
 };
