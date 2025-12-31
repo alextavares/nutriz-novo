@@ -80,6 +80,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.badHabits,
           _StepKey.dietaryPreference,
           _StepKey.healthConditions,
+          _StepKey.thankYou,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -103,6 +104,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.badHabits,
           _StepKey.dietaryPreference,
           _StepKey.healthConditions,
+          _StepKey.thankYou,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -227,6 +229,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return true;
       case _StepKey.healthConditions:
         return true;
+      case _StepKey.thankYou:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -275,6 +279,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.dietAiBoost &&
         _currentStepKey != _StepKey.dietaryPreference &&
         _currentStepKey != _StepKey.healthConditions &&
+        _currentStepKey != _StepKey.thankYou &&
         _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
@@ -309,6 +314,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.dietAiBoost &&
         _currentStepKey != _StepKey.dietaryPreference &&
         _currentStepKey != _StepKey.healthConditions &&
+        _currentStepKey != _StepKey.thankYou &&
         _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
@@ -384,6 +390,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.dietAiBoost ||
                                       _currentStepKey == _StepKey.dietaryPreference ||
                                       _currentStepKey == _StepKey.healthConditions ||
+                                      _currentStepKey == _StepKey.thankYou ||
                                       _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -3133,6 +3140,105 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
+  Widget _buildThankYouStep(OnboardingNotifier notifier) {
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 56),
+            Text(
+              'Thank you for\ntrusting us!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 30,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(
+              "Now let's personalize DietAI just for you...",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                height: 1.4,
+                color: const Color(0xFF6B7280),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 18),
+            const Center(
+              child: Icon(
+                Icons.lock_rounded,
+                color: Color(0xFFD1D5DB),
+                size: 22,
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(
+              'Your privacy and security are our top priority.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                height: 1.4,
+                color: const Color(0xFF111827),
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Your personal information\nwill be kept safe and protected.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                height: 1.35,
+                color: const Color(0xFF6B7280),
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  _nextPage();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBadHabitsStep(OnboardingNotifier notifier, UserProfile profile) {
     final restrictions = profile.badHabits;
     final noneSelected = restrictions.isEmpty;
@@ -3514,6 +3620,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildDietaryPreferenceStep(notifier, profile);
       case _StepKey.healthConditions:
         return _buildHealthConditionsStep(notifier, profile);
+      case _StepKey.thankYou:
+        return _buildThankYouStep(notifier);
       case _StepKey.badHabits:
         return _buildBadHabitsStep(notifier, profile);
       case _StepKey.water:
@@ -3549,6 +3657,7 @@ enum _StepKey {
   dietAiBoost,
   dietaryPreference,
   healthConditions,
+  thankYou,
   badHabits,
   water,
   sleep,
