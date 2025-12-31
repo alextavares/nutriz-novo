@@ -77,8 +77,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.realisticGoal,
           _StepKey.weeklyGoal,
           _StepKey.dietAiBoost,
-          _StepKey.dietaryPreference,
           _StepKey.badHabits,
+          _StepKey.dietaryPreference,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -99,8 +99,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.realisticGoal,
           _StepKey.weeklyGoal,
           _StepKey.dietAiBoost,
-          _StepKey.dietaryPreference,
           _StepKey.badHabits,
+          _StepKey.dietaryPreference,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -2991,42 +2991,42 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     const items = <_RestrictionItem>[
       _RestrictionItem(
         id: 'vegetarian',
-        emoji: '🥗',
-        title: 'Vegetariano',
+        emoji: '🌱',
+        title: 'Vegetarian',
         info:
-            'Evita carnes. Pode incluir ovos e laticínios dependendo do seu padrão alimentar.',
+            'Avoids meat. May include eggs and dairy depending on your diet.',
       ),
       _RestrictionItem(
         id: 'vegan',
         emoji: '🌿',
-        title: 'Vegano',
-        info: 'Evita todos os alimentos de origem animal.',
+        title: 'Vegan',
+        info: 'Avoids all animal-derived foods.',
       ),
       _RestrictionItem(
         id: 'gluten_free',
         emoji: '🚫🌾',
-        title: 'Sem glúten',
+        title: 'Gluten-Free',
         info:
-            'Evita alimentos com trigo, cevada e centeio. Importante para intolerância ou doença celíaca.',
+            'Avoids wheat, barley, and rye. Important for intolerance or celiac disease.',
       ),
       _RestrictionItem(
         id: 'dairy_free',
         emoji: '🚫🥛',
-        title: 'Sem lactose',
+        title: 'Dairy-Free',
         info:
-            'Evita leite e derivados. Pode ser útil para intolerância à lactose.',
+            'Avoids milk and dairy products. Useful for lactose intolerance.',
       ),
       _RestrictionItem(
         id: 'no_red_meat',
         emoji: '🥩',
-        title: 'Evito carne vermelha',
-        info: 'Evita carne bovina/suína e similares.',
+        title: 'Dislike red meat',
+        info: 'Avoids red meat (beef/pork and similar).',
       ),
       _RestrictionItem(
         id: 'nut_allergy',
         emoji: '🥜',
-        title: 'Alergia a nozes',
-        info: 'Evita amendoim, castanhas e derivados por segurança.',
+        title: 'Nut allergy',
+        info: 'Avoids peanuts, tree nuts, and derivatives for safety.',
       ),
     ];
 
@@ -3054,7 +3054,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ),
             const SizedBox(height: 14),
             Text(
-              'Você tem alguma restrição\nalimentar, alergia ou algo\na evitar?',
+              'Do you have any dietary restrictions,\nallergies, or foods you dislike?',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 22,
@@ -3069,12 +3069,12 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 child: Column(
                   children: [
                     _DietAiRestrictionCard(
-                      title: 'Nenhuma',
-                      emoji: '✅',
+                      title: 'None',
+                      emoji: '✓',
                       isSelected: noneSelected,
                       onTap: setNone,
                       infoText:
-                          'Sem restrições. Você pode ajustar isso depois no Perfil.',
+                          'No restrictions. You can change this later in your profile.',
                     ),
                     const SizedBox(height: 10),
                     for (final item in items) ...[
