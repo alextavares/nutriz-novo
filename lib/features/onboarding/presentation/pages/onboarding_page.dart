@@ -12,7 +12,6 @@ import 'package:nutriz/features/onboarding/presentation/providers/onboarding_flo
 import '../widgets/onboarding_step_container.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/goal_card.dart';
-import '../widgets/biometric_slider.dart';
 import '../widgets/calorie_result_display.dart';
 import '../widgets/pro_upsell_card.dart';
 import '../widgets/calculating_step.dart';
@@ -34,12 +33,18 @@ class OnboardingPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {
+  static const MethodChannel _notificationsChannel = MethodChannel(
+    'com.nutriz.app/notifications',
+  );
+
   late final PageController _pageController;
   int _currentPage = 0;
   bool _heightUseMetric = true;
   bool _weightUseMetric = true;
   bool _birthDateDefaulted = false;
   bool _weeklyGoalDefaulted = false;
+  bool _pushPromptShown = false;
+  bool _extraDetailsAddMore = false;
 
   @override
   void initState() {
@@ -81,6 +86,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.dietaryPreference,
           _StepKey.healthConditions,
           _StepKey.thankYou,
+          _StepKey.pushNotifications,
+          _StepKey.extraDetails,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -105,6 +112,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.dietaryPreference,
           _StepKey.healthConditions,
           _StepKey.thankYou,
+          _StepKey.pushNotifications,
+          _StepKey.extraDetails,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -231,6 +240,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return true;
       case _StepKey.thankYou:
         return true;
+      case _StepKey.pushNotifications:
+        return true;
+      case _StepKey.extraDetails:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -280,6 +293,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.dietaryPreference &&
         _currentStepKey != _StepKey.healthConditions &&
         _currentStepKey != _StepKey.thankYou &&
+        _currentStepKey != _StepKey.pushNotifications &&
+        _currentStepKey != _StepKey.extraDetails &&
         _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
@@ -315,6 +330,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.dietaryPreference &&
         _currentStepKey != _StepKey.healthConditions &&
         _currentStepKey != _StepKey.thankYou &&
+        _currentStepKey != _StepKey.pushNotifications &&
+        _currentStepKey != _StepKey.extraDetails &&
         _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
@@ -391,6 +408,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.dietaryPreference ||
                                       _currentStepKey == _StepKey.healthConditions ||
                                       _currentStepKey == _StepKey.thankYou ||
+                                      _currentStepKey == _StepKey.pushNotifications ||
+                                      _currentStepKey == _StepKey.extraDetails ||
                                       _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -3397,6 +3416,325 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
+  Future<bool> _requestNotificationsPermission() async {
+    try {
+      final granted =
+          await _notificationsChannel.invokeMethod<bool>('requestPermission');
+      return granted ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> _showPushPermissionDialog(OnboardingNotifier notifier) async {
+    if (!mounted) return;
+
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.notifications_none_rounded, size: 28),
+                const SizedBox(height: 10),
+                Text(
+                  'Allow Nutriz to send you\nnotifications?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF111827),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await _requestNotificationsPermission();
+                      if (context.mounted) Navigator.of(context).pop(true);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE0E7FF),
+                      foregroundColor: const Color(0xFF111827),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      'Allow',
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE0E7FF),
+                      foregroundColor: const Color(0xFF111827),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      "Don't allow",
+                      style: GoogleFonts.inter(fontWeight: FontWeight.w800),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    if (!mounted) return;
+    notifier.saveDraft();
+    _nextPage();
+
+    // Silence unused variable analysis; the result is not used yet but might be
+    // useful later for analytics.
+    // ignore: unused_local_variable
+    final _ = result;
+  }
+
+  Widget _buildPushNotificationsStep(OnboardingNotifier notifier) {
+    if (!_pushPromptShown) {
+      _pushPromptShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _currentStepKey == _StepKey.pushNotifications) {
+          _showPushPermissionDialog(notifier);
+        }
+      });
+    }
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 66),
+            Text(
+              'Reach your goals with\nnotifications',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 28,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () => _showPushPermissionDialog(notifier),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExtraDetailsStep(OnboardingNotifier notifier, UserProfile profile) {
+    final suffix = profile.gender == Gender.male ? 'male' : 'female';
+    final allSetAsset = 'assets/images/extra_all_set_$suffix.png';
+    final addMoreAsset = 'assets/images/extra_add_details_$suffix.png';
+
+    Widget option({
+      required String title,
+      required String assetPath,
+      required bool selected,
+      required VoidCallback onTap,
+    }) {
+      final bg = selected ? const Color(0xFF4CAF50) : const Color(0xFFE5E7EB);
+      final fg = selected ? Colors.white : const Color(0xFF111827);
+      return InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          height: 76,
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w900,
+                    color: fg,
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 150,
+                height: 76,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(14),
+                    bottomRight: Radius.circular(14),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Image.asset(
+                      assetPath,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.only(right: 14),
+                          child: Icon(
+                            Icons.image_outlined,
+                            color: selected
+                                ? Colors.white.withOpacity(0.85)
+                                : const Color(0xFF9CA3AF),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 6),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.playlist_add_check_circle_outlined,
+                  color: Color(0xFF111827),
+                  size: 18,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              "Do you want to add any extra details you'd\nlike our AI to include in your diet plan?",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                height: 1.2,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 18),
+            option(
+              title: "Thanks, I'm all set",
+              assetPath: allSetAsset,
+              selected: !_extraDetailsAddMore,
+              onTap: () => setState(() => _extraDetailsAddMore = false),
+            ),
+            const SizedBox(height: 10),
+            option(
+              title: 'Add more details',
+              assetPath: addMoreAsset,
+              selected: _extraDetailsAddMore,
+              onTap: () => setState(() => _extraDetailsAddMore = true),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  if (_extraDetailsAddMore) {
+                    _nextPage();
+                    return;
+                  }
+                  _goToStep(_StepKey.calculating);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildWaterStep(OnboardingNotifier notifier, UserProfile profile) {
     return OnboardingStepContainer(
       title: 'Consumo de água',
@@ -3622,6 +3960,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildHealthConditionsStep(notifier, profile);
       case _StepKey.thankYou:
         return _buildThankYouStep(notifier);
+      case _StepKey.pushNotifications:
+        return _buildPushNotificationsStep(notifier);
+      case _StepKey.extraDetails:
+        return _buildExtraDetailsStep(notifier, profile);
       case _StepKey.badHabits:
         return _buildBadHabitsStep(notifier, profile);
       case _StepKey.water:
@@ -3658,6 +4000,8 @@ enum _StepKey {
   dietaryPreference,
   healthConditions,
   thankYou,
+  pushNotifications,
+  extraDetails,
   badHabits,
   water,
   sleep,
