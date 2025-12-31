@@ -99,6 +99,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.rating,
           _StepKey.calculating,
           _StepKey.results,
+          _StepKey.allDone,
         ]
       : const [
           _StepKey.welcome,
@@ -128,6 +129,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.calculating,
           _StepKey.results,
           _StepKey.proUpsell,
+          _StepKey.allDone,
         ];
 
   int get _totalPages => _stepKeys.length;
@@ -256,6 +258,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return profile.name.trim().isNotEmpty;
       case _StepKey.rating:
         return true;
+      case _StepKey.allDone:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -309,6 +313,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.extraDetails &&
         _currentStepKey != _StepKey.name &&
         _currentStepKey != _StepKey.rating &&
+        _currentStepKey != _StepKey.allDone &&
         _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
@@ -348,6 +353,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.extraDetails &&
         _currentStepKey != _StepKey.name &&
         _currentStepKey != _StepKey.rating &&
+        _currentStepKey != _StepKey.allDone &&
         _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
@@ -428,6 +434,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.extraDetails ||
                                       _currentStepKey == _StepKey.name ||
                                       _currentStepKey == _StepKey.rating ||
+                                      _currentStepKey == _StepKey.allDone ||
                                       _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -3635,6 +3642,111 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
+  Widget _buildAllDoneStep(OnboardingNotifier notifier, UserProfile profile) {
+    final isMale = profile.gender == Gender.male;
+    final assetPath = isMale
+        ? 'assets/images/all_done_male.png'
+        : 'assets/images/all_done_female.png';
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 18),
+            Text(
+              'All done! Get ready to\nlog your first food!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1.12,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Center(
+              child: Container(
+                width: 84,
+                height: 84,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF22C55E).withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Container(
+                    width: 56,
+                    height: 56,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF22C55E),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.check_rounded,
+                      color: Colors.white,
+                      size: 34,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Expanded(
+              child: Center(
+                child: Image.asset(
+                  assetPath,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.image_outlined,
+                      size: 120,
+                      color: const Color(0xFFD1D5DB),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () async {
+                  notifier.saveDraft();
+                  await _finishOnboarding(nextRoute: '/diary?firstRun=1');
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBadHabitsStep(OnboardingNotifier notifier, UserProfile profile) {
     final restrictions = profile.badHabits;
     final noneSelected = restrictions.isEmpty;
@@ -4293,7 +4405,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     return OnboardingStepContainer(
       title: '',
       child: ProUpsellCard(
-        onContinueFree: () async => _finishOnboarding(),
+        onContinueFree: () async => _goToStep(_StepKey.allDone),
         onTryPro: () async => _finishOnboarding(nextRoute: '/premium'),
       ),
     );
@@ -4345,6 +4457,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildNameStep(notifier, profile);
       case _StepKey.rating:
         return _buildRatingStep(notifier);
+      case _StepKey.allDone:
+        return _buildAllDoneStep(notifier, profile);
       case _StepKey.badHabits:
         return _buildBadHabitsStep(notifier, profile);
       case _StepKey.water:
@@ -4385,6 +4499,7 @@ enum _StepKey {
   extraDetails,
   name,
   rating,
+  allDone,
   badHabits,
   water,
   sleep,
