@@ -98,6 +98,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.targetWeight,
           _StepKey.realisticGoal,
           _StepKey.weeklyGoal,
+          _StepKey.dietAiBoost,
           _StepKey.dietaryPreference,
           _StepKey.badHabits,
           _StepKey.water,
