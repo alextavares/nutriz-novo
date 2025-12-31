@@ -79,6 +79,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.dietAiBoost,
           _StepKey.badHabits,
           _StepKey.dietaryPreference,
+          _StepKey.healthConditions,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -101,6 +102,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.dietAiBoost,
           _StepKey.badHabits,
           _StepKey.dietaryPreference,
+          _StepKey.healthConditions,
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
@@ -223,6 +225,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return true;
       case _StepKey.dietAiBoost:
         return true;
+      case _StepKey.healthConditions:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -270,6 +274,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.weeklyGoal &&
         _currentStepKey != _StepKey.dietAiBoost &&
         _currentStepKey != _StepKey.dietaryPreference &&
+        _currentStepKey != _StepKey.healthConditions &&
         _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
@@ -303,6 +308,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.weeklyGoal &&
         _currentStepKey != _StepKey.dietAiBoost &&
         _currentStepKey != _StepKey.dietaryPreference &&
+        _currentStepKey != _StepKey.healthConditions &&
         _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
@@ -377,6 +383,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.weeklyGoal ||
                                       _currentStepKey == _StepKey.dietAiBoost ||
                                       _currentStepKey == _StepKey.dietaryPreference ||
+                                      _currentStepKey == _StepKey.healthConditions ||
                                       _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -2972,6 +2979,160 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
+  Widget _buildHealthConditionsStep(
+    OnboardingNotifier notifier,
+    UserProfile profile,
+  ) {
+    // Reuse `badHabits` list as a lightweight store; keep conditions namespaced.
+    const prefix = 'hc:';
+    final selected = profile.badHabits.where((e) => e.startsWith(prefix)).toSet();
+
+    bool isSelected(String id) => selected.contains('$prefix$id');
+
+    void toggle(String id) {
+      final next = List<String>.from(profile.badHabits);
+      final key = '$prefix$id';
+      if (next.contains(key)) {
+        next.remove(key);
+      } else {
+        next.add(key);
+      }
+      notifier.updateBadHabits(next);
+    }
+
+    void clearAll() {
+      final next = profile.badHabits.where((e) => !e.startsWith(prefix)).toList();
+      notifier.updateBadHabits(next);
+    }
+
+    final noneSelected = selected.isEmpty;
+
+    const items = <_HealthConditionItem>[
+      _HealthConditionItem(
+        id: 'high_bp',
+        emoji: '🩸',
+        title: 'High blood pressure',
+        info: 'Helps tailor nutrition suggestions to your needs.',
+      ),
+      _HealthConditionItem(
+        id: 'diabetes',
+        emoji: '🌀',
+        title: 'Diabetes',
+        info: 'We can prioritize steady blood sugar-friendly meals.',
+      ),
+      _HealthConditionItem(
+        id: 'high_cholesterol',
+        emoji: '🍟',
+        title: 'High cholesterol',
+        info: 'We can emphasize heart-healthy choices and fats.',
+      ),
+      _HealthConditionItem(
+        id: 'other',
+        emoji: '❓',
+        title: 'Other',
+        info: 'You can refine this later in your profile.',
+      ),
+    ];
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 6),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.health_and_safety_outlined,
+                  color: Color(0xFF111827),
+                  size: 18,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              'Do you have any health\nconditions?',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 18),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _DietAiRestrictionCard(
+                      title: 'None',
+                      emoji: '✓',
+                      isSelected: noneSelected,
+                      onTap: clearAll,
+                      infoText: 'No health conditions. You can change this later.',
+                    ),
+                    const SizedBox(height: 10),
+                    for (final item in items) ...[
+                      _DietAiRestrictionCard(
+                        title: item.title,
+                        emoji: item.emoji,
+                        isSelected: isSelected(item.id),
+                        onTap: () => toggle(item.id),
+                        infoText: item.info,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 18),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  _nextPage();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBadHabitsStep(OnboardingNotifier notifier, UserProfile profile) {
     final restrictions = profile.badHabits;
     final noneSelected = restrictions.isEmpty;
@@ -3351,6 +3512,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildDietAiBoostStep(notifier);
       case _StepKey.dietaryPreference:
         return _buildDietaryPreferenceStep(notifier, profile);
+      case _StepKey.healthConditions:
+        return _buildHealthConditionsStep(notifier, profile);
       case _StepKey.badHabits:
         return _buildBadHabitsStep(notifier, profile);
       case _StepKey.water:
@@ -3385,6 +3548,7 @@ enum _StepKey {
   weeklyGoal,
   dietAiBoost,
   dietaryPreference,
+  healthConditions,
   badHabits,
   water,
   sleep,
@@ -4036,6 +4200,20 @@ class _RestrictionItem {
   final String info;
 
   const _RestrictionItem({
+    required this.id,
+    required this.emoji,
+    required this.title,
+    required this.info,
+  });
+}
+
+class _HealthConditionItem {
+  final String id;
+  final String emoji;
+  final String title;
+  final String info;
+
+  const _HealthConditionItem({
     required this.id,
     required this.emoji,
     required this.title,
