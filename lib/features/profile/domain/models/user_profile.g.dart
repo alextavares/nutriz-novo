@@ -9,6 +9,7 @@ part of 'user_profile.dart';
 _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
     _$UserProfileImpl(
       id: json['id'] as String,
+      name: json['name'] as String? ?? '',
       gender: $enumDecode(_$GenderEnumMap, json['gender']),
       birthDate: DateTime.parse(json['birthDate'] as String),
       height: (json['height'] as num).toInt(),
@@ -62,6 +63,7 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'name': instance.name,
       'gender': _$GenderEnumMap[instance.gender]!,
       'birthDate': instance.birthDate.toIso8601String(),
       'height': instance.height,

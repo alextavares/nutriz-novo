@@ -11,6 +11,8 @@ class UserProfileEntity {
   @Index(unique: true, replace: true)
   late String profileId;
 
+  String? name;
+
   @enumerated
   late Gender gender;
 
@@ -48,6 +50,7 @@ class UserProfileEntity {
   static UserProfileEntity fromDomain(UserProfile profile) {
     return UserProfileEntity()
       ..profileId = profile.id
+      ..name = profile.name.trim().isEmpty ? null : profile.name.trim()
       ..gender = profile.gender
       ..birthDate = profile.birthDate
       ..height = profile.height
@@ -74,6 +77,7 @@ class UserProfileEntity {
   UserProfile toDomain() {
     return UserProfile(
       id: profileId,
+      name: name ?? '',
       gender: gender,
       birthDate: birthDate,
       height: height,

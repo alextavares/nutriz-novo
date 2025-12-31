@@ -106,28 +106,33 @@ const UserProfileEntitySchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _UserProfileEntitymainGoalEnumValueMap,
     ),
-    r'paywallDismissCount': PropertySchema(
+    r'name': PropertySchema(
       id: 17,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'paywallDismissCount': PropertySchema(
+      id: 18,
       name: r'paywallDismissCount',
       type: IsarType.long,
     ),
     r'profileId': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'profileId',
       type: IsarType.string,
     ),
     r'proteinGrams': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'proteinGrams',
       type: IsarType.long,
     ),
     r'targetWeight': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'targetWeight',
       type: IsarType.double,
     ),
     r'weeklyGoal': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'weeklyGoal',
       type: IsarType.double,
     )
@@ -172,6 +177,12 @@ int _userProfileEntityEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  {
+    final value = object.name;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   bytesCount += 3 + object.profileId.length * 3;
   return bytesCount;
 }
@@ -199,11 +210,12 @@ void _userProfileEntitySerialize(
   writer.writeLong(offsets[14], object.height);
   writer.writeBool(offsets[15], object.isOnboardingCompleted);
   writer.writeByte(offsets[16], object.mainGoal.index);
-  writer.writeLong(offsets[17], object.paywallDismissCount);
-  writer.writeString(offsets[18], object.profileId);
-  writer.writeLong(offsets[19], object.proteinGrams);
-  writer.writeDouble(offsets[20], object.targetWeight);
-  writer.writeDouble(offsets[21], object.weeklyGoal);
+  writer.writeString(offsets[17], object.name);
+  writer.writeLong(offsets[18], object.paywallDismissCount);
+  writer.writeString(offsets[19], object.profileId);
+  writer.writeLong(offsets[20], object.proteinGrams);
+  writer.writeDouble(offsets[21], object.targetWeight);
+  writer.writeDouble(offsets[22], object.weeklyGoal);
 }
 
 UserProfileEntity _userProfileEntityDeserialize(
@@ -239,11 +251,12 @@ UserProfileEntity _userProfileEntityDeserialize(
   object.mainGoal = _UserProfileEntitymainGoalValueEnumMap[
           reader.readByteOrNull(offsets[16])] ??
       MainGoal.loseWeight;
-  object.paywallDismissCount = reader.readLongOrNull(offsets[17]);
-  object.profileId = reader.readString(offsets[18]);
-  object.proteinGrams = reader.readLong(offsets[19]);
-  object.targetWeight = reader.readDouble(offsets[20]);
-  object.weeklyGoal = reader.readDouble(offsets[21]);
+  object.name = reader.readStringOrNull(offsets[17]);
+  object.paywallDismissCount = reader.readLongOrNull(offsets[18]);
+  object.profileId = reader.readString(offsets[19]);
+  object.proteinGrams = reader.readLong(offsets[20]);
+  object.targetWeight = reader.readDouble(offsets[21]);
+  object.weeklyGoal = reader.readDouble(offsets[22]);
   return object;
 }
 
@@ -297,14 +310,16 @@ P _userProfileEntityDeserializeProp<P>(
               reader.readByteOrNull(offset)] ??
           MainGoal.loseWeight) as P;
     case 17:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 18:
-      return (reader.readString(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 19:
-      return (reader.readLong(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 20:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 21:
+      return (reader.readDouble(offset)) as P;
+    case 22:
       return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1666,6 +1681,160 @@ extension UserProfileEntityQueryFilter
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'name',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
       paywallDismissCountIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2311,6 +2480,20 @@ extension UserProfileEntityQuerySortBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       sortByPaywallDismissCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'paywallDismissCount', Sort.asc);
@@ -2635,6 +2818,20 @@ extension UserProfileEntityQuerySortThenBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       thenByPaywallDismissCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'paywallDismissCount', Sort.asc);
@@ -2827,6 +3024,13 @@ extension UserProfileEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct> distinctByName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
       distinctByPaywallDismissCount() {
     return QueryBuilder.apply(this, (query) {
@@ -2983,6 +3187,12 @@ extension UserProfileEntityQueryProperty
       mainGoalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'mainGoal');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, String?, QQueryOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'name');
     });
   }
 

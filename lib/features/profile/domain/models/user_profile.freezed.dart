@@ -21,6 +21,7 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserProfile {
   String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
   Gender get gender => throw _privateConstructorUsedError;
   DateTime get birthDate => throw _privateConstructorUsedError;
   int get height => throw _privateConstructorUsedError; // cm
@@ -71,6 +72,7 @@ abstract class $UserProfileCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String name,
       Gender gender,
       DateTime birthDate,
       int height,
@@ -114,6 +116,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
   @override
   $Res call({
     Object? id = null,
+    Object? name = null,
     Object? gender = null,
     Object? birthDate = null,
     Object? height = null,
@@ -146,6 +149,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       gender: null == gender
           ? _value.gender
@@ -269,6 +276,7 @@ abstract class _$$UserProfileImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String name,
       Gender gender,
       DateTime birthDate,
       int height,
@@ -310,6 +318,7 @@ class __$$UserProfileImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? name = null,
     Object? gender = null,
     Object? birthDate = null,
     Object? height = null,
@@ -342,6 +351,10 @@ class __$$UserProfileImplCopyWithImpl<$Res>
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
               as String,
       gender: null == gender
           ? _value.gender
@@ -460,6 +473,7 @@ class __$$UserProfileImplCopyWithImpl<$Res>
 class _$UserProfileImpl implements _UserProfile {
   const _$UserProfileImpl(
       {required this.id,
+      this.name = '',
       required this.gender,
       required this.birthDate,
       required this.height,
@@ -496,6 +510,9 @@ class _$UserProfileImpl implements _UserProfile {
 
   @override
   final String id;
+  @override
+  @JsonKey()
+  final String name;
   @override
   final Gender gender;
   @override
@@ -594,7 +611,7 @@ class _$UserProfileImpl implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted)';
+    return 'UserProfile(id: $id, name: $name, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted)';
   }
 
   @override
@@ -603,6 +620,7 @@ class _$UserProfileImpl implements _UserProfile {
         (other.runtimeType == runtimeType &&
             other is _$UserProfileImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
             (identical(other.gender, gender) || other.gender == gender) &&
             (identical(other.birthDate, birthDate) ||
                 other.birthDate == birthDate) &&
@@ -663,6 +681,7 @@ class _$UserProfileImpl implements _UserProfile {
   int get hashCode => Object.hashAll([
         runtimeType,
         id,
+        name,
         gender,
         birthDate,
         height,
@@ -709,6 +728,7 @@ class _$UserProfileImpl implements _UserProfile {
 abstract class _UserProfile implements UserProfile {
   const factory _UserProfile(
       {required final String id,
+      final String name,
       required final Gender gender,
       required final DateTime birthDate,
       required final int height,
@@ -742,6 +762,8 @@ abstract class _UserProfile implements UserProfile {
 
   @override
   String get id;
+  @override
+  String get name;
   @override
   Gender get gender;
   @override

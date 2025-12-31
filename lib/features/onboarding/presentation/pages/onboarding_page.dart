@@ -38,6 +38,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   );
 
   late final PageController _pageController;
+  late final TextEditingController _nameController;
   int _currentPage = 0;
   bool _heightUseMetric = true;
   bool _weightUseMetric = true;
@@ -52,11 +53,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     final savedIndex = ref.read(
       onboardingCurrentPageProvider(widget.isEditMode),
     );
+    final existingName = ref.read(onboardingNotifierProvider).name;
     final initialIndex = _stepKeys.isEmpty
         ? 0
         : savedIndex.clamp(0, _stepKeys.length - 1);
     _currentPage = initialIndex;
     _pageController = PageController(initialPage: initialIndex);
+    _nameController = TextEditingController(text: existingName);
     // No debug logs here: this method runs often during development (hot
     // restart), and logging the whole step list is noisy.
   }
@@ -64,6 +67,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   @override
   void dispose() {
     _pageController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -91,6 +95,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
+          _StepKey.name,
+          _StepKey.rating,
           _StepKey.calculating,
           _StepKey.results,
         ]
@@ -117,6 +123,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.water,
           _StepKey.sleep,
           _StepKey.motivation,
+          _StepKey.name,
+          _StepKey.rating,
           _StepKey.calculating,
           _StepKey.results,
           _StepKey.proUpsell,
@@ -244,6 +252,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return true;
       case _StepKey.extraDetails:
         return true;
+      case _StepKey.name:
+        return profile.name.trim().isNotEmpty;
+      case _StepKey.rating:
+        return true;
       case _StepKey.activityLevel:
         return true;
       case _StepKey.scienceAi:
@@ -295,6 +307,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.thankYou &&
         _currentStepKey != _StepKey.pushNotifications &&
         _currentStepKey != _StepKey.extraDetails &&
+        _currentStepKey != _StepKey.name &&
+        _currentStepKey != _StepKey.rating &&
         _currentStepKey != _StepKey.badHabits;
     final stepNumber = totalSteps == 0
         ? 0
@@ -332,6 +346,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.thankYou &&
         _currentStepKey != _StepKey.pushNotifications &&
         _currentStepKey != _StepKey.extraDetails &&
+        _currentStepKey != _StepKey.name &&
+        _currentStepKey != _StepKey.rating &&
         _currentStepKey != _StepKey.badHabits;
 
     return WillPopScope(
@@ -410,6 +426,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                       _currentStepKey == _StepKey.thankYou ||
                                       _currentStepKey == _StepKey.pushNotifications ||
                                       _currentStepKey == _StepKey.extraDetails ||
+                                      _currentStepKey == _StepKey.name ||
+                                      _currentStepKey == _StepKey.rating ||
                                       _currentStepKey == _StepKey.badHabits)
                                   ? const SizedBox.shrink()
                                   : TextButton(
@@ -3258,6 +3276,365 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
+  Widget _buildNameStep(OnboardingNotifier notifier, UserProfile profile) {
+    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final canContinue = profile.name.trim().isNotEmpty;
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(24, 12, 24, 24 + bottomInset),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 6),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3F4F6),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.badge_outlined,
+                  color: Color(0xFF111827),
+                  size: 18,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              'What is your name?',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1.15,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const Spacer(),
+            TextField(
+              controller: _nameController,
+              textAlign: TextAlign.center,
+              textInputAction: TextInputAction.done,
+              style: GoogleFonts.inter(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF111827),
+              ),
+              decoration: InputDecoration(
+                hintText: 'Name',
+                hintStyle: GoogleFonts.inter(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF9CA3AF),
+                ),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF86EFAC), width: 2),
+                ),
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xFF4CAF50), width: 2),
+                ),
+              ),
+              onChanged: notifier.updateName,
+              onSubmitted: (_) {
+                notifier.saveDraft();
+                if (!mounted) return;
+                if (ref.read(onboardingNotifierProvider).name.trim().isEmpty) {
+                  return;
+                }
+                _goToStep(_StepKey.rating);
+              },
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: canContinue
+                    ? () {
+                        notifier.saveDraft();
+                        _goToStep(_StepKey.rating);
+                      }
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: const Color(0xFF4CAF50)
+                      .withOpacity(0.35),
+                  disabledForegroundColor: Colors.white.withOpacity(0.8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRatingStep(OnboardingNotifier notifier) {
+    Widget stars({double size = 16}) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(
+          5,
+          (_) => Icon(Icons.star_rounded, color: const Color(0xFFF59E0B), size: size),
+        ),
+      );
+    }
+
+    Widget avatar(String label, Color color) {
+      return CircleAvatar(
+        radius: 16,
+        backgroundColor: color,
+        child: Text(
+          label,
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
+
+    Widget testimonial({
+      required String initials,
+      required String name,
+      required String text,
+    }) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF3F4F6),
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: const Color(0xFF111827),
+              child: Text(
+                initials,
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: const Color(0xFF111827),
+                          ),
+                        ),
+                      ),
+                      stars(size: 14),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    text,
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      height: 1.35,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF6B7280),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              'Give us rating',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+                height: 1.1,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '4.7',
+                  style: GoogleFonts.inter(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    color: const Color(0xFF111827),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                stars(size: 18),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('❮'),
+                const SizedBox(width: 10),
+                Text(
+                  '100K+ User Rating',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF111827),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Text('❯'),
+              ],
+            ),
+            const SizedBox(height: 18),
+            Text(
+              'Nutriz was created for people exactly\nlike you',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 13,
+                height: 1.25,
+                fontWeight: FontWeight.w700,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Center(
+              child: SizedBox(
+                height: 34,
+                width: 190,
+                child: Stack(
+                  children: [
+                    Positioned(left: 0, child: avatar('M', const Color(0xFF60A5FA))),
+                    Positioned(left: 22, child: avatar('A', const Color(0xFF34D399))),
+                    Positioned(left: 44, child: avatar('J', const Color(0xFFF472B6))),
+                    Positioned(left: 66, child: avatar('C', const Color(0xFFFBBF24))),
+                    Positioned(left: 88, child: avatar('R', const Color(0xFF818CF8))),
+                    Positioned(left: 110, child: avatar('S', const Color(0xFFFB7185))),
+                    Positioned(left: 132, child: avatar('D', const Color(0xFF22C55E))),
+                    Positioned(left: 154, child: avatar('K', const Color(0xFF111827))),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              '1.5M+ users',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    testimonial(
+                      initials: 'MW',
+                      name: 'Maria Wilson',
+                      text:
+                          "I lost 10 kg in just 3 months! I was about to start Ozempic, but I gave this app a try first and it worked!",
+                    ),
+                    const SizedBox(height: 12),
+                    testimonial(
+                      initials: 'DJ',
+                      name: 'David Johnson',
+                      text:
+                          "Since I don't have to log food piece by piece anymore, I finally have time to hit the gym after work.",
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              height: 56,
+              child: ElevatedButton(
+                onPressed: () {
+                  notifier.saveDraft();
+                  _goToStep(_StepKey.calculating);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Continue',
+                      style: GoogleFonts.inter(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    const Icon(Icons.arrow_forward_rounded, size: 20),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildBadHabitsStep(OnboardingNotifier notifier, UserProfile profile) {
     final restrictions = profile.badHabits;
     final noneSelected = restrictions.isEmpty;
@@ -3700,10 +4077,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 onPressed: () {
                   notifier.saveDraft();
                   if (_extraDetailsAddMore) {
-                    _nextPage();
+                    _goToStep(_StepKey.water);
                     return;
                   }
-                  _goToStep(_StepKey.calculating);
+                  _goToStep(_StepKey.name);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4CAF50),
@@ -3964,6 +4341,10 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         return _buildPushNotificationsStep(notifier);
       case _StepKey.extraDetails:
         return _buildExtraDetailsStep(notifier, profile);
+      case _StepKey.name:
+        return _buildNameStep(notifier, profile);
+      case _StepKey.rating:
+        return _buildRatingStep(notifier);
       case _StepKey.badHabits:
         return _buildBadHabitsStep(notifier, profile);
       case _StepKey.water:
@@ -4002,6 +4383,8 @@ enum _StepKey {
   thankYou,
   pushNotifications,
   extraDetails,
+  name,
+  rating,
   badHabits,
   water,
   sleep,

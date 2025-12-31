@@ -72,6 +72,10 @@ class OnboardingNotifier extends _$OnboardingNotifier {
     state = state.copyWith(gender: gender);
   }
 
+  void updateName(String name) {
+    state = state.copyWith(name: name);
+  }
+
   void updateBiometrics({
     DateTime? birthDate,
     int? height,

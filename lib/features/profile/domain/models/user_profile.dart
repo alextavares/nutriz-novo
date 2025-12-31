@@ -24,6 +24,7 @@ enum WaterIntake { lessThan1L, oneToTwoL, twoToThreeL, moreThan3L }
 class UserProfile with _$UserProfile {
   const factory UserProfile({
     required String id,
+    @Default('') String name,
     required Gender gender,
     required DateTime birthDate,
     required int height, // cm
