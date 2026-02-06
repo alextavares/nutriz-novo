@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:nutriz/core/monetization/promo_offer.dart';
 import 'package:nutriz/core/monetization/meal_log_gate.dart';
 import 'package:nutriz/features/profile/presentation/notifiers/profile_notifier.dart';
 
@@ -32,6 +33,13 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
     final isPro = ref.read(subscriptionProvider).isPro;
     if (!isPro) {
       await ref.read(mealLogGateProvider).recordPaywallDismissed();
+      ref
+          .read(promoOfferProvider.notifier)
+          .ensureActive(
+            duration: const Duration(minutes: 10),
+            discountPercent: 75,
+            source: 'premium_screen_close',
+          );
       if (!mounted) return;
 
       final profile = ref.read(profileNotifierProvider);
@@ -140,6 +148,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
     final subscriptionStatus = ref.watch(subscriptionProvider);
     final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
     final offerings = offeringsAsync.asData?.value;
+    final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
 
     final annualPackage = _packageForPlan(offerings, PremiumPlan.annual);
     final monthlyPackage = _packageForPlan(offerings, PremiumPlan.monthly);
@@ -178,6 +187,20 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                           ),
                         ),
                       );
+                    } on StateError catch (e) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.message.toString())),
+                      );
+                    } on PlatformException catch (e) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Não foi possível restaurar compras: ${e.message ?? 'tente novamente'}',
+                          ),
+                        ),
+                      );
                     } catch (_) {
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -208,10 +231,10 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
             onPageChanged: (index) {
               setState(() => _stepIndex = index);
               unawaited(
-                ref.read(analyticsServiceProvider).logEvent('paywall_step_view', {
-                  'paywall_id': 'premium_screen',
-                  'step': index,
-                }),
+                ref.read(analyticsServiceProvider).logEvent(
+                  'paywall_step_view',
+                  {'paywall_id': 'premium_screen', 'step': index},
+                ),
               );
             },
             children: [
@@ -234,7 +257,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     const _InlineBullet(
                       icon: Icons.camera_alt_rounded,
                       title: 'IA por foto (Premium)',
-                      subtitle: 'Analise refeições por imagem e confirme em segundos.',
+                      subtitle:
+                          'Analise refeições por imagem e confirme em segundos.',
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     const _InlineBullet(
@@ -261,7 +285,9 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                       padding: const EdgeInsets.all(AppSpacing.lg),
                       decoration: BoxDecoration(
                         color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl,
+                        ),
                         border: Border.all(
                           color: Colors.black.withValues(alpha: 0.06),
                         ),
@@ -390,10 +416,10 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
 
               if (!isLastStep) {
                 unawaited(
-                  ref.read(analyticsServiceProvider).logEvent('paywall_next_tap', {
-                    'paywall_id': 'premium_screen',
-                    'step': _stepIndex,
-                  }),
+                  ref.read(analyticsServiceProvider).logEvent(
+                    'paywall_next_tap',
+                    {'paywall_id': 'premium_screen', 'step': _stepIndex},
+                  ),
                 );
                 _goToStep(_stepIndex + 1);
                 return;
@@ -402,6 +428,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
               final analytics = ref.read(analyticsServiceProvider);
               await analytics.logEvent('paywall_cta_tap', {
                 'paywall_id': 'premium_screen',
+                'plan_id': _selectedPlan.planId,
                 'plan': _selectedPlan.label,
               });
               if (!mounted) return;
@@ -411,19 +438,31 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                   : monthlyPackage;
 
               if (selectedPackage == null) {
+                await analytics.logEvent('purchase_failed', {
+                  'reason': 'package_not_found',
+                  'paywall_id': 'premium_screen',
+                  'plan_id': _selectedPlan.planId,
+                  'plan': _selectedPlan.label,
+                  'product_id': 'unavailable',
+                });
                 messenger.showSnackBar(
                   SnackBar(
                     content: Text(
-                      'Plano indisponível. Configure Offering/Packages no RevenueCat (${_selectedPlan.label}).',
+                      revenueCatPackageNotFoundMessage(
+                        planLabel: _selectedPlan.label,
+                        offeringsError: offeringsError,
+                      ),
                     ),
                   ),
                 );
+                ref.invalidate(revenueCatOfferingsProvider);
                 return;
               }
 
               try {
                 await analytics.logEvent('purchase_start', {
                   'paywall_id': 'premium_screen',
+                  'plan_id': _selectedPlan.planId,
                   'plan': _selectedPlan.label,
                   'product_id': selectedPackage.storeProduct.identifier,
                 });
@@ -435,6 +474,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
 
                 await analytics.logEvent('purchase_complete', {
                   'paywall_id': 'premium_screen',
+                  'plan_id': _selectedPlan.planId,
                   'plan': _selectedPlan.label,
                   'product_id': selectedPackage.storeProduct.identifier,
                 });
@@ -449,7 +489,9 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                   await analytics.logEvent('purchase_failed', {
                     'reason': 'cancelled',
                     'paywall_id': 'premium_screen',
+                    'plan_id': _selectedPlan.planId,
                     'plan': _selectedPlan.label,
+                    'product_id': selectedPackage.storeProduct.identifier,
                   });
                   if (!mounted) return;
                   messenger.showSnackBar(
@@ -461,17 +503,33 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                 await analytics.logEvent('purchase_failed', {
                   'reason': code.name,
                   'paywall_id': 'premium_screen',
+                  'plan_id': _selectedPlan.planId,
                   'plan': _selectedPlan.label,
+                  'product_id': selectedPackage.storeProduct.identifier,
                 });
                 if (!mounted) return;
                 messenger.showSnackBar(
                   SnackBar(content: Text('Erro na compra: ${code.name}')),
                 );
+              } on StateError catch (e) {
+                await analytics.logEvent('purchase_failed', {
+                  'reason': 'sdk_not_configured',
+                  'paywall_id': 'premium_screen',
+                  'plan_id': _selectedPlan.planId,
+                  'plan': _selectedPlan.label,
+                  'product_id': selectedPackage.storeProduct.identifier,
+                });
+                if (!mounted) return;
+                messenger.showSnackBar(
+                  SnackBar(content: Text(e.message.toString())),
+                );
               } catch (_) {
                 await analytics.logEvent('purchase_failed', {
                   'reason': 'unknown',
                   'paywall_id': 'premium_screen',
+                  'plan_id': _selectedPlan.planId,
                   'plan': _selectedPlan.label,
+                  'product_id': selectedPackage.storeProduct.identifier,
                 });
                 if (!mounted) return;
                 messenger.showSnackBar(
@@ -490,9 +548,14 @@ enum PremiumPlan { annual, monthly }
 
 extension PremiumPlanX on PremiumPlan {
   String get label => switch (this) {
-        PremiumPlan.annual => '12 meses',
-        PremiumPlan.monthly => '1 mês',
-      };
+    PremiumPlan.annual => '12 meses',
+    PremiumPlan.monthly => '1 mês',
+  };
+
+  String get planId => switch (this) {
+    PremiumPlan.annual => 'annual',
+    PremiumPlan.monthly => 'monthly',
+  };
 }
 
 class _HeroCard extends StatelessWidget {
@@ -564,11 +627,9 @@ class _BenefitsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const benefits = [
-      (Icons.analytics_rounded, 'Estatísticas avançadas'),
-      (Icons.camera_alt_rounded, 'Reconhecimento por IA'),
-      (Icons.qr_code_scanner_rounded, 'Scanner de código de barras'),
-      (Icons.block_rounded, 'Sem anúncios'),
-      (Icons.sync_rounded, 'Sincronização com wearables'),
+      (Icons.analytics_rounded, 'Estatísticas avançadas do diário'),
+      (Icons.camera_alt_rounded, 'Análise de refeições por foto com IA'),
+      (Icons.lock_open_rounded, 'Registros ilimitados de refeições'),
     ];
 
     return Column(
@@ -825,7 +886,9 @@ class _BottomCtaBar extends StatelessWidget {
               ElevatedButton(
                 onPressed: onPressed,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isPro ? AppColors.success : AppColors.primary,
+                  backgroundColor: isPro
+                      ? AppColors.success
+                      : AppColors.primary,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.lg,

@@ -1,10 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
+
+import '../../../../core/analytics/analytics_providers.dart';
+import '../../../../core/monetization/meal_log_gate.dart';
+import '../../../../core/monetization/promo_offer.dart';
 import '../providers/subscription_provider.dart';
+
+String _formatCountdown(Duration duration) {
+  final totalSeconds = duration.inSeconds.clamp(0, 24 * 60 * 60);
+  final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
+  final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+  return '$minutes:$seconds';
+}
 
 class HardPaywallScreen extends ConsumerStatefulWidget {
   const HardPaywallScreen({super.key});
@@ -15,55 +28,137 @@ class HardPaywallScreen extends ConsumerStatefulWidget {
 
 class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
   bool _isLoading = false;
+  bool _isRestoring = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(analyticsServiceProvider).logEvent('paywall_view', {
+        'paywall_id': 'hard_paywall_screen',
+      });
+    });
+    ref
+        .read(promoOfferProvider.notifier)
+        .ensureActive(
+          duration: const Duration(minutes: 10),
+          discountPercent: 75,
+          source: 'hard_paywall_view',
+        );
+  }
+
+  Future<void> _handleClose() async {
+    await ref.read(mealLogGateProvider).recordPaywallDismissed();
+    ref
+        .read(promoOfferProvider.notifier)
+        .ensureActive(
+          duration: const Duration(minutes: 10),
+          discountPercent: 75,
+          source: 'hard_paywall_close',
+        );
+    if (!mounted) return;
+    if (Navigator.of(context).canPop()) {
+      context.pop();
+      return;
+    }
+    context.go('/diary');
+  }
+
+  Future<void> _handleRestore() async {
+    if (_isRestoring) return;
+    setState(() => _isRestoring = true);
+    try {
+      await ref.read(subscriptionProvider.notifier).restorePurchases();
+      await ref.read(subscriptionProvider.notifier).refresh();
+      if (!mounted) return;
+      final isPro = ref.read(subscriptionProvider).isPro;
+      if (isPro) {
+        context.go('/diary');
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nenhuma compra para restaurar.')),
+      );
+    } on StateError catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message.toString())));
+    } on PlatformException catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao restaurar: ${e.message ?? 'tente novamente'}'),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Não foi possível restaurar compras.')),
+      );
+    } finally {
+      if (mounted) setState(() => _isRestoring = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
 
-    // Attempt to find the monthly package
     final offerings = offeringsAsync.asData?.value;
-    final currentOffering = offerings?.current;
-    final monthlyPackage = currentOffering?.availablePackages.firstWhere(
-      (p) => p.packageType == PackageType.monthly,
-      orElse: () => currentOffering.availablePackages.first, // Fallback
-    );
+    final monthlyPackage = findPackageForPlan(offerings, PackageType.monthly);
 
-    // If still loading or no package found, show loading state or fallback UI
-    // For MVP, if loading, we show a spinner on the button or price
-    final priceString = monthlyPackage?.storeProduct.priceString ?? "R\$ 49,90";
+    final priceString = monthlyPackage?.storeProduct.priceString ?? '—';
 
-    return WillPopScope(
-      onWillPop: () async => false, // PREVENT BACK NAVIGATION
+    return PopScope(
+      canPop: false, // prevent Android back (supports predictive back)
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
             children: [
-              // Header with Timer
+              // Header with Timer + Close
               Container(
                 padding: const EdgeInsets.symmetric(
                   vertical: 12,
-                  horizontal: 24,
+                  horizontal: 16,
                 ),
-                color: Colors.red[50], // Urgency bg
+                color: Colors.red[50],
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "OFERTA EXPIRA EM:",
+                      'OFERTA EXPIRA EM:',
                       style: GoogleFonts.inter(
                         fontWeight: FontWeight.bold,
                         color: Colors.red[700],
                         fontSize: 12,
                       ),
                     ),
-                    Text(
-                      "09:59", // TODO: Implement real timer logic if needed
-                      style: GoogleFonts.robotoMono(
-                        fontWeight: FontWeight.w700,
-                        color: Colors.red[700],
-                        fontSize: 16,
-                      ),
+                    const Spacer(),
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final now =
+                            ref.watch(promoOfferTickerProvider).asData?.value ??
+                            DateTime.now();
+                        final remaining = ref
+                            .watch(promoOfferProvider)
+                            .remaining(now);
+                        return Text(
+                          _formatCountdown(remaining),
+                          style: GoogleFonts.robotoMono(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.red[700],
+                            fontSize: 16,
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 6),
+                    IconButton(
+                      tooltip: 'Fechar',
+                      onPressed: _handleClose,
+                      icon: const Icon(Icons.close),
+                      color: Colors.black87,
                     ),
                   ],
                 ),
@@ -76,7 +171,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        "Seu Plano Está Pronto!",
+                        'Seu Plano Está Pronto!',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: 28,
@@ -86,7 +181,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "Baseado no seu perfil, criamos um protocolo exclusivo para você.",
+                        'Baseado no seu perfil, criamos um protocolo exclusivo para você.',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                           fontSize: 16,
@@ -95,11 +190,10 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Benefits Checkmarks
-                      _buildCheckItem("Protocolo Anti-Inchaço (7 Dias)"),
-                      _buildCheckItem("Cardápio Detox de Cortisol"),
-                      _buildCheckItem("Lista de Compras Inteligente"),
-                      _buildCheckItem("Acesso Ilimitado ao Diário"),
+                      _buildCheckItem('Protocolo Anti-Inchaço (7 Dias)'),
+                      _buildCheckItem('Cardápio Detox de Cortisol'),
+                      _buildCheckItem('Lista de Compras Inteligente'),
+                      _buildCheckItem('Acesso Ilimitado ao Diário'),
 
                       const SizedBox(height: 40),
 
@@ -112,7 +206,9 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(16),
-                          color: const Color(0xFF4CAF50).withOpacity(0.05),
+                          color: const Color(
+                            0xFF4CAF50,
+                          ).withValues(alpha: 0.05),
                         ),
                         child: Column(
                           children: [
@@ -127,7 +223,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                                 ),
                               ),
                               child: Text(
-                                "MAIS ESCOLHIDO",
+                                'MAIS ESCOLHIDO',
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.inter(
                                   color: Colors.white,
@@ -147,14 +243,14 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Plano Mensal",
+                                        'Plano Mensal',
                                         style: GoogleFonts.inter(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18,
                                         ),
                                       ),
                                       Text(
-                                        "Acesso total imediato",
+                                        'Acesso total imediato',
                                         style: GoogleFonts.inter(
                                           color: Colors.grey[600],
                                           fontSize: 12,
@@ -174,7 +270,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                                         ),
                                       ),
                                       Text(
-                                        "/mês",
+                                        '/mês',
                                         style: GoogleFonts.inter(
                                           color: Colors.grey,
                                           fontSize: 12,
@@ -201,7 +297,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: _isLoading
+                        onPressed: (_isLoading || _isRestoring)
                             ? null
                             : () => _handlePurchase(monthlyPackage),
                         style: ElevatedButton.styleFrom(
@@ -221,7 +317,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                                 ),
                               )
                             : Text(
-                                "CONTINUAR",
+                                'CONTINUAR',
                                 style: GoogleFonts.inter(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -232,11 +328,41 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      "Garantia de 7 dias ou seu dinheiro de volta",
+                      'Garantia de 7 dias ou seu dinheiro de volta',
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         color: Colors.grey,
                       ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () => context.push('/legal/privacy'),
+                          child: const Text('Privacidade'),
+                        ),
+                        const Text(' | '),
+                        TextButton(
+                          onPressed: () => context.push('/legal/terms'),
+                          child: const Text('Termos'),
+                        ),
+                        const Text(' | '),
+                        TextButton(
+                          onPressed: (_isLoading || _isRestoring)
+                              ? null
+                              : _handleRestore,
+                          child: _isRestoring
+                              ? const SizedBox(
+                                  height: 14,
+                                  width: 14,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('Restaurar compra'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -265,48 +391,114 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
   }
 
   Future<void> _handlePurchase(Package? package) async {
+    final analytics = ref.read(analyticsServiceProvider);
+    unawaited(
+      analytics.logEvent('paywall_cta_tap', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+      }),
+    );
+
     if (package == null) {
+      final offeringsError = ref.read(revenueCatOfferingsErrorProvider);
+      await analytics.logEvent('purchase_failed', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+        'product_id': 'unavailable',
+        'reason': 'package_not_found',
+      });
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            "Ocorreu um erro ao carregar o plano. Tente novamente.",
+            revenueCatPackageNotFoundMessage(
+              planLabel: 'mensal',
+              offeringsError: offeringsError,
+            ),
           ),
         ),
       );
-      // Attempt to refresh/init
-      ref.refresh(revenueCatOfferingsProvider);
+      ref.invalidate(revenueCatOfferingsProvider);
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
+      await analytics.logEvent('purchase_start', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+        'product_id': package.storeProduct.identifier,
+      });
       await ref.read(subscriptionProvider.notifier).purchasePackage(package);
+      await ref.read(subscriptionProvider.notifier).refresh();
+      await analytics.logEvent('purchase_complete', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+        'product_id': package.storeProduct.identifier,
+      });
 
       if (!mounted) return;
 
-      // Success! Check status again to be safe
       final isPro = ref.read(subscriptionProvider).isPro;
       if (isPro) {
-        context.go('/diary'); // Success Navigation
+        context.go('/diary');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text("Assinatura não ativada. Tente novamente."),
+            content: Text('Assinatura não ativada. Tente novamente.'),
           ),
         );
       }
-    } on PlatformException catch (e) {
+    } on StateError catch (e) {
+      await analytics.logEvent('purchase_failed', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+        'reason': 'sdk_not_configured',
+        'product_id': package.storeProduct.identifier,
+      });
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text("Erro: ${e.message}")));
-    } catch (e) {
+      ).showSnackBar(SnackBar(content: Text(e.message.toString())));
+    } on PlatformException catch (e) {
+      final code = PurchasesErrorHelper.getErrorCode(e);
+      final reason = code == PurchasesErrorCode.purchaseCancelledError
+          ? 'cancelled'
+          : code.name;
+      await analytics.logEvent('purchase_failed', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+        'reason': reason,
+        'product_id': package.storeProduct.identifier,
+      });
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Erro desconhecido ao processar pagamento."),
+        SnackBar(
+          content: Text(
+            code == PurchasesErrorCode.purchaseCancelledError
+                ? 'Compra cancelada.'
+                : 'Erro: ${e.message}',
+          ),
         ),
+      );
+    } catch (_) {
+      await analytics.logEvent('purchase_failed', {
+        'paywall_id': 'hard_paywall_screen',
+        'plan_id': 'monthly',
+        'plan': 'mensal',
+        'reason': 'unknown',
+        'product_id': package.storeProduct.identifier,
+      });
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao processar pagamento.')),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
