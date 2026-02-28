@@ -7,6 +7,7 @@ plugins {
 
 import java.io.FileInputStream
 import java.util.Properties
+import org.gradle.api.tasks.bundling.Zip
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
@@ -17,10 +18,8 @@ if (hasReleaseKeystore) {
 
 android {
     namespace = "com.nutriz.app"
-    // Required by some dependencies (e.g. isar_flutter_libs) that reference
-    // Android 12+ attributes like `android:attr/lStar`.
-    // Keeping this explicit avoids relying on the Flutter SDK's default.
-    // Some Flutter plugins now require API 36+ for resource linking.
+    // Keep this explicit to avoid relying on Flutter defaults.
+    // Some plugins now require API 36+ for resource linking.
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -39,7 +38,7 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
-        // Target can be bumped separately; keep stable for beta unless needed.
+        // Target can be bumped separately; keep stable for now.
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -61,6 +60,17 @@ android {
             // For Play Store, you must sign with an upload/release key (android/key.properties).
             // Fallback to debug signing only when building locally without a keystore.
             signingConfig = signingConfigs.getByName(if (hasReleaseKeystore) "release" else "debug")
+            // Generate native symbols zip for Play Console (ANR/crash symbolication).
+//            ndk {
+//                debugSymbolLevel = "SYMBOL_TABLE"
+//            }
+        }
+    }
+
+    packaging {
+        jniLibs {
+            // Workaround for environments where stripDebugSymbols fails on some .so files.
+            keepDebugSymbols += "**/*.so"
         }
     }
 
@@ -73,3 +83,10 @@ android {
 flutter {
     source = "../.."
 }
+
+// tasks.register<Zip>("bundleReleaseNativeSymbols") {
+//     dependsOn("stripReleaseDebugSymbols")
+//     from(layout.buildDirectory.dir("intermediates/merged_native_libs/release/mergeReleaseNativeLibs/out/lib"))
+//     destinationDirectory.set(layout.buildDirectory.dir("outputs/native-debug-symbols/release"))
+//     archiveFileName.set("native-debug-symbols.zip")
+// }

@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
-class PredictionScreen extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/analytics/analytics_providers.dart';
+
+class PredictionScreen extends ConsumerWidget {
   final double currentWeight;
   final double goalWeight;
   final int age;
@@ -16,7 +19,7 @@ class PredictionScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final double weightDifference = currentWeight - goalWeight;
     final int weeksToGoal = (weightDifference / 0.8).ceil().clamp(4, 12);
     final DateTime goalDate = DateTime.now().add(
@@ -356,7 +359,12 @@ class PredictionScreen extends StatelessWidget {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () => context.push('/premium/paywall'),
+                          onPressed: () {
+                            ref
+                                .read(analyticsServiceProvider)
+                                .logEvent('onboarding_completo');
+                            context.push('/premium/paywall');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4CAF50),
                             foregroundColor: Colors.white,

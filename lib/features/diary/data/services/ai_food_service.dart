@@ -4,11 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../domain/entities/food.dart';
 import '../../../../core/value_objects/calories.dart';
 import '../../../../core/value_objects/macro_nutrients.dart';
+import '../../../../core/network/worker_endpoints.dart';
 
 class AiFoodService {
-  // TODO: Update this URL after deploying your worker
-  static const _workerUrl =
-      'https://nutriz-food-ai.alexandretmoraes110.workers.dev';
   static const _analyzePath = '/analyze-food';
   final Dio _dio = Dio(
     BaseOptions(
@@ -31,7 +29,7 @@ class AiFoodService {
       });
 
       final response = await _dio.post(
-        '$_workerUrl$_analyzePath',
+        '${resolveWorkerBaseUrl()}$_analyzePath',
         data: formData,
         options: Options(
           responseType: ResponseType.plain,
@@ -85,7 +83,7 @@ class AiFoodService {
         }
         if (status == 404) {
           throw Exception(
-            'Serviço de IA não encontrado (404). Verifique o Worker em $_workerUrl$_analyzePath',
+            'Serviço de IA não encontrado (404). Verifique o Worker em ${resolveWorkerBaseUrl()}$_analyzePath',
           );
         }
         final suffix = body == null ? '' : '\n$body';

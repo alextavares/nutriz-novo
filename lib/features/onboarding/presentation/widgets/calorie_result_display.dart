@@ -56,35 +56,40 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    // Using a more modern primary color if its default was simple green
+    final Color ringColor = theme.colorScheme.primary;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Calorie ring
         SizedBox(
-              width: 220,
-              height: 220,
+              width: 240,
+              height: 240,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   // Background ring
                   CustomPaint(
-                    size: const Size(220, 220),
+                    size: const Size(240, 240),
                     painter: _CalorieRingPainter(
                       progress: 1.0,
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      strokeWidth: 16,
+                      color: theme.colorScheme.surfaceContainerHighest
+                          .withValues(alpha: 0.3),
+                      strokeWidth: 18,
                     ),
                   ),
-                  // Animated progress ring
+                  // Animated progress ring with glow
                   AnimatedBuilder(
                     animation: _controller,
                     builder: (context, child) {
                       return CustomPaint(
-                        size: const Size(220, 220),
+                        size: const Size(240, 240),
                         painter: _CalorieRingPainter(
                           progress: _controller.value,
-                          color: theme.colorScheme.primary,
-                          strokeWidth: 16,
+                          color: ringColor,
+                          strokeWidth: 18,
+                          addGlow: true,
                         ),
                       );
                     },
@@ -99,19 +104,22 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
                           return Text(
                             '${_calorieAnimation.value}',
                             style: theme.textTheme.displayLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
-                              fontSize: 48,
+                              fontWeight: FontWeight.w900,
+                              color: ringColor,
+                              fontSize: 56,
+                              letterSpacing: -1.5,
                             ),
                           );
                         },
                       ),
                       Text(
-                        'kcal/dia',
+                        'kcal / dia',
                         style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
                           color: theme.colorScheme.onSurface.withValues(
-                            alpha: 0.6,
+                            alpha: 0.5,
                           ),
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ],
@@ -120,47 +128,66 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
               ),
             )
             .animate()
-            .scale(begin: const Offset(0.8, 0.8), duration: 600.ms)
+            .scale(
+              begin: const Offset(0.8, 0.8),
+              duration: 600.ms,
+              curve: Curves.easeOutBack,
+            )
             .fadeIn(duration: 600.ms),
-        const SizedBox(height: 32),
+        const SizedBox(height: 48),
         // Description
         Text(
               'Seu orçamento diário de calorias',
               style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                fontWeight: FontWeight.w700,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
               ),
               textAlign: TextAlign.center,
             )
             .animate(delay: 500.ms)
             .fadeIn(duration: 400.ms)
             .slideY(begin: 0.2, duration: 400.ms),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
         // Macro breakdown
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _MacroChip(
-              label: 'Proteína',
-              value: widget.protein,
-              unit: 'g',
-              color: Colors.red.shade400,
-              delay: 600,
-            ),
-            _MacroChip(
-              label: 'Carboidratos',
-              value: widget.carbs,
-              unit: 'g',
-              color: Colors.amber.shade600,
-              delay: 700,
-            ),
-            _MacroChip(
-              label: 'Gordura',
-              value: widget.fat,
-              unit: 'g',
-              color: Colors.blue.shade400,
-              delay: 800,
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: _MacroChip(
+                  label: 'Proteína',
+                  value: widget.protein,
+                  unit: 'g',
+                  color: const Color(0xFFEF4444), // Modern Red
+                  icon: Icons.fitness_center_rounded,
+                  delay: 600,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MacroChip(
+                  label: 'Carbs',
+                  value: widget.carbs,
+                  unit: 'g',
+                  color: const Color(0xFFF59E0B), // Modern Amber
+                  icon: Icons.bolt_rounded,
+                  delay: 700,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _MacroChip(
+                  label: 'Gordura',
+                  value: widget.fat,
+                  unit: 'g',
+                  color: const Color(0xFF3B82F6), // Modern Blue
+                  icon: Icons.opacity_rounded,
+                  delay: 800,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -172,6 +199,7 @@ class _MacroChip extends StatelessWidget {
   final int value;
   final String unit;
   final Color color;
+  final IconData icon;
   final int delay;
 
   const _MacroChip({
@@ -179,6 +207,7 @@ class _MacroChip extends StatelessWidget {
     required this.value,
     required this.unit,
     required this.color,
+    required this.icon,
     required this.delay,
   });
 
@@ -186,37 +215,60 @@ class _MacroChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-          children: [
-            Container(
-              width: 64,
-              height: 64,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(16),
+    return Container(
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: color.withValues(alpha: 0.15),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.08),
+                blurRadius: 16,
+                offset: const Offset(0, 8),
               ),
-              child: Center(
-                child: Text(
-                  '$value$unit',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 20, color: color),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '$value$unit',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  color: theme.colorScheme.onSurface,
+                  letterSpacing: -0.5,
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                  fontWeight: FontWeight.w600,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            ),
-          ],
+            ],
+          ),
         )
         .animate(delay: Duration(milliseconds: delay))
         .fadeIn(duration: 400.ms)
-        .slideY(begin: 0.3, duration: 400.ms);
+        .slideY(begin: 0.2, duration: 400.ms);
   }
 }
 
@@ -224,31 +276,72 @@ class _CalorieRingPainter extends CustomPainter {
   final double progress;
   final Color color;
   final double strokeWidth;
+  final bool addGlow;
 
   _CalorieRingPainter({
     required this.progress,
     required this.color,
     required this.strokeWidth,
+    this.addGlow = false,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = (size.width - strokeWidth) / 2;
+    final rect = Rect.fromCircle(center: center, radius: radius);
 
+    // Subtle glow if needed
+    if (addGlow && progress > 0) {
+      final glowPaint = Paint()
+        ..color = color.withValues(alpha: 0.4)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
+
+      canvas.drawArc(
+        rect,
+        -math.pi / 2,
+        2 * math.pi * progress,
+        false,
+        glowPaint,
+      );
+    }
+
+    // Main ring paint
     final paint = Paint()
-      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -math.pi / 2,
-      2 * math.pi * progress,
-      false,
-      paint,
-    );
+    if (addGlow) {
+      // Use a gradient for the active progress ring
+      paint.shader = SweepGradient(
+        colors: [
+          color.withValues(alpha: 0.6),
+          color,
+          color.withValues(
+            alpha: 0.8,
+          ), // A slightly lighter/different ending color for depth
+        ],
+        stops: const [0.0, 0.7, 1.0],
+        startAngle: -math.pi / 2,
+        endAngle: -math.pi / 2 + 2 * math.pi * (progress == 0 ? 1 : progress),
+      ).createShader(rect);
+    } else {
+      paint.color = color;
+    }
+
+    if (progress > 0 || !addGlow) {
+      canvas.drawArc(
+        rect,
+        -math.pi / 2,
+        addGlow ? 2 * math.pi * progress : 2 * math.pi,
+        false,
+        paint,
+      );
+    }
   }
 
   @override
@@ -314,10 +407,21 @@ class TimeEstimateWidget extends StatelessWidget {
         Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.5,
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(
+                  color: theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
+                  width: 1.5,
                 ),
-                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -338,26 +442,39 @@ class TimeEstimateWidget extends StatelessWidget {
                             alignment: Alignment.center,
                             children: [
                               Container(
-                                height: 4,
+                                height: 6,
                                 decoration: BoxDecoration(
-                                  color: progressColor.withValues(alpha: 0.3),
-                                  borderRadius: BorderRadius.circular(2),
+                                  color: progressColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(3),
                                 ),
                               ),
                               Container(
-                                    width: 4,
-                                    height: 4,
+                                    width: 12,
+                                    height: 12,
                                     decoration: BoxDecoration(
-                                      color: progressColor,
+                                      color: Colors.white,
                                       shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: progressColor,
+                                        width: 3,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: progressColor.withValues(
+                                            alpha: 0.4,
+                                          ),
+                                          blurRadius: 6,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
                                     ),
                                   )
                                   .animate(onPlay: (c) => c.repeat())
                                   .moveX(
-                                    begin: -40,
-                                    end: 40,
+                                    begin: -50,
+                                    end: 50,
                                     duration: 2.seconds,
-                                    curve: Curves.easeInOut,
+                                    curve: Curves.easeInOutSine,
                                   ),
                             ],
                           ),
@@ -451,33 +568,60 @@ class _WeightBubble extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 80,
-          height: 80,
+          width: 88,
+          height: 88,
           decoration: BoxDecoration(
             color: isPrimary
-                ? bubbleColor.withValues(alpha: 0.15)
-                : theme.colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(16),
-            border: isPrimary ? Border.all(color: bubbleColor, width: 2) : null,
+                ? bubbleColor.withValues(alpha: 0.1)
+                : theme.colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.3,
+                  ),
+            borderRadius: BorderRadius.circular(24),
+            border: isPrimary
+                ? Border.all(
+                    color: bubbleColor.withValues(alpha: 0.5),
+                    width: 2,
+                  )
+                : Border.all(
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    width: 1.5,
+                  ),
+            boxShadow: isPrimary
+                ? [
+                    BoxShadow(
+                      color: bubbleColor.withValues(alpha: 0.1),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
+                : null,
           ),
-          child: Center(
-            child: Text(
-              weight.toStringAsFixed(1),
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: isPrimary
-                    ? bubbleColor
-                    : theme.colorScheme.onSurface.withValues(alpha: 0.7),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                label.toUpperCase(),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: isPrimary
+                      ? bubbleColor
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5,
+                ),
               ),
-            ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-            fontWeight: isPrimary ? FontWeight.w500 : null,
+              const SizedBox(height: 4),
+              Text(
+                weight.toStringAsFixed(1),
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: isPrimary
+                      ? bubbleColor
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.8),
+                  fontSize: 24,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ],
           ),
         ),
       ],

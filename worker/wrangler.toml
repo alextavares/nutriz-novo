@@ -5,3 +5,8 @@ compatibility_date = "2024-12-01"
 # We don't need to define the secret here, it's set via CLI
 # [vars]
 # GEMINI_API_KEY = "..." 
+
+[[d1_databases]]
+binding = "DB" # Available in your worker as env.DB
+database_name = "nutriz-db"
+database_id = "5da78b67-4541-4107-be38-6aad0f09b831"

@@ -14,6 +14,7 @@ _$UserProfileImpl _$$UserProfileImplFromJson(Map<String, dynamic> json) =>
       birthDate: DateTime.parse(json['birthDate'] as String),
       height: (json['height'] as num).toInt(),
       currentWeight: (json['currentWeight'] as num).toDouble(),
+      startWeight: (json['startWeight'] as num).toDouble(),
       targetWeight: (json['targetWeight'] as num).toDouble(),
       weeklyGoal: (json['weeklyGoal'] as num).toDouble(),
       activityLevel: $enumDecode(_$ActivityLevelEnumMap, json['activityLevel']),
@@ -71,6 +72,7 @@ Map<String, dynamic> _$$UserProfileImplToJson(_$UserProfileImpl instance) =>
       'birthDate': instance.birthDate.toIso8601String(),
       'height': instance.height,
       'currentWeight': instance.currentWeight,
+      'startWeight': instance.startWeight,
       'targetWeight': instance.targetWeight,
       'weeklyGoal': instance.weeklyGoal,
       'activityLevel': _$ActivityLevelEnumMap[instance.activityLevel]!,
@@ -118,7 +120,15 @@ const _$MainGoalEnumMap = {
 };
 
 const _$DietaryPreferenceEnumMap = {
-  DietaryPreference.classic: 'classic',
+  DietaryPreference.artificialIntelligence: 'artificialIntelligence',
+  DietaryPreference.balanced: 'balanced',
+  DietaryPreference.highProtein: 'highProtein',
+  DietaryPreference.lowCarb: 'lowCarb',
+  DietaryPreference.keto: 'keto',
+  DietaryPreference.mediterranean: 'mediterranean',
+  DietaryPreference.paleo: 'paleo',
+  DietaryPreference.lowFat: 'lowFat',
+  DietaryPreference.dash: 'dash',
   DietaryPreference.pescetarian: 'pescetarian',
   DietaryPreference.vegetarian: 'vegetarian',
   DietaryPreference.vegan: 'vegan',

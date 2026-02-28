@@ -13,6 +13,8 @@ import '../notifiers/food_search_notifier.dart';
 import '../providers/ai_food_provider.dart';
 import '../providers/diary_providers.dart';
 import '../widgets/food_detail_sheet.dart';
+import 'create_custom_food_screen.dart';
+import 'barcode_scanner_screen.dart';
 
 class FoodSearchScreen extends ConsumerStatefulWidget {
   final String mealType;
@@ -92,6 +94,11 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
               return;
             }
 
+            await ref.read(analyticsServiceProvider).logEvent(
+              'refeicao_registrada_ia',
+              {'food_name': food.name, 'meal_type': widget.mealType},
+            );
+
             await ref
                 .read(diaryNotifierProvider.notifier)
                 .addFoodToMeal(
@@ -122,9 +129,9 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
           next.error != previous?.error &&
           mounted &&
           !next.isLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error!)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.error!)));
       }
     });
 
@@ -181,8 +188,73 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
             IconButton(
               icon: const Icon(Icons.qr_code_scanner, color: Colors.black),
               tooltip: 'Ler código de barras',
-              onPressed: () {
-                // TODO: Implement Barcode Scanner
+              onPressed: () async {
+                final String? barcode = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const BarcodeScannerScreen(),
+                  ),
+                );
+
+                if (barcode != null && barcode.isNotEmpty && mounted) {
+                  // Mostrar loading
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Buscando código de barras...'),
+                    ),
+                  );
+
+                  final service = ref.read(foodServiceProvider);
+                  final foodItem = await service.scanBarcode(barcode);
+
+                  if (foodItem != null && mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    // Converte FoodItem model base de volta para Food Entity padrão do _showFoodConfirmationDialog
+                    // Nota: O método _showFoodConfirmationDialog aceita Food (domínio).
+                    final food = Food(
+                      id: foodItem.id,
+                      name: foodItem.name,
+                      calories: Calories(foodItem.calories),
+                      macros: MacroNutrients(
+                        protein: foodItem.protein,
+                        carbs: foodItem.carbs,
+                        fat: foodItem.fat,
+                      ),
+                      servingSize: 100, // OFF default is 100g
+                      servingUnit: 'g',
+                      brand: foodItem.brand,
+                    );
+                    _showFoodConfirmationDialog(context, food);
+                  } else if (mounted) {
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Alimento não encontrado pelo código de barras.',
+                        ),
+                        backgroundColor: AppColors.error,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline, color: Colors.black),
+              tooltip: 'Adicionar Alimento Manual',
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CreateCustomFoodScreen(),
+                  ),
+                );
+                if (result == true) {
+                  // Se o usuário adicionou um alimento, recarregamos a busca
+                  ref
+                      .read(foodSearchNotifierProvider.notifier)
+                      .search(_searchController.text);
+                }
               },
             ),
           ],
@@ -363,6 +435,9 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                     if (mounted) this.context.push('/premium');
                     return;
                   }
+                  ref.read(analyticsServiceProvider).logEvent('scan_iniciado', {
+                    'source': 'camera',
+                  });
                   ref
                       .read(aiFoodNotifierProvider.notifier)
                       .pickAndAnalyzeImage(ImageSource.camera);
@@ -377,6 +452,9 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen>
                     if (mounted) this.context.push('/premium');
                     return;
                   }
+                  ref.read(analyticsServiceProvider).logEvent('scan_iniciado', {
+                    'source': 'gallery',
+                  });
                   ref
                       .read(aiFoodNotifierProvider.notifier)
                       .pickAndAnalyzeImage(ImageSource.gallery);

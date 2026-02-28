@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/models/fasting_stage.dart';
+import '../../data/repositories/fasting_repository.dart';
+import '../../../gamification/presentation/providers/gamification_providers.dart'; // For isarProvider
 
 class FastingState {
   final bool isFasting;
@@ -35,9 +37,48 @@ class FastingState {
 }
 
 class FastingNotifier extends StateNotifier<FastingState> {
+  final FastingRepository _repository;
   Timer? _timer;
 
-  FastingNotifier() : super(const FastingState());
+  FastingNotifier(this._repository) : super(const FastingState()) {
+    _loadPersistedState();
+  }
+
+  Future<void> _loadPersistedState() async {
+    final entity = await _repository.getState();
+    if (entity != null && entity.isFasting && entity.startTime != null) {
+      final now = DateTime.now();
+      final elapsed = now.difference(entity.startTime!);
+      state = FastingState(
+        isFasting: true,
+        startTime: entity.startTime,
+        elapsed: elapsed,
+        goal: Duration(milliseconds: entity.goalMilliseconds),
+      );
+      _startTimer();
+    } else {
+      // Clear inconsistent state just in case
+      await _repository.clearState();
+    }
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (state.startTime == null) return;
+      final currentElapsed = DateTime.now().difference(state.startTime!);
+      state = state.copyWith(elapsed: currentElapsed);
+    });
+  }
+
+  Future<void> _persistState() async {
+    await _repository.saveState(
+      isFasting: state.isFasting,
+      startTime: state.startTime,
+      elapsed: state.elapsed,
+      goal: state.goal,
+    );
+  }
 
   void startFasting({Duration? initialElapsed}) {
     if (state.isFasting) return;
@@ -50,11 +91,8 @@ class FastingNotifier extends StateNotifier<FastingState> {
       startTime: start,
       elapsed: initialElapsed ?? Duration.zero,
     );
-
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      final currentElapsed = DateTime.now().difference(state.startTime!);
-      state = state.copyWith(elapsed: currentElapsed);
-    });
+    _persistState();
+    _startTimer();
   }
 
   void updateStartTime(DateTime newStart) {
@@ -70,6 +108,7 @@ class FastingNotifier extends StateNotifier<FastingState> {
 
     final newElapsed = now.difference(newStart);
     state = state.copyWith(startTime: newStart, elapsed: newElapsed);
+    _persistState();
   }
 
   void updateEndTime(DateTime newEnd) {
@@ -83,11 +122,13 @@ class FastingNotifier extends StateNotifier<FastingState> {
 
     final newGoal = newEnd.difference(state.startTime!);
     state = state.copyWith(goal: newGoal);
+    _persistState();
   }
 
   void updateGoal(Duration newGoal) {
     if (newGoal <= Duration.zero) return;
     state = state.copyWith(goal: newGoal);
+    _persistState();
   }
 
   void stopFasting() {
@@ -97,6 +138,7 @@ class FastingNotifier extends StateNotifier<FastingState> {
       elapsed: Duration.zero,
       startTime: null,
     );
+    _repository.clearState();
   }
 
   @override
@@ -108,5 +150,6 @@ class FastingNotifier extends StateNotifier<FastingState> {
 
 final fastingNotifierProvider =
     StateNotifierProvider<FastingNotifier, FastingState>((ref) {
-      return FastingNotifier();
+      final isar = ref.watch(isarProvider);
+      return FastingNotifier(FastingRepository(isar));
     });

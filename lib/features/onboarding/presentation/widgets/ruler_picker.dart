@@ -11,6 +11,7 @@ class RulerPicker extends StatefulWidget {
   final Axis direction;
   final bool showValue;
   final bool showIndicator;
+  final String Function(num)? labelBuilder;
 
   const RulerPicker({
     super.key,
@@ -23,6 +24,7 @@ class RulerPicker extends StatefulWidget {
     this.direction = Axis.horizontal,
     this.showValue = true,
     this.showIndicator = true,
+    this.labelBuilder,
   });
 
   @override
@@ -176,8 +178,8 @@ class _RulerPickerState extends State<RulerPicker> {
                 final isMajor = value % 10 == 0;
                 final isMedium = value % 5 == 0 && !isMajor;
 
-                final tickSize = isMajor ? 60.0 : (isMedium ? 40.0 : 25.0);
-                final tickThickness = isMajor ? 3.0 : (isMedium ? 2.0 : 1.5);
+                final tickSize = isMajor ? 50.0 : (isMedium ? 30.0 : 18.0);
+                final tickThickness = isMajor ? 2.5 : (isMedium ? 1.5 : 1.0);
 
                 return Container(
                   width: isHorizontal ? _rulerItemWidth : null,
@@ -273,20 +275,32 @@ class _RulerPickerState extends State<RulerPicker> {
       height: height,
       decoration: BoxDecoration(
         color: isMajor
-            ? theme.colorScheme.onSurface
-            : theme.colorScheme.onSurface.withOpacity(isMedium ? 0.4 : 0.2),
+            ? const Color(0xFF9CA3AF)
+            : const Color(0xFFE5E7EB), // Grey 400 vs Grey 200
         borderRadius: BorderRadius.circular(2),
       ),
     );
   }
 
   Widget _buildTickLabel(ThemeData theme, double value) {
-    return Text(
-      value.round().toString(),
-      style: TextStyle(
-        color: theme.colorScheme.onSurface.withOpacity(0.6),
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
+    final text = widget.labelBuilder != null
+        ? widget.labelBuilder!(value)
+        : value.round().toString();
+
+    // Use OverflowBox to allow text to be wider than the 10px column width
+    return SizedBox(
+      width: 40, // Fixed width sufficient for 3-4 digits
+      child: Center(
+        child: Text(
+          text,
+          softWrap: false,
+          overflow: TextOverflow.visible,
+          style: TextStyle(
+            color: theme.colorScheme.onSurface.withOpacity(0.6),
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

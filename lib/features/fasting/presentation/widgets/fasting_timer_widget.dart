@@ -46,25 +46,25 @@ class FastingTimerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isFasting = startTime != null;
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        final availableWidth = constraints.maxWidth;
-        final ringSize = math.min(availableWidth * 0.85, 320.0);
-        final isFasting = startTime != null;
-        final statusLabel = isFasting ? 'Em jejum' : 'Pronto';
+        final ringSize = math.min(constraints.maxWidth * 0.85, 300.0);
 
         return SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 20),
-              // 1. The Big Animated Ring
+              const SizedBox(height: 12),
+
+              // ── Big animated ring ──────────────────────────────────────
               SizedBox(
                 width: ringSize,
                 height: ringSize,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    // Shadow for depth
+                    // Glow shadow under ring
                     Container(
                       width: ringSize,
                       height: ringSize,
@@ -72,101 +72,55 @@ class FastingTimerWidget extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withValues(alpha: 0.12),
-                            blurRadius: 20,
-                            spreadRadius: 5,
-                            offset: const Offset(0, 8),
+                            color: AppColors.primary.withValues(alpha: 0.18),
+                            blurRadius: 40,
+                            spreadRadius: 8,
+                            offset: const Offset(0, 12),
                           ),
                         ],
                       ),
                     ),
-                    // Background Ring
+                    // Track
                     SizedBox(
                       width: ringSize,
                       height: ringSize,
                       child: CircularProgressIndicator(
                         value: 1.0,
-                        strokeWidth: 22,
+                        strokeWidth: 20,
                         color: AppColors.surfaceVariant,
                         strokeCap: StrokeCap.round,
                       ),
                     ),
-                    // Animated Ring Painter
+                    // Gradient progress arc
                     AnimatedProgressRing(
-                      progress: progress,
+                      progress: isFasting ? progress : 0,
                       size: ringSize,
-                      strokeWidth: 22,
+                      strokeWidth: 20,
                       color: Colors.transparent,
                       backgroundColor: Colors.transparent,
                       gradient: const SweepGradient(
                         startAngle: -math.pi / 2,
                         endAngle: 3 * math.pi / 2,
-                        colors: [AppColors.primaryDark, AppColors.primary],
+                        colors: [AppColors.primaryLight, AppColors.primaryDark],
                         tileMode: TileMode.clamp,
                       ),
                     ),
 
-                    // Center Content
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Icon
-                        Icon(
-                          Icons.bolt_rounded,
-                          size: 32,
-                          color: AppColors.primary,
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Giant Timer
-                        Text(
-                          _formatDuration(elapsed),
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.textPrimary,
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                            height: 1.0,
-                            letterSpacing: -1.0,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-
-                        // Label
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.primary.withValues(alpha: 0.12),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            statusLabel,
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primary,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Center content
+                    if (isFasting)
+                      _ActiveCenter(elapsed: elapsed, progress: progress)
+                    else
+                      _IdleCenter(onStart: onStart, goal: goal),
                   ],
                 ),
               ),
 
               const SizedBox(height: AppSpacing.lg),
 
-              // 2. Stats Card
+              // ── Stats card ────────────────────────────────────────────
               Container(
-                margin: EdgeInsets.zero,
                 padding: const EdgeInsets.symmetric(
-                  vertical: 20,
+                  vertical: 18,
                   horizontal: 16,
                 ),
                 decoration: BoxDecoration(
@@ -192,28 +146,23 @@ class FastingTimerWidget extends StatelessWidget {
                           'Início',
                           _formatTime(start),
                           icon: Icons.play_arrow_rounded,
+                          color: AppColors.primary,
                           onEdit: onEditStart,
                         ),
-                        Container(
-                          width: 1,
-                          height: 40,
-                          color: AppColors.border,
-                        ),
+                        _divider(),
                         _buildStatItem(
                           'Fim',
                           _formatTime(end),
                           icon: Icons.stop_rounded,
+                          color: AppColors.secondary,
                           onEdit: onEditEnd,
                         ),
-                        Container(
-                          width: 1,
-                          height: 40,
-                          color: AppColors.border,
-                        ),
+                        _divider(),
                         _buildStatItem(
                           'Meta',
                           '${goal.inHours}h',
                           icon: Icons.flag_rounded,
+                          color: AppColors.accent,
                         ),
                       ],
                     );
@@ -221,28 +170,37 @@ class FastingTimerWidget extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.md),
 
-              // 3. Start/Stop Button
+              // ── Start / Stop button ───────────────────────────────────
               SizedBox(
                 width: double.infinity,
-                child: FilledButton.icon(
-                  onPressed: isFasting ? onStop : onStart,
-                  icon: Icon(
-                    isFasting ? Icons.stop_rounded : Icons.play_arrow_rounded,
-                    size: 20,
-                  ),
-                  label: Text(isFasting ? 'Encerrar jejum' : 'Iniciar jejum'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  child: FilledButton.icon(
+                    onPressed: isFasting ? onStop : onStart,
+                    icon: Icon(
+                      isFasting
+                          ? Icons.stop_circle_outlined
+                          : Icons.play_circle_outlined,
+                      size: 22,
                     ),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
+                    label: Text(isFasting ? 'Encerrar jejum' : 'Iniciar jejum'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: isFasting
+                          ? AppColors.error
+                          : AppColors.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusLg,
+                        ),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -250,7 +208,7 @@ class FastingTimerWidget extends StatelessWidget {
 
               const SizedBox(height: AppSpacing.xl),
 
-              // 4. Streak & History
+              // ── History chart ─────────────────────────────────────────
               const SectionHeader(title: 'Últimos 7 dias'),
               const SizedBox(height: AppSpacing.md),
               Container(
@@ -267,10 +225,13 @@ class FastingTimerWidget extends StatelessWidget {
                   ],
                 ),
                 padding: const EdgeInsets.all(AppSpacing.md),
-                child: const SizedBox(height: 150, child: FastingHistoryChart()),
+                child: const SizedBox(
+                  height: 150,
+                  child: FastingHistoryChart(),
+                ),
               ),
 
-              const SizedBox(height: 220),
+              const SizedBox(height: 100),
             ],
           ),
         );
@@ -278,10 +239,13 @@ class FastingTimerWidget extends StatelessWidget {
     );
   }
 
+  Widget _divider() => Container(width: 1, height: 40, color: AppColors.border);
+
   Widget _buildStatItem(
     String label,
     String value, {
-    IconData? icon,
+    required IconData icon,
+    required Color color,
     VoidCallback? onEdit,
   }) {
     return InkWell(
@@ -290,23 +254,28 @@ class FastingTimerWidget extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                if (icon != null)
-                  Icon(icon, size: 14, color: AppColors.textHint),
+                Icon(icon, size: 13, color: color),
                 const SizedBox(width: 4),
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 11,
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 if (onEdit != null) ...[
-                  const SizedBox(width: 4),
-                  const Icon(Icons.edit, size: 12, color: AppColors.primary),
+                  const SizedBox(width: 3),
+                  const Icon(
+                    Icons.edit_rounded,
+                    size: 10,
+                    color: AppColors.primary,
+                  ),
                 ],
               ],
             ),
@@ -314,7 +283,7 @@ class FastingTimerWidget extends StatelessWidget {
             Text(
               value,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.w900,
                 color: AppColors.textPrimary,
               ),
@@ -322,6 +291,129 @@ class FastingTimerWidget extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Center of the ring when actively fasting
+class _ActiveCenter extends StatelessWidget {
+  final Duration elapsed;
+  final double progress;
+
+  const _ActiveCenter({required this.elapsed, required this.progress});
+
+  String _format(Duration d) {
+    String p(int n) => n.toString().padLeft(2, '0');
+    return '${p(d.inHours)}:${p(d.inMinutes.remainder(60))}:${p(d.inSeconds.remainder(60))}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pct = (progress * 100).toInt();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Lightning bolt icon
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.12),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.bolt_rounded,
+            size: 26,
+            color: AppColors.primary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          _format(elapsed),
+          style: const TextStyle(
+            fontSize: 38,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+            fontFeatures: [FontFeature.tabularFigures()],
+            height: 1.0,
+            letterSpacing: -1.0,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            '$pct% concluído',
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: AppColors.primary,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Center of the ring when NOT fasting
+class _IdleCenter extends StatelessWidget {
+  final VoidCallback? onStart;
+  final Duration goal;
+
+  const _IdleCenter({required this.onStart, required this.goal});
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now();
+    // Suggest starting at 20:00 if before that, or right now
+    final suggestedStart = now.hour < 20
+        ? DateTime(now.year, now.month, now.day, 20, 0)
+        : now;
+    final suggestedEnd = suggestedStart.add(goal);
+    String _fmt(DateTime t) =>
+        '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: AppColors.primary.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            Icons.bedtime_rounded,
+            size: 28,
+            color: AppColors.primary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Pronto para\ncomeçar',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textPrimary,
+            height: 1.2,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          '${_fmt(suggestedStart)} → ${_fmt(suggestedEnd)}',
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
+          ),
+        ),
+      ],
     );
   }
 }

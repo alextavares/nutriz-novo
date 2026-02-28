@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,6 +22,12 @@ import '../features/recipes/presentation/pages/recipes_list_screen.dart';
 import '../features/recipes/presentation/pages/recipe_detail_screen.dart';
 import '../features/onboarding/presentation/pages/prediction_screen.dart';
 import '../features/premium/presentation/pages/hard_paywall_screen.dart';
+import '../features/premium/presentation/pages/offer_paywall_screen.dart';
+import '../features/legal/presentation/pages/privacy_policy_screen.dart';
+import '../features/legal/presentation/pages/terms_of_service_screen.dart';
+import '../features/coach/presentation/pages/coach_chat_screen.dart';
+import '../features/diet/presentation/pages/diet_plan_screen.dart';
+import '../features/diet/presentation/pages/shopping_list_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -131,6 +136,10 @@ GoRouter appRouter(AppRouterRef ref) {
               !isSplashRoute) {
             return '/onboarding';
           }
+          // One-way guard: once completed, never stay in first-run onboarding route.
+          if (isCompleted && isOnboardingRoute) {
+            return '/diary';
+          }
           return null; // No redirect needed
         },
         loading: () {
@@ -140,7 +149,12 @@ GoRouter appRouter(AppRouterRef ref) {
             );
           }
           // While loading, avoid bouncing off onboarding (resets its PageView).
-          if (isSplashRoute || isOnboardingRoute || isOnboardingEditRoute) {
+          // Avoid bouncing from diary back to splash during transient loading
+          // states right after onboarding completion/navigation.
+          if (isSplashRoute ||
+              isOnboardingRoute ||
+              isOnboardingEditRoute ||
+              state.matchedLocation == '/diary') {
             return null;
           }
           return '/splash';
@@ -180,8 +194,12 @@ GoRouter appRouter(AppRouterRef ref) {
             builder: (context, state) => const RecipesScreen(),
           ),
           GoRoute(
+            path: '/diet',
+            builder: (context, state) => const DietPlanScreen(),
+          ),
+          GoRoute(
             path: '/coach',
-            builder: (context, state) => const CoachScreen(),
+            builder: (context, state) => const CoachChatScreen(),
           ),
           GoRoute(path: '/pro', builder: (context, state) => const ProScreen()),
           GoRoute(
@@ -194,6 +212,11 @@ GoRouter appRouter(AppRouterRef ref) {
         parentNavigatorKey: rootNavigatorKey,
         path: '/premium',
         builder: (context, state) => const PremiumScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/diet/shopping-list',
+        builder: (context, state) => const ShoppingListScreen(),
       ),
       GoRoute(
         parentNavigatorKey: rootNavigatorKey,
@@ -280,6 +303,21 @@ GoRouter appRouter(AppRouterRef ref) {
         parentNavigatorKey: rootNavigatorKey,
         path: '/premium/paywall',
         builder: (context, state) => const HardPaywallScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/premium/offer',
+        builder: (context, state) => const OfferPaywallScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/legal/privacy',
+        builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootNavigatorKey,
+        path: '/legal/terms',
+        builder: (context, state) => const TermsOfServiceScreen(),
       ),
     ],
   );

@@ -19,6 +19,7 @@ class UserProfileEntity {
   late DateTime birthDate;
   late int height;
   late double currentWeight;
+  late double startWeight;
   late double targetWeight;
   late double weeklyGoal;
 
@@ -58,6 +59,7 @@ class UserProfileEntity {
       ..birthDate = profile.birthDate
       ..height = profile.height
       ..currentWeight = profile.currentWeight
+      ..startWeight = profile.startWeight
       ..targetWeight = profile.targetWeight
       ..weeklyGoal = profile.weeklyGoal
       ..activityLevel = profile.activityLevel
@@ -86,6 +88,7 @@ class UserProfileEntity {
       birthDate: birthDate,
       height: height,
       currentWeight: currentWeight,
+      startWeight: startWeight,
       targetWeight: targetWeight,
       weeklyGoal: weeklyGoal,
       activityLevel: activityLevel,

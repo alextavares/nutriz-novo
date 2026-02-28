@@ -132,13 +132,18 @@ const UserProfileEntitySchema = CollectionSchema(
       name: r'proteinGrams',
       type: IsarType.long,
     ),
-    r'targetWeight': PropertySchema(
+    r'startWeight': PropertySchema(
       id: 22,
+      name: r'startWeight',
+      type: IsarType.double,
+    ),
+    r'targetWeight': PropertySchema(
+      id: 23,
       name: r'targetWeight',
       type: IsarType.double,
     ),
     r'weeklyGoal': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'weeklyGoal',
       type: IsarType.double,
     )
@@ -221,8 +226,9 @@ void _userProfileEntitySerialize(
   writer.writeLong(offsets[19], object.paywallDismissCount);
   writer.writeString(offsets[20], object.profileId);
   writer.writeLong(offsets[21], object.proteinGrams);
-  writer.writeDouble(offsets[22], object.targetWeight);
-  writer.writeDouble(offsets[23], object.weeklyGoal);
+  writer.writeDouble(offsets[22], object.startWeight);
+  writer.writeDouble(offsets[23], object.targetWeight);
+  writer.writeDouble(offsets[24], object.weeklyGoal);
 }
 
 UserProfileEntity _userProfileEntityDeserialize(
@@ -245,7 +251,7 @@ UserProfileEntity _userProfileEntityDeserialize(
   object.currentWeight = reader.readDouble(offsets[8]);
   object.dietaryPreference = _UserProfileEntitydietaryPreferenceValueEnumMap[
           reader.readByteOrNull(offsets[9])] ??
-      DietaryPreference.classic;
+      DietaryPreference.artificialIntelligence;
   object.fatGrams = reader.readLong(offsets[10]);
   object.favoriteFoodKeysJson = reader.readStringOrNull(offsets[11]);
   object.foodLoggingMethod = _UserProfileEntityfoodLoggingMethodValueEnumMap[
@@ -265,8 +271,9 @@ UserProfileEntity _userProfileEntityDeserialize(
   object.paywallDismissCount = reader.readLongOrNull(offsets[19]);
   object.profileId = reader.readString(offsets[20]);
   object.proteinGrams = reader.readLong(offsets[21]);
-  object.targetWeight = reader.readDouble(offsets[22]);
-  object.weeklyGoal = reader.readDouble(offsets[23]);
+  object.startWeight = reader.readDouble(offsets[22]);
+  object.targetWeight = reader.readDouble(offsets[23]);
+  object.weeklyGoal = reader.readDouble(offsets[24]);
   return object;
 }
 
@@ -300,7 +307,7 @@ P _userProfileEntityDeserializeProp<P>(
     case 9:
       return (_UserProfileEntitydietaryPreferenceValueEnumMap[
               reader.readByteOrNull(offset)] ??
-          DietaryPreference.classic) as P;
+          DietaryPreference.artificialIntelligence) as P;
     case 10:
       return (reader.readLong(offset)) as P;
     case 11:
@@ -335,6 +342,8 @@ P _userProfileEntityDeserializeProp<P>(
       return (reader.readDouble(offset)) as P;
     case 23:
       return (reader.readDouble(offset)) as P;
+    case 24:
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -353,16 +362,32 @@ const _UserProfileEntityactivityLevelValueEnumMap = {
   3: ActivityLevel.veryActive,
 };
 const _UserProfileEntitydietaryPreferenceEnumValueMap = {
-  'classic': 0,
-  'pescetarian': 1,
-  'vegetarian': 2,
-  'vegan': 3,
+  'artificialIntelligence': 0,
+  'balanced': 1,
+  'highProtein': 2,
+  'lowCarb': 3,
+  'keto': 4,
+  'mediterranean': 5,
+  'paleo': 6,
+  'lowFat': 7,
+  'dash': 8,
+  'pescetarian': 9,
+  'vegetarian': 10,
+  'vegan': 11,
 };
 const _UserProfileEntitydietaryPreferenceValueEnumMap = {
-  0: DietaryPreference.classic,
-  1: DietaryPreference.pescetarian,
-  2: DietaryPreference.vegetarian,
-  3: DietaryPreference.vegan,
+  0: DietaryPreference.artificialIntelligence,
+  1: DietaryPreference.balanced,
+  2: DietaryPreference.highProtein,
+  3: DietaryPreference.lowCarb,
+  4: DietaryPreference.keto,
+  5: DietaryPreference.mediterranean,
+  6: DietaryPreference.paleo,
+  7: DietaryPreference.lowFat,
+  8: DietaryPreference.dash,
+  9: DietaryPreference.pescetarian,
+  10: DietaryPreference.vegetarian,
+  11: DietaryPreference.vegan,
 };
 const _UserProfileEntityfoodLoggingMethodEnumValueMap = {
   'notNow': 0,
@@ -2187,6 +2212,72 @@ extension UserProfileEntityQueryFilter
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      startWeightEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'startWeight',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      startWeightGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'startWeight',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      startWeightLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'startWeight',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
+      startWeightBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'startWeight',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterFilterCondition>
       targetWeightEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -2636,6 +2727,20 @@ extension UserProfileEntityQuerySortBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByStartWeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startWeight', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      sortByStartWeightDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startWeight', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       sortByTargetWeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'targetWeight', Sort.asc);
@@ -2988,6 +3093,20 @@ extension UserProfileEntityQuerySortThenBy
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByStartWeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startWeight', Sort.asc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
+      thenByStartWeightDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'startWeight', Sort.desc);
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QAfterSortBy>
       thenByTargetWeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'targetWeight', Sort.asc);
@@ -3174,6 +3293,13 @@ extension UserProfileEntityQueryWhereDistinct
   }
 
   QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
+      distinctByStartWeight() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'startWeight');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, UserProfileEntity, QDistinct>
       distinctByTargetWeight() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'targetWeight');
@@ -3342,6 +3468,13 @@ extension UserProfileEntityQueryProperty
       proteinGramsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'proteinGrams');
+    });
+  }
+
+  QueryBuilder<UserProfileEntity, double, QQueryOperations>
+      startWeightProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'startWeight');
     });
   }
 

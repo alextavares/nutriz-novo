@@ -8,3 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final onboardingCurrentPageProvider = StateProvider.family<int, bool>(
   (ref, isEditMode) => 0,
 );
+
+/// Becomes true once user reaches post-calculation steps (results/upsell/final).
+/// Survives route/widget recreation to prevent loops back to calculating.
+final onboardingPostCalculationReachedProvider = StateProvider.family<bool, bool>(
+  (ref, isEditMode) => false,
+);

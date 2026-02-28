@@ -13,16 +13,31 @@ import '../../domain/entities/diary_day.dart';
 import '../../../profile/presentation/notifiers/profile_notifier.dart';
 import '../../../fasting/presentation/notifiers/fasting_notifier.dart';
 
+// Dark text color for use on the gradient (better contrast than white)
+const _kDarkText = Color(0xFF143D22);
+const _kDarkTextMid = Color(0xFF1E5930);
+const _kDarkTextLight = Color(0xFF2D7A45);
+
 class DailySummaryHeaderImproved extends ConsumerWidget {
   final DiaryDay diaryDay;
   final int? calorieGoal;
   final bool deEmphasizeFastingCta;
+  final String? dateLabel;
+  final VoidCallback? onPreviousDay;
+  final VoidCallback? onNextDay;
+  final VoidCallback? onDetailsTap;
+  final Widget? profileIcon;
 
   const DailySummaryHeaderImproved({
     super.key,
     required this.diaryDay,
     this.calorieGoal,
     this.deEmphasizeFastingCta = false,
+    this.dateLabel,
+    this.onPreviousDay,
+    this.onNextDay,
+    this.onDetailsTap,
+    this.profileIcon,
   });
 
   @override
@@ -32,211 +47,256 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
         ? Calories(calorieGoal!.toDouble())
         : (diaryDay.calorieGoal ?? const Calories(2000));
     final consumed = diaryDay.totalCalories;
-    final burned = 0; // TODO: Connect to real data
-    final isFasting =
-        ref.watch(fastingNotifierProvider.select((state) => state.isFasting));
+    const burned = 0;
+    final isFasting = ref.watch(
+      fastingNotifierProvider.select((s) => s.isFasting),
+    );
     final showCompactFastingCta = deEmphasizeFastingCta && !isFasting;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final ringSize = (constraints.maxWidth * 0.48).clamp(150.0, 180.0);
-        final showSideStats = constraints.maxWidth >= 340;
+    return Column(
+      children: [
+        // ── Gradient header ──────────────────────────────────────────────
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF27AE60), // Medium green top
+                Color(0xFFA8E063), // Lime-yellow bottom
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Column(
+            children: [
+              // Safe area + top bar
+              SizedBox(height: MediaQuery.of(context).padding.top),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: 6,
+                ),
+                child: Row(
+                  children: [
+                    // Date navigation (center)
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: onPreviousDay,
+                            child: const Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.chevron_left_rounded,
+                                color: _kDarkText,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                          const Icon(
+                            Icons.calendar_today_rounded,
+                            size: 13,
+                            color: _kDarkText,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            dateLabel ?? '',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              color: _kDarkText,
+                              letterSpacing: 0.4,
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                          GestureDetector(
+                            onTap: onNextDay,
+                            child: const Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.chevron_right_rounded,
+                                color: _kDarkText,
+                                size: 22,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Profile icon right
+                    profileIcon ?? const SizedBox(width: 40),
+                  ],
+                ),
+              ),
 
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-            border: Border.all(color: AppColors.border),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.shadow,
-                blurRadius: 16,
-                offset: const Offset(0, 6),
+              // Ring + flanking stats
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: 4,
+                ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final ringSize = (constraints.maxWidth * 0.50).clamp(
+                      140.0,
+                      175.0,
+                    );
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: _StatColumn(
+                            label: 'Consumidas',
+                            value: consumed.value.toInt(),
+                            alignment: CrossAxisAlignment.end,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        GestureDetector(
+                          onTap: onDetailsTap,
+                          child: SizedBox(
+                            width: ringSize,
+                            height: ringSize,
+                            child: _CalorieRing(
+                              consumed: consumed.value.toInt(),
+                              goal: goal.value.toInt(),
+                              burned: burned,
+                              diameter: ringSize,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _StatColumn(
+                            label: 'Queimadas',
+                            value: burned,
+                            alignment: CrossAxisAlignment.start,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Fasting chip inside gradient
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  0,
+                  AppSpacing.md,
+                  AppSpacing.md,
+                ),
+                child: showCompactFastingCta
+                    ? _FastingAction(
+                        isFasting: false,
+                        onTap: () => context.push('/fasting'),
+                      )
+                    : _FastingAction(
+                        isFasting: isFasting,
+                        onTap: () => context.push('/fasting'),
+                      ),
               ),
             ],
           ),
-          clipBehavior: Clip.none,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(
-              children: [
-                // Calorie Ring + stats beside (Yazio-like)
-                if (showSideStats)
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: _StatColumn(
-                            value: consumed.value.toInt(),
-                            label: 'Consumidas',
-                            icon: Icons.restaurant_rounded,
-                            color: AppColors.success,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      GestureDetector(
-                        onTap: () =>
-                            context.push('/nutrition-detail', extra: diaryDay),
-                        child: SizedBox(
-                          width: ringSize,
-                          height: ringSize,
-                          child: _EnhancedCalorieRing(
-                            consumed: consumed.value.toInt(),
-                            goal: goal.value.toInt(),
-                            burned: burned,
-                            diameter: ringSize,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: _StatColumn(
-                            value: burned,
-                            label: 'Queimadas',
-                            icon: Icons.local_fire_department_rounded,
-                            color: AppColors.secondary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                else ...[
-                  GestureDetector(
-                    onTap: () =>
-                        context.push('/nutrition-detail', extra: diaryDay),
-                    child: SizedBox(
-                      width: ringSize,
-                      height: ringSize,
-                      child: _EnhancedCalorieRing(
-                        consumed: consumed.value.toInt(),
-                        goal: goal.value.toInt(),
-                        burned: burned,
-                        diameter: ringSize,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _StatColumn(
-                        value: consumed.value.toInt(),
-                        label: 'Consumidas',
-                        icon: Icons.restaurant_rounded,
-                        color: AppColors.success,
-                      ),
-                      const SizedBox(width: 24),
-                      _StatColumn(
-                        value: burned,
-                        label: 'Queimadas',
-                        icon: Icons.local_fire_department_rounded,
-                        color: AppColors.secondary,
-                      ),
-                    ],
-                  ),
-                ],
-                const SizedBox(height: 12),
+        ),
 
-                // Macro Bars (compact)
-                MacroBars(
-                  carbs: diaryDay.totalMacros.carbs,
-                  protein: diaryDay.totalMacros.protein,
-                  fat: diaryDay.totalMacros.fat,
-                  carbsGoal: profile.carbsGrams.toDouble(),
-                  proteinGoal: profile.proteinGrams.toDouble(),
-                  fatGoal: profile.fatGrams.toDouble(),
-                ),
-                const SizedBox(height: 12),
-
-                // Fasting chip (compact CTA)
-                if (showCompactFastingCta)
-                  Align(
-                    alignment: Alignment.center,
-                    child: TextButton.icon(
-                      onPressed: () => context.push('/fasting'),
-                      icon: Icon(
-                        Icons.timer_rounded,
-                        size: 18,
-                        color: AppColors.textPrimary.withValues(alpha: 0.55),
-                      ),
-                      label: Text(
-                        'Iniciar jejum',
-                        style: AppTypography.labelLarge.copyWith(
-                          color: AppColors.textPrimary.withValues(alpha: 0.55),
-                          fontWeight: FontWeight.w800,
-                          fontSize: 13,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 10,
-                        ),
-                        backgroundColor: Colors.black.withValues(alpha: 0.035),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                      ),
-                    ),
-                  )
-                else
-                  _FastingChip(
-                    isFasting: isFasting,
-                    onTap: () => context.push('/fasting'),
-                  ),
-              ],
-            ),
+        // ── Macro cards (white, below gradient) ──────────────────────────
+        Container(
+          color: AppColors.surfaceVariant,
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.md,
+            AppSpacing.md,
+            AppSpacing.md,
+            0,
           ),
-        );
-      },
+          child: Row(
+            children: [
+              _MacroCard(
+                label: 'Carbo',
+                value: diaryDay.totalMacros.carbs,
+                goal: profile.carbsGrams.toDouble(),
+                color: AppColors.carbs,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              _MacroCard(
+                label: 'Proteína',
+                value: diaryDay.totalMacros.protein,
+                goal: profile.proteinGrams.toDouble(),
+                color: AppColors.protein,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              _MacroCard(
+                label: 'Gordura',
+                value: diaryDay.totalMacros.fat,
+                goal: profile.fatGrams.toDouble(),
+                color: AppColors.fat,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _EnhancedCalorieRing extends StatelessWidget {
-  final int consumed;
-  final int goal;
-  final int burned;
-  final double diameter;
+/// Individual white macro card
+class _MacroCard extends StatelessWidget {
+  final String label;
+  final double value;
+  final double goal;
+  final Color color;
 
-  const _EnhancedCalorieRing({
-    required this.consumed,
+  const _MacroCard({
+    required this.label,
+    required this.value,
     required this.goal,
-    required this.burned,
-    required this.diameter,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    final remaining = goal - consumed + burned;
-    final progress = (consumed / goal).clamp(0.0, 1.0);
-    final numberFontSize = (diameter * 0.27).clamp(40.0, 52.0);
-
-    return CustomPaint(
-      painter: _CalorieRingPainter(progress: progress),
-      child: Center(
+    final safeProgress = goal > 0 ? (value / goal).clamp(0.0, 1.0) : 0.0;
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.border),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              remaining.toString(),
-              style: AppTypography.displayLarge.copyWith(
-                fontSize: numberFontSize,
-                fontWeight: FontWeight.w900,
-                height: 1,
-                color: remaining >= 0 ? AppColors.textPrimary : AppColors.error,
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 4),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(999),
+              child: LinearProgressIndicator(
+                value: safeProgress,
+                backgroundColor: color.withValues(alpha: 0.15),
+                valueColor: AlwaysStoppedAnimation<Color>(color),
+                minHeight: 5,
               ),
             ),
             const SizedBox(height: 4),
             Text(
-              'Restantes',
-              style: AppTypography.bodyMedium.copyWith(
-                fontSize: 13,
+              goal > 0
+                  ? '${value.toInt()}/${goal.toInt()}g'
+                  : '${value.toInt()}g',
+              style: const TextStyle(
+                fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textSecondary,
               ),
@@ -248,152 +308,169 @@ class _EnhancedCalorieRing extends StatelessWidget {
   }
 }
 
-class _CalorieRingPainter extends CustomPainter {
-  final double progress;
+/// Calorie ring with dark text for contrast on the green gradient
+class _CalorieRing extends StatelessWidget {
+  final int consumed;
+  final int goal;
+  final int burned;
+  final double diameter;
 
-  _CalorieRingPainter({required this.progress});
+  const _CalorieRing({
+    required this.consumed,
+    required this.goal,
+    required this.burned,
+    required this.diameter,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final remaining = goal - consumed + burned;
+    final progress = goal > 0 ? (consumed / goal).clamp(0.0, 1.0) : 0.0;
+    final numFontSize = (diameter * 0.26).clamp(36.0, 52.0);
+
+    return CustomPaint(
+      painter: _RingPainter(progress: progress),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              remaining.toString(),
+              style: TextStyle(
+                fontSize: numFontSize,
+                fontWeight: FontWeight.w900,
+                height: 1,
+                color: _kDarkText,
+              ),
+            ),
+            const SizedBox(height: 2),
+            const Text(
+              'Restantes',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: _kDarkTextMid,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RingPainter extends CustomPainter {
+  final double progress;
+  _RingPainter({required this.progress});
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final strokeWidth = (size.shortestSide * 0.1).clamp(14.0, 20.0);
+    final strokeWidth = (size.shortestSide * 0.09).clamp(10.0, 16.0);
     final radius = (size.shortestSide - strokeWidth) / 2;
 
-    // Background circle
-    final backgroundPaint = Paint()
-      ..color = AppColors.surfaceVariant
+    // Track
+    final trackPaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.45)
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
+    canvas.drawCircle(center, radius, trackPaint);
 
-    canvas.drawCircle(center, radius, backgroundPaint);
-
-    // Progress arc
+    // Progress
     final progressPaint = Paint()
-      ..shader = LinearGradient(
-        colors: [AppColors.primary, AppColors.primaryLight],
-      ).createShader(Rect.fromCircle(center: center, radius: radius))
+      ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
-
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius),
-      -math.pi / 2, // Start from top
-      progress * 2 * math.pi, // Sweep angle
+      -math.pi / 2,
+      progress * 2 * math.pi,
       false,
       progressPaint,
     );
   }
 
   @override
-  bool shouldRepaint(_CalorieRingPainter oldDelegate) {
-    return oldDelegate.progress != progress;
-  }
+  bool shouldRepaint(_RingPainter old) => old.progress != progress;
 }
 
 class _StatColumn extends StatelessWidget {
-  final int value;
   final String label;
-  final IconData icon;
-  final Color color;
+  final int value;
+  final CrossAxisAlignment alignment;
 
   const _StatColumn({
-    required this.value,
     required this.label,
-    required this.icon,
-    required this.color,
+    required this.value,
+    required this.alignment,
   });
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: constraints.maxWidth),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(icon, size: 16, color: color),
-                    const SizedBox(width: 4),
-                    Text(
-                      value.toString(),
-                      style: AppTypography.titleMedium.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: AppTypography.labelSmall.copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: alignment,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: _kDarkTextLight,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          value.toString(),
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+            color: _kDarkText,
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _FastingChip extends StatelessWidget {
+class _FastingAction extends StatelessWidget {
   final bool isFasting;
   final VoidCallback onTap;
 
-  const _FastingChip({required this.isFasting, required this.onTap});
+  const _FastingAction({required this.isFasting, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final bg = isFasting
-        ? AppColors.secondaryLight.withValues(alpha: 0.28)
-        : AppColors.surfaceVariant;
-    final fg = isFasting ? AppColors.secondary : AppColors.primary;
     final icon = isFasting
         ? Icons.local_fire_department_rounded
         : Icons.timer_rounded;
     final label = isFasting ? 'Agora: Jejum' : 'Iniciar jejum';
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        child: Ink(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-          decoration: BoxDecoration(
-            color: bg,
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, color: fg, size: 18),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: AppTypography.labelLarge.copyWith(
-                  color: fg,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 13,
-                ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 11),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.35),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16, color: _kDarkText),
+            const SizedBox(width: 6),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w800,
+                color: _kDarkText,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

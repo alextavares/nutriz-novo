@@ -17,11 +17,12 @@ class ProfileNotifier extends _$ProfileNotifier {
       birthDate: DateTime(1990, 1, 1),
       height: 170,
       currentWeight: 70,
+      startWeight: 70,
       targetWeight: 70,
       weeklyGoal: 0,
       activityLevel: ActivityLevel.sedentary,
       mainGoal: MainGoal.maintain,
-      dietaryPreference: DietaryPreference.classic,
+      dietaryPreference: DietaryPreference.balanced,
       calculatedCalories: 2000,
       proteinGrams: 150,
       carbsGrams: 200,
@@ -41,7 +42,7 @@ class ProfileNotifier extends _$ProfileNotifier {
       }
     } catch (e) {
       // Handle error or keep default
-// print('Error loading profile: $e');
+      // print('Error loading profile: $e');
     }
   }
 

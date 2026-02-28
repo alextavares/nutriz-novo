@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,10 +12,26 @@ import '../../domain/entities/subscription_status.dart';
 const _premiumEntitlementId = 'premium';
 const _debugForcePro = bool.fromEnvironment(
   'NUTRIZ_DEBUG_FORCE_PRO',
-  defaultValue: false,
+  defaultValue: true, // Forçando PRO para testes do usuário
 );
 
 final revenueCatOfferingsErrorProvider = StateProvider<String?>((ref) => null);
+
+void logRevenueCatRuntime(
+  String message, {
+  Object? error,
+  StackTrace? stackTrace,
+}) {
+  developer.log(
+    message,
+    name: 'RevenueCat',
+    error: error,
+    stackTrace: stackTrace,
+  );
+  if (DebugFlags.canLog) {
+    debugPrint('RC: $message');
+  }
+}
 
 String _currentPlatformLabel() {
   if (Platform.isAndroid) return 'android';
@@ -57,21 +74,115 @@ String revenueCatOfferingEmptyMessage({String? offeringsError}) {
 String revenueCatPackageNotFoundMessage({
   required String planLabel,
   String? offeringsError,
+  String? technicalReason,
 }) {
-  final base = revenueCatOfferingEmptyMessage(offeringsError: offeringsError);
-  return 'Plano $planLabel indisponível. $base';
+  return 'O plano $planLabel está indisponível no momento. Tente novamente mais tarde.';
 }
 
-Package? findPackageForPlan(Offerings? offerings, PackageType packageType) {
-  final current = offerings?.current;
-  if (current == null) return null;
+class RevenueCatPackageLookupResult {
+  const RevenueCatPackageLookupResult({
+    required this.packageType,
+    required this.package,
+    required this.reasonCode,
+    required this.technicalReason,
+  });
+
+  final PackageType packageType;
+  final Package? package;
+  final String reasonCode;
+  final String technicalReason;
+}
+
+RevenueCatPackageLookupResult findPackageForPlanDetailed(
+  Offerings? offerings,
+  PackageType packageType,
+) {
+  if (offerings == null) {
+    return RevenueCatPackageLookupResult(
+      packageType: packageType,
+      package: null,
+      reasonCode: 'offerings_null',
+      technicalReason: 'Offerings retornou null.',
+    );
+  }
+
+  final current = offerings.current;
+  if (current == null) {
+    return RevenueCatPackageLookupResult(
+      packageType: packageType,
+      package: null,
+      reasonCode: 'current_offering_null',
+      technicalReason:
+          'Offerings.current é null. Offerings disponíveis: ${offerings.all.keys.join(', ')}.',
+    );
+  }
 
   for (final package in current.availablePackages) {
     if (package.packageType == packageType) {
-      return package;
+      return RevenueCatPackageLookupResult(
+        packageType: packageType,
+        package: package,
+        reasonCode: 'package_found',
+        technicalReason:
+            'Pacote ${packageType.name} encontrado no offering ${current.identifier}.',
+      );
     }
   }
-  return null;
+
+  final available = current.availablePackages
+      .map((p) => p.packageType.name)
+      .join(', ');
+  return RevenueCatPackageLookupResult(
+    packageType: packageType,
+    package: null,
+    reasonCode: 'package_type_not_found',
+    technicalReason:
+        'Offering ${current.identifier} sem pacote ${packageType.name}. Tipos disponíveis: $available.',
+  );
+}
+
+String revenueCatSelectedPackageNullReason({
+  required Offerings? offerings,
+  required RevenueCatPackageLookupResult lookup,
+  String? offeringsError,
+}) {
+  final text = offeringsError?.trim();
+  if (text != null && text.isNotEmpty) {
+    if (text.contains('SDK key ausente')) {
+      return 'sdk_key_missing';
+    }
+    return 'offerings_error';
+  }
+  if (offerings == null) return 'offerings_null';
+  if (offerings.current == null) return 'current_offering_null';
+  return lookup.reasonCode;
+}
+
+String revenueCatSelectedPackageNullTechnicalReason({
+  required Offerings? offerings,
+  required RevenueCatPackageLookupResult lookup,
+  String? offeringsError,
+}) {
+  final reason = revenueCatSelectedPackageNullReason(
+    offerings: offerings,
+    lookup: lookup,
+    offeringsError: offeringsError,
+  );
+  final errorText = offeringsError?.trim();
+  final offeringId = offerings?.current?.identifier ?? 'null';
+  final availableTypes =
+      offerings?.current?.availablePackages
+          .map((p) => p.packageType.name)
+          .join(', ') ??
+      '';
+  if (errorText != null && errorText.isNotEmpty) {
+    return 'reason=$reason; error="$errorText"; current_offering=$offeringId; available_types=[$availableTypes]';
+  }
+  return 'reason=$reason; ${lookup.technicalReason}';
+}
+
+Package? findPackageForPlan(Offerings? offerings, PackageType packageType) {
+  return findPackageForPlanDetailed(offerings, packageType).package;
 }
 
 abstract class RevenueCatClient {
@@ -145,10 +256,34 @@ class RevenueCatGateway {
   bool _configured = false;
   Future<void>? _configureFuture;
 
+  String _sdkKeySource() {
+    if (platform == 'android' && androidSdkKey.isNotEmpty) {
+      return 'android_define';
+    }
+    if (platform == 'ios' && iosSdkKey.isNotEmpty) {
+      return 'ios_define';
+    }
+    if (fallbackSdkKey.isNotEmpty) {
+      return 'fallback_define';
+    }
+    return 'missing';
+  }
+
   Future<void> ensureConfigured() async {
     if (_configured) return;
+    if (_configureFuture != null) {
+      await _configureFuture;
+      return;
+    }
 
-    _configureFuture ??= () async {
+    _configureFuture = () async {
+      final keySource = _sdkKeySource();
+      logRevenueCatRuntime(
+        'init_start platform=$platform key_source=$keySource '
+        'android_define_present=${androidSdkKey.isNotEmpty} '
+        'ios_define_present=${iosSdkKey.isNotEmpty} '
+        'fallback_define_present=${fallbackSdkKey.isNotEmpty}',
+      );
       final apiKey = _resolveRevenueCatSdkKey(
         platform: platform,
         androidKey: androidSdkKey,
@@ -156,13 +291,23 @@ class RevenueCatGateway {
         fallbackKey: fallbackSdkKey,
       );
       if (apiKey.isEmpty) {
+        logRevenueCatRuntime(
+          'init_failed reason=sdk_key_missing platform=$platform key_source=$keySource',
+        );
         throw StateError(revenueCatMissingSdkKeyMessage(platform));
       }
       await client.configure(apiKey, verboseLogs: DebugFlags.canVerbose);
       _configured = true;
+      logRevenueCatRuntime(
+        'init_success platform=$platform key_source=$keySource',
+      );
     }();
 
-    await _configureFuture;
+    try {
+      await _configureFuture;
+    } finally {
+      _configureFuture = null;
+    }
   }
 }
 
@@ -199,12 +344,16 @@ final revenueCatInitializerProvider = FutureProvider<bool>((ref) async {
 final revenueCatOfferingsProvider = FutureProvider<Offerings?>((ref) async {
   final gateway = ref.watch(revenueCatGatewayProvider);
   ref.read(revenueCatOfferingsErrorProvider.notifier).state = null;
+  logRevenueCatRuntime('offerings_fetch_start platform=${gateway.platform}');
 
   try {
     await gateway.ensureConfigured();
   } on StateError catch (e) {
     final text = e.message.toString();
     ref.read(revenueCatOfferingsErrorProvider.notifier).state = text;
+    logRevenueCatRuntime(
+      'offerings_fetch_failed reason=sdk_key_missing error=$text',
+    );
     if (kDebugMode && DebugFlags.canLog) {
       debugPrint('DEBUG: RevenueCat config error: $text');
     }
@@ -212,6 +361,9 @@ final revenueCatOfferingsProvider = FutureProvider<Offerings?>((ref) async {
   } catch (e) {
     final text = 'Falha ao inicializar RevenueCat: $e';
     ref.read(revenueCatOfferingsErrorProvider.notifier).state = text;
+    logRevenueCatRuntime(
+      'offerings_fetch_failed reason=init_error error=$text',
+    );
     if (kDebugMode && DebugFlags.canLog) {
       debugPrint('DEBUG: RevenueCat config error: $text');
     }
@@ -224,6 +376,40 @@ final revenueCatOfferingsProvider = FutureProvider<Offerings?>((ref) async {
     if (current == null || current.availablePackages.isEmpty) {
       ref.read(revenueCatOfferingsErrorProvider.notifier).state =
           revenueCatOfferingEmptyMessage();
+      logRevenueCatRuntime(
+        'offerings_fetch_result current_offering=null_or_empty '
+        'offerings_all=[${offerings.all.keys.join(', ')}]',
+      );
+    } else {
+      final packagesSummary = current.availablePackages
+          .map(
+            (p) =>
+                '${p.packageType.name}:${p.identifier}:${p.storeProduct.priceString}',
+          )
+          .join(' | ');
+      logRevenueCatRuntime(
+        'offerings_fetch_result current_offering=${current.identifier} '
+        'packages=$packagesSummary',
+      );
+    }
+
+    final monthlyLookup = findPackageForPlanDetailed(
+      offerings,
+      PackageType.monthly,
+    );
+    final annualLookup = findPackageForPlanDetailed(
+      offerings,
+      PackageType.annual,
+    );
+    logRevenueCatRuntime(
+      'offerings_lookup monthly=${monthlyLookup.reasonCode} '
+      'annual=${annualLookup.reasonCode}',
+    );
+    if (monthlyLookup.package == null || annualLookup.package == null) {
+      final currentError = ref.read(revenueCatOfferingsErrorProvider);
+      ref.read(revenueCatOfferingsErrorProvider.notifier).state =
+          currentError ??
+          'Offering sem pacotes obrigatórios: monthly=${monthlyLookup.reasonCode}, annual=${annualLookup.reasonCode}.';
     }
     return offerings;
   } on PlatformException catch (e) {
@@ -231,12 +417,20 @@ final revenueCatOfferingsProvider = FutureProvider<Offerings?>((ref) async {
     final msg = e.message ?? e.toString();
     final text = '${code.name}: $msg';
     ref.read(revenueCatOfferingsErrorProvider.notifier).state = text;
+    logRevenueCatRuntime(
+      'offerings_fetch_failed reason=platform_exception code=${code.name} error=$msg',
+      error: e,
+    );
     if (kDebugMode && DebugFlags.canLog) {
       debugPrint('DEBUG: Purchases.getOfferings failed: $text');
     }
     return null;
   } catch (e) {
     ref.read(revenueCatOfferingsErrorProvider.notifier).state = e.toString();
+    logRevenueCatRuntime(
+      'offerings_fetch_failed reason=unknown error=$e',
+      error: e,
+    );
     if (kDebugMode && DebugFlags.canLog) {
       debugPrint('DEBUG: Purchases.getOfferings failed: $e');
     }

@@ -96,17 +96,18 @@ class _RestrictiveDietsChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final padding = const EdgeInsets.fromLTRB(18, 8, 18, 16);
+    final padding = const EdgeInsets.fromLTRB(18, 12, 18, 24);
     final rect = padding.deflateRect(Offset.zero & size);
 
-    final x0 = rect.left + 18;
+    final x0 = rect.left + 24;
     final x1 = rect.right - 8;
-    final y0 = rect.bottom - 16;
+    final y0 = rect.bottom - 20;
     final yTop = rect.top + 10;
 
     final axisPaint = Paint()
-      ..color = const Color(0xFF9CA3AF)
-      ..strokeWidth = 2
+      ..color =
+          const Color(0xFFE5E7EB) // Very light grey
+      ..strokeWidth = 1.5
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
@@ -123,194 +124,215 @@ class _RestrictiveDietsChartPainter extends CustomPainter {
 
     if (axisProgress > 0.9) {
       // Arrow heads.
-      canvas.drawLine(
-        Offset(x1, y0),
-        Offset(x1 - 10, y0 - 6),
-        axisPaint,
-      );
-      canvas.drawLine(
-        Offset(x1, y0),
-        Offset(x1 - 10, y0 + 6),
-        axisPaint,
-      );
-
-      canvas.drawLine(
-        Offset(x0, yTop),
-        Offset(x0 - 6, yTop + 10),
-        axisPaint,
-      );
-      canvas.drawLine(
-        Offset(x0, yTop),
-        Offset(x0 + 6, yTop + 10),
-        axisPaint,
-      );
+      canvas.drawLine(Offset(x1, y0), Offset(x1 - 8, y0 - 5), axisPaint);
+      canvas.drawLine(Offset(x1, y0), Offset(x1 - 8, y0 + 5), axisPaint);
+      canvas.drawLine(Offset(x0, yTop), Offset(x0 - 5, yTop + 8), axisPaint);
+      canvas.drawLine(Offset(x0, yTop), Offset(x0 + 5, yTop + 8), axisPaint);
     }
-
-    final redPaint = Paint()
-      ..color = const Color(0xFFEF4444)
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-
-    final fillPaint = Paint()
-      ..color = const Color(0xFFEF4444).withOpacity(0.15)
-      ..style = PaintingStyle.fill;
 
     // Wave points (yo-yo effect).
     final width = (x1 - x0);
     final height = (y0 - yTop);
 
+    // Helper to map relative coords (0..1) to screen coords
     Offset p(double t, double y) => Offset(x0 + width * t, yTop + height * y);
 
-    final start = p(0.04, 0.42);
-    final trough1 = p(0.16, 0.72);
-    final peak1 = p(0.28, 0.46);
-    final trough2 = p(0.42, 0.70);
-    final peak2 = p(0.56, 0.40);
-    final trough3 = p(0.70, 0.74);
-    final peak3 = p(0.84, 0.38);
-    final end = p(0.95, 0.30);
+    // "Super-smooth" sine-wave points
+    // y=0 is top, y=1 is bottom
+    final start = p(0.0, 0.50);
+    final trough1 = p(0.18, 0.85); // 1st diet
+    final peak1 = p(0.33, 0.45); // Rebound
+    final trough2 = p(0.50, 0.82); // 2nd diet
+    final peak2 = p(0.67, 0.40); // Rebound
+    final trough3 = p(0.83, 0.78); // 3rd diet
+    final peak3 = p(1.0, 0.22); // Final high
+
+    // Tension for rounder curves (higher = rounder/wider turns)
+    const tensionX = 0.12;
 
     final wave = Path()
       ..moveTo(start.dx, start.dy)
+      // Dip to Trough 1
       ..cubicTo(
-        start.dx + width * 0.06,
-        start.dy + height * 0.30,
-        trough1.dx - width * 0.06,
+        start.dx + width * tensionX,
+        start.dy + height * 0.2,
+        trough1.dx - width * tensionX,
         trough1.dy - height * 0.02,
         trough1.dx,
         trough1.dy,
       )
+      // Rise to Peak 1
       ..cubicTo(
-        trough1.dx + width * 0.08,
-        trough1.dy - height * 0.40,
-        peak1.dx - width * 0.06,
-        peak1.dy + height * 0.10,
+        trough1.dx + width * tensionX,
+        trough1.dy - height * 0.02,
+        peak1.dx - width * tensionX,
+        peak1.dy + height * 0.05,
         peak1.dx,
         peak1.dy,
       )
+      // Dip to Trough 2
       ..cubicTo(
-        peak1.dx + width * 0.06,
-        peak1.dy + height * 0.35,
-        trough2.dx - width * 0.06,
+        peak1.dx + width * tensionX,
+        peak1.dy + height * 0.05,
+        trough2.dx - width * tensionX,
         trough2.dy - height * 0.02,
         trough2.dx,
         trough2.dy,
       )
+      // Rise to Peak 2
       ..cubicTo(
-        trough2.dx + width * 0.08,
-        trough2.dy - height * 0.42,
-        peak2.dx - width * 0.06,
-        peak2.dy + height * 0.10,
+        trough2.dx + width * tensionX,
+        trough2.dy - height * 0.02,
+        peak2.dx - width * tensionX,
+        peak2.dy + height * 0.05,
         peak2.dx,
         peak2.dy,
       )
+      // Dip to Trough 3
       ..cubicTo(
-        peak2.dx + width * 0.06,
-        peak2.dy + height * 0.38,
-        trough3.dx - width * 0.06,
+        peak2.dx + width * tensionX,
+        peak2.dy + height * 0.05,
+        trough3.dx - width * tensionX,
         trough3.dy - height * 0.02,
         trough3.dx,
         trough3.dy,
       )
+      // Rise to Final Peak
       ..cubicTo(
-        trough3.dx + width * 0.08,
-        trough3.dy - height * 0.50,
-        peak3.dx - width * 0.06,
-        peak3.dy + height * 0.10,
+        trough3.dx + width * tensionX,
+        trough3.dy - height * 0.02,
+        peak3.dx - width * 0.15,
+        peak3.dy + height * 0.1,
         peak3.dx,
         peak3.dy,
-      )
-      ..cubicTo(
-        peak3.dx + width * 0.04,
-        peak3.dy - height * 0.10,
-        end.dx - width * 0.04,
-        end.dy + height * 0.10,
-        end.dx,
-        end.dy,
       );
 
-    final filled = Path.from(wave)
-      ..lineTo(end.dx, y0)
+    final fillPath = Path.from(wave)
+      ..lineTo(peak3.dx, y0)
       ..lineTo(start.dx, y0)
       ..close();
 
+    final redPaint = Paint()
+      ..color = const Color(0xFFEF4444)
+      ..strokeWidth = 2.0
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    final gradientChoice = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0x66EF4444), // Red ~40%
+        Color(0x00EF4444), // Transparent
+      ],
+      stops: [0.0, 0.9],
+    );
+
+    // Draw fill first
     if (curveProgress > 0) {
-      final metric = wave.computeMetrics().isEmpty ? null : wave.computeMetrics();
+      final metric = wave.computeMetrics().isEmpty
+          ? null
+          : wave.computeMetrics();
       if (metric != null) {
         final first = metric.first;
         final length = first.length * curveProgress.clamp(0.0, 1.0);
-        final partial = first.extractPath(0, length);
-        // Fill: approximate by clipping full fill to the current x.
+
+        // Correct Fill approximation
         final currentPos = first.getTangentForOffset(length)?.position;
         if (currentPos != null) {
           canvas.save();
-          canvas.clipRect(Rect.fromLTRB(rect.left, rect.top, currentPos.dx, rect.bottom));
-          canvas.drawPath(filled, fillPaint);
+          // Clip to current progress width
+          canvas.clipRect(Rect.fromLTRB(x0, yTop, currentPos.dx, y0));
+
+          final fillPaint = Paint()
+            ..shader = gradientChoice.createShader(rect)
+            ..style = PaintingStyle.fill;
+
+          canvas.drawPath(fillPath, fillPaint);
           canvas.restore();
         }
+
+        // Draw Stroke
+        final partial = first.extractPath(0, length);
         canvas.drawPath(partial, redPaint);
       }
     }
 
-    // Dots.
-    if (curveProgress > 0.15) {
-      _drawDot(canvas, start, const Color(0xFFEF4444));
-    }
-    if (curveProgress > 0.35) {
-      _drawDot(canvas, peak1, const Color(0xFFEF4444));
-    }
-    if (curveProgress > 0.55) {
-      _drawDot(canvas, peak2, const Color(0xFFEF4444));
-    }
-    if (curveProgress > 0.78) {
-      _drawDot(canvas, peak3, const Color(0xFFEF4444));
-    }
-    if (curveProgress > 0.95) {
-      _drawDot(canvas, end, const Color(0xFFEF4444));
-    }
+    // Dots
+    if (curveProgress > 0.05) _drawDot(canvas, start, const Color(0xFFEF4444));
+    if (curveProgress > 0.35) _drawDot(canvas, peak1, const Color(0xFFEF4444));
+    if (curveProgress > 0.65) _drawDot(canvas, peak2, const Color(0xFFEF4444));
+    if (curveProgress > 0.95) _drawDot(canvas, peak3, const Color(0xFFEF4444));
 
-    // Labels.
+    // Labels
     if (labelsOpacity > 0) {
       final alpha = (255 * labelsOpacity).round().clamp(0, 255);
+
+      // Axis Labels
       _drawText(
         canvas,
         'Peso',
-        Offset(rect.left, yTop + 40),
-        textStyle.copyWith(color: const Color(0xFF6B7280).withAlpha(alpha)),
+        Offset(rect.left + 5, yTop + 30),
+        textStyle.copyWith(
+          color: const Color(0xFF9CA3AF).withAlpha(alpha),
+        ), // Light grey text
         rotate: -math.pi / 2,
       );
       _drawText(
         canvas,
         'Tempo',
-        Offset(x0 + 26, y0 + 10),
-        textStyle.copyWith(color: const Color(0xFF6B7280).withAlpha(alpha)),
+        Offset(x1 - 14, y0 + 10),
+        textStyle.copyWith(color: const Color(0xFF9CA3AF).withAlpha(alpha)),
       );
 
-      final small = textStyle.copyWith(
+      // Diet labels under troughs
+      final labelStyle = textStyle.copyWith(
         fontSize: 10,
-        fontWeight: FontWeight.w700,
-        color: const Color(0xFFEF4444).withAlpha(alpha),
+        fontWeight: FontWeight.w600,
+        color: const Color(0xFFEF4444).withAlpha(alpha), // Red text
       );
 
-      _drawText(canvas, '1ª dieta', Offset(trough1.dx - 18, y0 - 10), small);
-      _drawText(canvas, '2ª dieta', Offset(trough2.dx - 18, y0 - 10), small);
-      _drawText(canvas, '3ª dieta', Offset(trough3.dx - 18, y0 - 10), small);
+      _drawTextCentered(
+        canvas,
+        '1ª dieta',
+        Offset(trough1.dx, trough1.dy + 8),
+        labelStyle,
+      );
+      _drawTextCentered(
+        canvas,
+        '2ª dieta',
+        Offset(trough2.dx, trough2.dy + 8),
+        labelStyle,
+      );
+      _drawTextCentered(
+        canvas,
+        '3ª dieta',
+        Offset(trough3.dx, trough3.dy + 8),
+        labelStyle,
+      );
+
+      // "Restrictive diets" badge - positioned slightly offset from the last/middle wave
+      final pillWidth = 110.0;
+      final pillHeight = 22.0;
+      final pillX = x1 - pillWidth - 10;
+      final pillY = y0 - 45.0; // Floating above axis
 
       final pillRect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(x1 - 122, y0 - 26, 118, 22),
-        const Radius.circular(999),
+        Rect.fromLTWH(pillX, pillY, pillWidth, pillHeight),
+        const Radius.circular(16),
       );
       final pillPaint = Paint()
         ..color = const Color(0xFFEF4444).withAlpha(alpha);
+
       canvas.drawRRect(pillRect, pillPaint);
+
       _drawText(
         canvas,
         'Dietas restritivas',
-        Offset(pillRect.left + 10, pillRect.top + 4),
+        Offset(pillX + 12, pillY + 4),
         textStyle.copyWith(
-          fontSize: 10,
-          fontWeight: FontWeight.w800,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
           color: Colors.white.withAlpha(alpha),
         ),
       );
@@ -323,11 +345,11 @@ class _RestrictiveDietsChartPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
     final stroke = Paint()
       ..color = Colors.white
-      ..strokeWidth = 3
+      ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke;
 
-    canvas.drawCircle(center, 5.5, fill);
-    canvas.drawCircle(center, 5.5, stroke);
+    canvas.drawCircle(center, 4.0, fill);
+    canvas.drawCircle(center, 4.0, stroke);
   }
 
   void _drawText(
@@ -340,7 +362,7 @@ class _RestrictiveDietsChartPainter extends CustomPainter {
     final painter = TextPainter(
       text: TextSpan(text: text, style: style),
       textDirection: TextDirection.ltr,
-    )..layout(maxWidth: 220);
+    )..layout(maxWidth: 200);
 
     canvas.save();
     canvas.translate(offset.dx, offset.dy);
@@ -349,7 +371,29 @@ class _RestrictiveDietsChartPainter extends CustomPainter {
     canvas.restore();
   }
 
-  void _drawPartialPath(Canvas canvas, Path path, Paint paint, double progress) {
+  void _drawTextCentered(
+    Canvas canvas,
+    String text,
+    Offset center,
+    TextStyle style,
+  ) {
+    final painter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: 200);
+
+    canvas.save();
+    canvas.translate(center.dx - painter.width / 2, center.dy);
+    painter.paint(canvas, Offset.zero);
+    canvas.restore();
+  }
+
+  void _drawPartialPath(
+    Canvas canvas,
+    Path path,
+    Paint paint,
+    double progress,
+  ) {
     if (progress <= 0) return;
     final metric = path.computeMetrics().isEmpty ? null : path.computeMetrics();
     if (metric == null) return;
@@ -366,4 +410,3 @@ class _RestrictiveDietsChartPainter extends CustomPainter {
         textStyle != oldDelegate.textStyle;
   }
 }
-

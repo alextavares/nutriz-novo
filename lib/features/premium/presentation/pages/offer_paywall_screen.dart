@@ -8,7 +8,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../../core/analytics/analytics_providers.dart';
+import '../../../../core/analytics/paywall_analytics_tracker.dart';
 import '../../../../core/monetization/promo_offer.dart';
+import '../../domain/entities/paywall_variant.dart';
+import '../providers/paywall_variant_provider.dart';
 import '../providers/subscription_provider.dart';
 
 String _formatCountdown(Duration duration) {
@@ -19,7 +22,10 @@ String _formatCountdown(Duration duration) {
 }
 
 class OfferPaywallScreen extends ConsumerStatefulWidget {
-  const OfferPaywallScreen({super.key});
+  final VoidCallback? onClose;
+  final VoidCallback? onSuccess;
+
+  const OfferPaywallScreen({super.key, this.onClose, this.onSuccess});
 
   @override
   ConsumerState<OfferPaywallScreen> createState() => _OfferPaywallScreenState();
@@ -28,14 +34,22 @@ class OfferPaywallScreen extends ConsumerStatefulWidget {
 class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
   bool _isPurchasing = false;
   bool _isRestoring = false;
+  late final PaywallVariant _paywallVariant;
+  late final PaywallAnalyticsTracker _tracker;
 
   @override
   void initState() {
     super.initState();
+    _paywallVariant = ref.read(paywallVariantProvider);
+    _tracker = PaywallAnalyticsTracker(
+      paywallId: 'offer_paywall_screen',
+      variant: _paywallVariant,
+      logEvent: (name, props) {
+        return ref.read(analyticsServiceProvider).logEvent(name, props);
+      },
+    );
     Future.microtask(() {
-      ref.read(analyticsServiceProvider).logEvent('paywall_view', {
-        'paywall_id': 'offer_paywall_screen',
-      });
+      _tracker.trackPaywallView();
     });
     ref
         .read(promoOfferProvider.notifier)
@@ -44,6 +58,18 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
           discountPercent: 75,
           source: 'offer_paywall_view',
         );
+  }
+
+  Future<void> _handleClose() async {
+    await _tracker.trackDismissed(source: 'close_button');
+    if (!mounted) return;
+    if (widget.onClose != null) {
+      widget.onClose!();
+    } else if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/diary');
+    }
   }
 
   Future<void> _handleRestore() async {
@@ -55,7 +81,11 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
       if (!mounted) return;
       final isPro = ref.read(subscriptionProvider).isPro;
       if (isPro) {
-        context.go('/diary');
+        if (widget.onSuccess != null) {
+          widget.onSuccess!();
+        } else {
+          context.go('/diary');
+        }
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
@@ -83,25 +113,36 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
     }
   }
 
-  Future<void> _handlePurchase(Package? pkg) async {
-    final analytics = ref.read(analyticsServiceProvider);
-    unawaited(
-      analytics.logEvent('paywall_cta_tap', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-      }),
-    );
+  Future<void> _handlePurchase({
+    required Package? pkg,
+    required RevenueCatPackageLookupResult lookup,
+    required Offerings? offerings,
+    required String? offeringsError,
+  }) async {
+    final analytics = _tracker;
+    unawaited(analytics.trackCtaTap(planId: 'annual', plan: 'anual'));
 
     if (pkg == null) {
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-        'product_id': 'unavailable',
-        'reason': 'package_not_found',
-      });
-      final offeringsError = ref.read(revenueCatOfferingsErrorProvider);
+      final reason = revenueCatSelectedPackageNullReason(
+        offerings: offerings,
+        lookup: lookup,
+        offeringsError: offeringsError,
+      );
+      final technicalReason = revenueCatSelectedPackageNullTechnicalReason(
+        offerings: offerings,
+        lookup: lookup,
+        offeringsError: offeringsError,
+      );
+      logRevenueCatRuntime(
+        'selected_package_null screen=offer_paywall_screen plan=annual '
+        'reason=$reason details="$technicalReason"',
+      );
+      await analytics.trackPurchaseFailed(
+        planId: 'annual',
+        plan: 'anual',
+        productId: 'unavailable',
+        reason: reason,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -109,6 +150,7 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
             revenueCatPackageNotFoundMessage(
               planLabel: 'anual',
               offeringsError: offeringsError,
+              technicalReason: technicalReason,
             ),
           ),
         ),
@@ -120,24 +162,26 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
     if (_isPurchasing) return;
     setState(() => _isPurchasing = true);
     try {
-      await analytics.logEvent('purchase_start', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-        'product_id': pkg.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseStart(
+        planId: 'annual',
+        plan: 'anual',
+        productId: pkg.storeProduct.identifier,
+      );
       await ref.read(subscriptionProvider.notifier).purchasePackage(pkg);
       await ref.read(subscriptionProvider.notifier).refresh();
-      await analytics.logEvent('purchase_complete', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-        'product_id': pkg.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseComplete(
+        planId: 'annual',
+        plan: 'anual',
+        productId: pkg.storeProduct.identifier,
+      );
       if (!mounted) return;
       final isPro = ref.read(subscriptionProvider).isPro;
       if (isPro) {
-        context.go('/diary');
+        if (widget.onSuccess != null) {
+          widget.onSuccess!();
+        } else {
+          context.go('/diary');
+        }
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
@@ -146,13 +190,12 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
         ),
       );
     } on StateError catch (e) {
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-        'reason': 'sdk_not_configured',
-        'product_id': pkg.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseFailed(
+        planId: 'annual',
+        plan: 'anual',
+        reason: 'sdk_not_configured',
+        productId: pkg.storeProduct.identifier,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
@@ -160,38 +203,35 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
     } on PlatformException catch (e) {
       final code = PurchasesErrorHelper.getErrorCode(e);
       if (code == PurchasesErrorCode.purchaseCancelledError) {
-        await analytics.logEvent('purchase_failed', {
-          'paywall_id': 'offer_paywall_screen',
-          'plan_id': 'annual',
-          'plan': 'anual',
-          'reason': 'cancelled',
-          'product_id': pkg.storeProduct.identifier,
-        });
+        await analytics.trackPurchaseFailed(
+          planId: 'annual',
+          plan: 'anual',
+          reason: 'cancelled',
+          productId: pkg.storeProduct.identifier,
+        );
         if (!mounted) return;
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Compra cancelada.')));
         return;
       }
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-        'reason': code.name,
-        'product_id': pkg.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseFailed(
+        planId: 'annual',
+        plan: 'anual',
+        reason: code.name,
+        productId: pkg.storeProduct.identifier,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Erro na compra: ${code.name}')));
     } catch (_) {
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'offer_paywall_screen',
-        'plan_id': 'annual',
-        'plan': 'anual',
-        'reason': 'unknown',
-        'product_id': pkg.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseFailed(
+        planId: 'annual',
+        plan: 'anual',
+        reason: 'unknown',
+        productId: pkg.storeProduct.identifier,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao processar compra.')),
@@ -206,11 +246,12 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
     final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
     final offerings = offeringsAsync.asData?.value;
     final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
-    final annualPackage = findPackageForPlan(offerings, PackageType.annual);
+    final annualLookup = findPackageForPlanDetailed(
+      offerings,
+      PackageType.annual,
+    );
+    final annualPackage = annualLookup.package;
     final price = annualPackage?.storeProduct.priceString ?? '—';
-
-    final offer = ref.watch(promoOfferProvider);
-    final discount = offer.discountPercent > 0 ? offer.discountPercent : 75;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -232,110 +273,116 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
                   const Spacer(),
                   IconButton(
                     tooltip: 'Fechar',
-                    onPressed: () => context.pop(),
+                    onPressed: _handleClose,
                     icon: const Icon(Icons.close),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.green.withValues(alpha: 0.12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.schedule,
-                        size: 64,
-                        color: Colors.green,
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Text(
-                      'Ano Novo, Vida Nova',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 22),
-                    Text(
-                      '$discount% de desconto!',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 40,
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-                    Text(
-                      price,
-                      style: GoogleFonts.inter(
-                        color: Colors.green[700],
-                        fontWeight: FontWeight.w900,
-                        fontSize: 32,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'no seu primeiro ano',
-                      style: GoogleFonts.inter(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 26),
-                    Text(
-                      'Corra! A oferta termina em',
-                      style: GoogleFonts.inter(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                    ),
-                    if (annualPackage == null && offeringsError != null) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        'Erro ao carregar planos: $offeringsError',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          fontSize: 12,
-                          color: Colors.black54,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 70,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.green.withValues(alpha: 0.12),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.schedule,
+                          size: 36,
+                          color: Colors.green,
                         ),
                       ),
-                    ],
-                    const SizedBox(height: 8),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final now =
-                            ref.watch(promoOfferTickerProvider).asData?.value ??
-                            DateTime.now();
-                        final remaining = ref
-                            .watch(promoOfferProvider)
-                            .remaining(now);
-                        return Text(
-                          _formatCountdown(remaining),
-                          style: GoogleFonts.robotoMono(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 44,
+                      const SizedBox(height: 12),
+                      Text(
+                        'Pare de Digitar Calorias',
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Desbloqueie o Escaneamento Infinito por IA. Reconhecimento instantâneo para qualquer prato.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 26,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        price,
+                        style: GoogleFonts.inter(
+                          color: Colors.green[700],
+                          fontWeight: FontWeight.w900,
+                          fontSize: 28,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'COMEÇAR MINHA DIETA FÁCIL',
+                        style: GoogleFonts.inter(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Corra! A oferta termina em',
+                        style: GoogleFonts.inter(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                      if (annualPackage == null && offeringsError != null) ...[
+                        const SizedBox(height: 10),
+                        Text(
+                          'Planos indisponíveis no momento.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.redAccent,
                           ),
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                      ],
+                      const SizedBox(height: 8),
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final now =
+                              ref
+                                  .watch(promoOfferTickerProvider)
+                                  .asData
+                                  ?.value ??
+                              DateTime.now();
+                          final remaining = ref
+                              .watch(promoOfferProvider)
+                              .remaining(now);
+                          return Text(
+                            _formatCountdown(remaining),
+                            style: GoogleFonts.robotoMono(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 44,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Column(
                 children: [
                   SizedBox(
@@ -343,7 +390,12 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
                     child: ElevatedButton(
                       onPressed: (_isPurchasing || _isRestoring)
                           ? null
-                          : () => _handlePurchase(annualPackage),
+                          : () => _handlePurchase(
+                              pkg: annualPackage,
+                              lookup: annualLookup,
+                              offerings: offerings,
+                              offeringsError: offeringsError,
+                            ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         foregroundColor: Colors.white,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +15,9 @@ class CalculatingStep extends StatefulWidget {
 
 class _CalculatingStepState extends State<CalculatingStep> {
   int _currentStep = 0;
+  bool _completed = false;
+  bool _showContinue = false;
+  Timer? _safetyTimer;
   final List<String> _steps = [
     'Analisando seu perfil...',
     'Calculando taxa metabólica...',
@@ -23,6 +28,17 @@ class _CalculatingStepState extends State<CalculatingStep> {
   void initState() {
     super.initState();
     _startSequence();
+    _safetyTimer = Timer(const Duration(seconds: 5), () {
+      if (!mounted || _completed) return;
+      setState(() => _showContinue = true);
+    });
+  }
+
+  void _completeOnce() {
+    if (_completed) return;
+    _completed = true;
+    _safetyTimer?.cancel();
+    widget.onComplete();
   }
 
   void _startSequence() async {
@@ -34,8 +50,14 @@ class _CalculatingStepState extends State<CalculatingStep> {
       await Future.delayed(const Duration(seconds: 2));
     }
     if (mounted) {
-      widget.onComplete();
+      _completeOnce();
     }
+  }
+
+  @override
+  void dispose() {
+    _safetyTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -117,6 +139,13 @@ class _CalculatingStepState extends State<CalculatingStep> {
               'Isso leva poucos segundos',
               style: GoogleFonts.inter(fontSize: 14, color: Colors.grey),
             ),
+            if (_showContinue) ...[
+              const SizedBox(height: 16),
+              TextButton(
+                onPressed: _completeOnce,
+                child: const Text('Continuar'),
+              ),
+            ],
           ],
         ),
       ),

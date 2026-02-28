@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/food_item.dart';
 import '../../data/services/food_service.dart';
+import '../../data/services/custom_food_service.dart';
 import '../../data/services/favorite_food_service.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../profile/data/repositories/profile_repository.dart';
@@ -86,10 +87,7 @@ class FoodSearchNotifier extends StateNotifier<FoodSearchState> {
 
   Future<void> loadRecents({int limit = 12, int days = 30}) async {
     try {
-      final recents = await _service.getRecentFoods(
-        limit: limit,
-        days: days,
-      );
+      final recents = await _service.getRecentFoods(limit: limit, days: days);
       state = state.copyWith(recentFoods: recents);
     } catch (e) {
       // ignore loading recents errors
@@ -125,12 +123,13 @@ class FoodSearchNotifier extends StateNotifier<FoodSearchState> {
 }
 
 // Providers
-  final foodServiceProvider = Provider<FoodService>((ref) {
-    final isar = ref.watch(isarProvider);
-    return FoodServiceImpl(isar: isar);
-  });
+final foodServiceProvider = Provider<FoodService>((ref) {
+  final isar = ref.watch(isarProvider);
+  final customFoodService = CustomFoodService(isar: isar);
+  return FoodServiceImpl(isar: isar, customFoodService: customFoodService);
+});
 
-  final foodSearchNotifierProvider =
+final foodSearchNotifierProvider =
     StateNotifierProvider<FoodSearchNotifier, FoodSearchState>((ref) {
       final service = ref.watch(foodServiceProvider);
       final isar = ref.watch(isarProvider);

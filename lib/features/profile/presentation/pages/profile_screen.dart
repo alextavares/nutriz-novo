@@ -14,9 +14,9 @@ class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   void _comingSoon(BuildContext context, String label) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$label em breve.')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text('$label em breve.')));
   }
 
   @override
@@ -179,7 +179,9 @@ class _ProfileHeaderCard extends StatelessWidget {
                           onPressed: onEdit,
                           icon: Icon(
                             Icons.edit_rounded,
-                            color: AppColors.textPrimary.withValues(alpha: 0.55),
+                            color: AppColors.textPrimary.withValues(
+                              alpha: 0.55,
+                            ),
                           ),
                           tooltip: 'Editar',
                         ),
@@ -540,7 +542,11 @@ class _GoalItem {
   final String label;
   final String value;
 
-  const _GoalItem({required this.icon, required this.label, required this.value});
+  const _GoalItem({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
 }
 
 class _GoalsRow extends StatelessWidget {
@@ -822,28 +828,25 @@ String? _progressSubtitle(UserProfile profile) {
 }
 
 double _estimatedProgress(UserProfile profile) {
-  final weeks = profile.weeksToGoal;
-  if (weeks == null || weeks <= 0) {
-    return (profile.currentWeight == profile.targetWeight) ? 1 : 0;
+  final start = profile.startWeight;
+  final current = profile.currentWeight;
+  final target = profile.targetWeight;
+
+  if (start == target) {
+    return (current == target) ? 1.0 : 0.0;
   }
 
-  final weeklyRate = profile.weeklyGoal.abs();
-  if (weeklyRate == 0) {
-    return (profile.currentWeight == profile.targetWeight) ? 1 : 0;
-  }
+  final totalDiff = (start - target).abs();
+  if (totalDiff == 0) return 0.0;
 
-  final totalChange = weeklyRate * weeks;
-  if (totalChange == 0) return 0;
+  final currentDiff = (start - current).abs();
 
-  final isLoss = profile.targetWeight < profile.currentWeight;
-  final startWeight =
-      isLoss ? profile.targetWeight + totalChange : profile.targetWeight - totalChange;
-  final denom = (startWeight - profile.targetWeight).abs();
-  if (denom == 0) return 0;
+  final isLoss = target < start;
+  // If moving in the wrong direction, 0 progress
+  if (isLoss && current > start) return 0.0;
+  if (!isLoss && current < start) return 0.0;
 
-  final raw = isLoss
-      ? (startWeight - profile.currentWeight) / denom
-      : (profile.currentWeight - startWeight) / denom;
+  final raw = currentDiff / totalDiff;
 
   return raw.clamp(0.0, 1.0);
 }
@@ -861,8 +864,24 @@ String _mainGoalLabel(MainGoal goal) {
 
 String _dietLabel(DietaryPreference preference) {
   switch (preference) {
-    case DietaryPreference.classic:
-      return 'Clássica';
+    case DietaryPreference.artificialIntelligence:
+      return 'IA';
+    case DietaryPreference.balanced:
+      return 'Equilibrada';
+    case DietaryPreference.highProtein:
+      return 'Alta proteína';
+    case DietaryPreference.lowCarb:
+      return 'Low carb';
+    case DietaryPreference.keto:
+      return 'Cetogênica';
+    case DietaryPreference.mediterranean:
+      return 'Mediterrânea';
+    case DietaryPreference.paleo:
+      return 'Paleo';
+    case DietaryPreference.lowFat:
+      return 'Baixa gordura';
+    case DietaryPreference.dash:
+      return 'Dash';
     case DietaryPreference.pescetarian:
       return 'Pescetariana';
     case DietaryPreference.vegetarian:

@@ -1,0 +1,25 @@
+
+ Ôøà´©Å wrangler 4.51.0 (update available 4.69.0)
+ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+X [ERROR] Failed to fetch auth token: 400 Bad Request {"error":"invalid_request","error_verbose":"The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, or is otherwise malformed","error_description":"The request is missing a required parameter, includes an invalid parameter value, includes a parameter more than once, or is otherwise malformed\n\nMake sure that the various parameters are correct, be aware of case sensitivity and trim your parameters. Make sure that the client you are using has exactly whitelisted the redirect_uri you specified.","error_hint":"Make sure that the various parameters are correct, be aware of case sensitivity and trim your parameters. Make sure that the client you are using has exactly whitelisted the redirect_uri you specified.","status_code":400}
+
+
+X [ERROR] TypeError: Body is unusable: Body has already been read
+
+      at consumeBody (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:16616:15)
+      at _Response.text (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:16568:18)
+      at getJSONFromResponse (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:120490:31)
+      at exchangeRefreshTokenForAccessToken (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:120016:35)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+      at async refreshToken (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:120321:9)
+      at async loginOrRefreshIfRequired (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:120164:24)
+      at async requireAuth (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:120413:20)
+      at async Object.handler (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:182403:50)
+      at async Object.handler (C:\Users\alext\AppData\Roaming\npm\node_modules\wrangler\wrangler-dist\cli.js:165058:7)
+
+
+
+X [ERROR] In a non-interactive environment, it's necessary to set a CLOUDFLARE_API_TOKEN environment variable for wrangler to work. Please go to https://developers.cloudflare.com/fundamentals/api/get-started/create-token/ for instructions on how to create an api token, and assign its value to CLOUDFLARE_API_TOKEN.
+
+
+­ƒ¬Á  Logs were written to "C:\Users\alext\AppData\Roaming\xdg.config\.wrangler\logs\wrangler-2026-02-27_11-08-42_489.log"

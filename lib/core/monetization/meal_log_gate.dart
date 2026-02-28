@@ -10,10 +10,7 @@ final mealLogGateProvider = Provider<MealLogGate>((ref) {
   return MealLogGate(ref);
 });
 
-enum MealLogBlockReason {
-  locked,
-  challengeUsedToday,
-}
+enum MealLogBlockReason { locked, challengeUsedToday }
 
 class MealLogDecision {
   final bool allowed;
@@ -79,7 +76,8 @@ class MealLogGate {
 
     final now = DateTime.now();
     var profile = existing;
-    if (_isChallengeExpired(profile, now) && profile.challengeMealsRemaining > 0) {
+    if (_isChallengeExpired(profile, now) &&
+        profile.challengeMealsRemaining > 0) {
       profile = profile.copyWith(
         challengeMealsRemaining: 0,
         challengeStartedAt: null,
@@ -89,7 +87,9 @@ class MealLogGate {
     }
 
     if (profile.freeMealsRemaining > 0) {
-      final next = profile.copyWith(freeMealsRemaining: profile.freeMealsRemaining - 1);
+      final next = profile.copyWith(
+        freeMealsRemaining: profile.freeMealsRemaining - 1,
+      );
       await _persist(repo, next);
       await _ref.read(analyticsServiceProvider).logEvent('free_meal_consumed', {
         'remaining': next.freeMealsRemaining,
@@ -105,17 +105,22 @@ class MealLogGate {
 
     final challengeActive = !_isChallengeExpired(profile, now);
     final canUseChallengeToday = _canUseChallengeMealToday(profile, now);
-    if (challengeActive && profile.challengeMealsRemaining > 0 && canUseChallengeToday) {
+    if (challengeActive &&
+        profile.challengeMealsRemaining > 0 &&
+        canUseChallengeToday) {
       final next = profile.copyWith(
         challengeMealsRemaining: profile.challengeMealsRemaining - 1,
         challengeLastMealAt: now,
       );
       await _persist(repo, next);
       final completedNow = next.challengeMealsRemaining == 0;
-      await _ref.read(analyticsServiceProvider).logEvent('challenge_meal_consumed', {
-        'remaining': next.challengeMealsRemaining,
-        'completed_now': completedNow,
-      });
+      await _ref.read(analyticsServiceProvider).logEvent(
+        'challenge_meal_consumed',
+        {
+          'remaining': next.challengeMealsRemaining,
+          'completed_now': completedNow,
+        },
+      );
       return MealLogDecision(
         allowed: true,
         blockReason: null,
@@ -125,21 +130,34 @@ class MealLogGate {
       );
     }
 
-    if (challengeActive && profile.challengeMealsRemaining > 0 && !canUseChallengeToday) {
-      return const MealLogDecision.blocked(MealLogBlockReason.challengeUsedToday);
+    if (challengeActive &&
+        profile.challengeMealsRemaining > 0 &&
+        !canUseChallengeToday) {
+      return const MealLogDecision.blocked(
+        MealLogBlockReason.challengeUsedToday,
+      );
     }
     return const MealLogDecision.blocked(MealLogBlockReason.locked);
   }
 
-  Future<void> recordPaywallDismissed() async {
+  Future<void> recordPaywallDismissed({
+    String? paywallId,
+    String? paywallVariant,
+    String? source,
+  }) async {
     final repo = ProfileRepository(_ref.read(isarProvider));
     final profile = await repo.getProfile();
     if (profile == null) return;
 
-    final next = profile.copyWith(paywallDismissCount: profile.paywallDismissCount + 1);
+    final next = profile.copyWith(
+      paywallDismissCount: profile.paywallDismissCount + 1,
+    );
     await _persist(repo, next);
     await _ref.read(analyticsServiceProvider).logEvent('paywall_dismissed', {
       'count': next.paywallDismissCount,
+      if (paywallId != null) 'paywall_id': paywallId,
+      if (paywallVariant != null) 'paywall_variant': paywallVariant,
+      if (source != null && source.isNotEmpty) 'source': source,
     });
   }
 

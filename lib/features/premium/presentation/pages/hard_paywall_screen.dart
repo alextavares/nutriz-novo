@@ -8,8 +8,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../../core/analytics/analytics_providers.dart';
+import '../../../../core/analytics/paywall_analytics_tracker.dart';
 import '../../../../core/monetization/meal_log_gate.dart';
 import '../../../../core/monetization/promo_offer.dart';
+import '../../domain/entities/paywall_variant.dart';
+import '../providers/paywall_variant_provider.dart';
 import '../providers/subscription_provider.dart';
 
 String _formatCountdown(Duration duration) {
@@ -29,14 +32,22 @@ class HardPaywallScreen extends ConsumerStatefulWidget {
 class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
   bool _isLoading = false;
   bool _isRestoring = false;
+  late final PaywallVariant _paywallVariant;
+  late final PaywallAnalyticsTracker _tracker;
 
   @override
   void initState() {
     super.initState();
+    _paywallVariant = ref.read(paywallVariantProvider);
+    _tracker = PaywallAnalyticsTracker(
+      paywallId: 'hard_paywall_screen',
+      variant: _paywallVariant,
+      logEvent: (name, props) {
+        return ref.read(analyticsServiceProvider).logEvent(name, props);
+      },
+    );
     Future.microtask(() {
-      ref.read(analyticsServiceProvider).logEvent('paywall_view', {
-        'paywall_id': 'hard_paywall_screen',
-      });
+      _tracker.trackPaywallView();
     });
     ref
         .read(promoOfferProvider.notifier)
@@ -48,7 +59,13 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
   }
 
   Future<void> _handleClose() async {
-    await ref.read(mealLogGateProvider).recordPaywallDismissed();
+    await ref
+        .read(mealLogGateProvider)
+        .recordPaywallDismissed(
+          paywallId: 'hard_paywall_screen',
+          paywallVariant: _paywallVariant.analyticsValue,
+          source: 'close_button',
+        );
     ref
         .read(promoOfferProvider.notifier)
         .ensureActive(
@@ -104,9 +121,13 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
-
+    final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
     final offerings = offeringsAsync.asData?.value;
-    final monthlyPackage = findPackageForPlan(offerings, PackageType.monthly);
+    final monthlyLookup = findPackageForPlanDetailed(
+      offerings,
+      PackageType.monthly,
+    );
+    final monthlyPackage = monthlyLookup.package;
 
     final priceString = monthlyPackage?.storeProduct.priceString ?? '—';
 
@@ -299,7 +320,12 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
                       child: ElevatedButton(
                         onPressed: (_isLoading || _isRestoring)
                             ? null
-                            : () => _handlePurchase(monthlyPackage),
+                            : () => _handlePurchase(
+                                package: monthlyPackage,
+                                lookup: monthlyLookup,
+                                offerings: offerings,
+                                offeringsError: offeringsError,
+                              ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF4CAF50),
                           padding: const EdgeInsets.symmetric(vertical: 20),
@@ -390,25 +416,36 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
     );
   }
 
-  Future<void> _handlePurchase(Package? package) async {
-    final analytics = ref.read(analyticsServiceProvider);
-    unawaited(
-      analytics.logEvent('paywall_cta_tap', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-      }),
-    );
+  Future<void> _handlePurchase({
+    required Package? package,
+    required RevenueCatPackageLookupResult lookup,
+    required Offerings? offerings,
+    required String? offeringsError,
+  }) async {
+    final analytics = _tracker;
+    unawaited(analytics.trackCtaTap(planId: 'monthly', plan: 'mensal'));
 
     if (package == null) {
-      final offeringsError = ref.read(revenueCatOfferingsErrorProvider);
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-        'product_id': 'unavailable',
-        'reason': 'package_not_found',
-      });
+      final reason = revenueCatSelectedPackageNullReason(
+        offerings: offerings,
+        lookup: lookup,
+        offeringsError: offeringsError,
+      );
+      final technicalReason = revenueCatSelectedPackageNullTechnicalReason(
+        offerings: offerings,
+        lookup: lookup,
+        offeringsError: offeringsError,
+      );
+      logRevenueCatRuntime(
+        'selected_package_null screen=hard_paywall_screen plan=monthly '
+        'reason=$reason details="$technicalReason"',
+      );
+      await analytics.trackPurchaseFailed(
+        planId: 'monthly',
+        plan: 'mensal',
+        productId: 'unavailable',
+        reason: reason,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -416,6 +453,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
             revenueCatPackageNotFoundMessage(
               planLabel: 'mensal',
               offeringsError: offeringsError,
+              technicalReason: technicalReason,
             ),
           ),
         ),
@@ -427,20 +465,18 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await analytics.logEvent('purchase_start', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-        'product_id': package.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseStart(
+        planId: 'monthly',
+        plan: 'mensal',
+        productId: package.storeProduct.identifier,
+      );
       await ref.read(subscriptionProvider.notifier).purchasePackage(package);
       await ref.read(subscriptionProvider.notifier).refresh();
-      await analytics.logEvent('purchase_complete', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-        'product_id': package.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseComplete(
+        planId: 'monthly',
+        plan: 'mensal',
+        productId: package.storeProduct.identifier,
+      );
 
       if (!mounted) return;
 
@@ -455,13 +491,12 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
         );
       }
     } on StateError catch (e) {
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-        'reason': 'sdk_not_configured',
-        'product_id': package.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseFailed(
+        planId: 'monthly',
+        plan: 'mensal',
+        reason: 'sdk_not_configured',
+        productId: package.storeProduct.identifier,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(
         context,
@@ -471,13 +506,12 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
       final reason = code == PurchasesErrorCode.purchaseCancelledError
           ? 'cancelled'
           : code.name;
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-        'reason': reason,
-        'product_id': package.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseFailed(
+        planId: 'monthly',
+        plan: 'mensal',
+        reason: reason,
+        productId: package.storeProduct.identifier,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -489,13 +523,12 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
         ),
       );
     } catch (_) {
-      await analytics.logEvent('purchase_failed', {
-        'paywall_id': 'hard_paywall_screen',
-        'plan_id': 'monthly',
-        'plan': 'mensal',
-        'reason': 'unknown',
-        'product_id': package.storeProduct.identifier,
-      });
+      await analytics.trackPurchaseFailed(
+        planId: 'monthly',
+        plan: 'mensal',
+        reason: 'unknown',
+        productId: package.storeProduct.identifier,
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao processar pagamento.')),

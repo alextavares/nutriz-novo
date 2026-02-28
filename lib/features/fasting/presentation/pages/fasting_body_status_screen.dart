@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,229 +12,400 @@ class FastingBodyStatusScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fastingState = ref.watch(fastingNotifierProvider);
+    final elapsed = fastingState.elapsed;
+    final isFasting = fastingState.startTime != null;
     final currentStage = fastingState.currentStage;
 
-    final goalMinutes = fastingState.goal.inMinutes;
-    final overallProgress = goalMinutes <= 0
-        ? 0.0
-        : (fastingState.elapsed.inMinutes / goalMinutes).clamp(0.0, 1.0);
-
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: 220),
+      padding: const EdgeInsets.only(top: 4, bottom: 120),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              vertical: AppSpacing.xl,
-              horizontal: AppSpacing.lg,
+          // ── Current Stage Hero Card ────────────────────────────────────
+          _CurrentStageCard(
+            currentStage: currentStage,
+            elapsed: elapsed,
+            isFasting: isFasting,
+          ),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // ── Timeline ───────────────────────────────────────────────────
+          const Text(
+            'Linha do Tempo',
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w900,
+              color: AppColors.textPrimary,
             ),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-              border: Border.all(color: AppColors.border),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.shadow,
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+
+          ...FastingStage.values.asMap().entries.map((entry) {
+            final i = entry.key;
+            final stage = entry.value;
+            final isLast = i == FastingStage.values.length - 1;
+            final isReached = elapsed >= stage.startDuration;
+            final isActive = stage == currentStage && isFasting;
+            final timeInStage = isReached
+                ? elapsed - stage.startDuration
+                : null;
+
+            return _StageRow(
+              stage: stage,
+              isReached: isReached,
+              isActive: isActive,
+              isLast: isLast,
+              timeInStage: timeInStage,
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+class _CurrentStageCard extends StatelessWidget {
+  final FastingStage currentStage;
+  final Duration elapsed;
+  final bool isFasting;
+
+  const _CurrentStageCard({
+    required this.currentStage,
+    required this.elapsed,
+    required this.isFasting,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final nextStageIndex = FastingStage.values.indexOf(currentStage) + 1;
+    final hasNext = nextStageIndex < FastingStage.values.length;
+    final nextStage = hasNext ? FastingStage.values[nextStageIndex] : null;
+    final timeToNext = nextStage != null
+        ? nextStage.startDuration - elapsed
+        : null;
+
+    String _formatCountdown(Duration d) {
+      if (d.isNegative) return '0min';
+      final h = d.inHours;
+      final m = d.inMinutes.remainder(60);
+      if (h > 0) return '${h}h ${m}min';
+      return '${m}min';
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            currentStage.color.withValues(alpha: 0.7),
+            currentStage.color.withValues(alpha: 0.3),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+        border: Border.all(color: currentStage.color.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
                 ),
-              ],
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 220,
-                  width: 220,
-                  child: CustomPaint(
-                    painter: FastingStagesPainter(
-                      progress: overallProgress,
-                      trackColor: AppColors.surfaceVariant,
-                      progressColor: AppColors.primary,
-                    ),
-                    child: Center(
-                      child: Container(
-                        width: 74,
-                        height: 74,
-                        decoration: BoxDecoration(
-                          color: currentStage.color.withValues(alpha: 0.35),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          currentStage.icon,
-                          size: 34,
-                          color: AppColors.textPrimary.withValues(alpha: 0.9),
-                        ),
-                      ),
-                    ),
-                  ),
+                child: Icon(
+                  currentStage.icon,
+                  size: 24,
+                  color: AppColors.textPrimary,
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(
-                  'Etapa atual',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  currentStage.title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  currentStage.description,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    height: 1.35,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildStatItem(
-                      'Queima de gordura',
-                      _getTimeInStage(
-                        fastingState.elapsed,
-                        FastingStage.fatBurn,
+                    Text(
+                      isFasting ? 'Etapa atual' : 'Você está em',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textSecondary,
                       ),
-                      Icons.local_fire_department_rounded,
                     ),
-                    _buildStatItem(
-                      'Autofagia',
-                      _getTimeInStage(
-                        fastingState.elapsed,
-                        FastingStage.autophagy,
+                    Text(
+                      currentStage.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
+                        letterSpacing: -0.2,
                       ),
-                      Icons.auto_awesome_rounded,
                     ),
                   ],
                 ),
+              ),
+              // Hours badge
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  '${currentStage.startDuration.inHours}h+',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            currentStage.description,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              height: 1.4,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          if (nextStage != null && timeToNext != null && isFasting) ...[
+            const SizedBox(height: 14),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.45),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.arrow_forward_rounded,
+                    size: 14,
+                    color: AppColors.textPrimary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${nextStage.title} em ${_formatCountdown(timeToNext)}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _StageRow extends StatelessWidget {
+  final FastingStage stage;
+  final bool isReached;
+  final bool isActive;
+  final bool isLast;
+  final Duration? timeInStage;
+
+  const _StageRow({
+    required this.stage,
+    required this.isReached,
+    required this.isActive,
+    required this.isLast,
+    this.timeInStage,
+  });
+
+  String _formatTime(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes.remainder(60);
+    if (h > 0 && m > 0) return '${h}h ${m}min';
+    if (h > 0) return '${h}h';
+    return '${m}min';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dotColor = isReached ? AppColors.primary : AppColors.border;
+    final lineColor = isReached
+        ? AppColors.primary.withValues(alpha: 0.3)
+        : AppColors.border;
+
+    return IntrinsicHeight(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Timeline column
+          SizedBox(
+            width: 32,
+            child: Column(
+              children: [
+                // Dot
+                Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: isActive
+                        ? AppColors.primary
+                        : isReached
+                        ? AppColors.primary.withValues(alpha: 0.7)
+                        : AppColors.surfaceVariant,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: dotColor,
+                      width: isActive ? 2.5 : 1.5,
+                    ),
+                    boxShadow: isActive
+                        ? [
+                            BoxShadow(
+                              color: AppColors.primary.withValues(alpha: 0.35),
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                            ),
+                          ]
+                        : null,
+                  ),
+                  child: isReached
+                      ? Icon(
+                          isActive ? stage.icon : Icons.check_rounded,
+                          size: isActive ? 12 : 13,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
+                // Vertical line to next stage
+                if (!isLast)
+                  Expanded(
+                    child: Center(child: Container(width: 2, color: lineColor)),
+                  ),
               ],
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // Content
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: isActive
+                      ? stage.color.withValues(alpha: 0.25)
+                      : isReached
+                      ? AppColors.surface
+                      : AppColors.surfaceVariant.withValues(alpha: 0.5),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                  border: Border.all(
+                    color: isActive
+                        ? stage.color.withValues(alpha: 0.6)
+                        : AppColors.border,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Stage name + hour label
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  stage.title,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w800,
+                                    color: isReached
+                                        ? AppColors.textPrimary
+                                        : AppColors.textHint,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '${stage.startDuration.inHours}h',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: isReached
+                                      ? AppColors.primary
+                                      : AppColors.textHint,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            stage.description,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: isReached
+                                  ? AppColors.textSecondary
+                                  : AppColors.textHint,
+                              height: 1.3,
+                            ),
+                          ),
+                          // Time in stage badge
+                          if (timeInStage != null && isActive) ...[
+                            const SizedBox(height: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.12,
+                                ),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Text(
+                                '${_formatTime(timeInStage!)} nesta etapa',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    if (!isReached)
+                      Icon(
+                        Icons.lock_outline_rounded,
+                        size: 14,
+                        color: AppColors.textHint,
+                      ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  String _getTimeInStage(Duration elapsed, FastingStage stage) {
-    if (elapsed < stage.startDuration) {
-      return '0h 0min';
-    }
-    final timeInStage = elapsed - stage.startDuration;
-    final hours = timeInStage.inHours;
-    final minutes = timeInStage.inMinutes.remainder(60);
-    return '${hours}h ${minutes}min';
-  }
-
-  Widget _buildStatItem(String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            color: AppColors.textSecondary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceVariant,
-            borderRadius: BorderRadius.circular(999),
-            border: Border.all(color: AppColors.border),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 16, color: AppColors.textSecondary),
-              const SizedBox(width: 6),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.textPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class FastingStagesPainter extends CustomPainter {
-  final double progress;
-  final Color trackColor;
-  final Color progressColor;
-
-  FastingStagesPainter({
-    required this.progress,
-    required this.trackColor,
-    required this.progressColor,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = math.min(size.width, size.height) / 2 - 10;
-
-    const startAngle = -math.pi * 1.2;
-    const sweepLength = math.pi * 1.4;
-
-    final trackPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 24
-      ..color = trackColor
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      sweepLength,
-      false,
-      trackPaint,
-    );
-
-    final progressSweep = sweepLength * progress;
-
-    final progressPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 24
-      ..color = progressColor
-      ..strokeCap = StrokeCap.round;
-
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      startAngle,
-      progressSweep,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant FastingStagesPainter oldDelegate) {
-    return oldDelegate.progress != progress ||
-        oldDelegate.trackColor != trackColor ||
-        oldDelegate.progressColor != progressColor;
   }
 }

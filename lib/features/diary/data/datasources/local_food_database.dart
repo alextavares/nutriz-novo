@@ -1,7 +1,14 @@
+import 'taco_database.dart';
+
 /// Local database of common Brazilian foods
 /// All values are per 100g or 100ml
 class LocalFoodDatabase {
   static final List<Map<String, dynamic>> foods = [
+    ..._baseFoods,
+    ...TacoDatabase.foods,
+  ];
+
+  static final List<Map<String, dynamic>> _baseFoods = [
     // === GRÃOS E CEREAIS ===
     {
       'id': 'local_arroz_branco',
@@ -2883,7 +2890,9 @@ class LocalFoodDatabase {
   ];
 
   static final Map<String, int> _popularRank = Map.fromEntries(
-    _popularIds.asMap().entries.map((entry) => MapEntry(entry.value, entry.key)),
+    _popularIds.asMap().entries.map(
+      (entry) => MapEntry(entry.value, entry.key),
+    ),
   );
 
   /// Quick suggestions for the "Frequentes" tab.
@@ -2914,20 +2923,31 @@ class LocalFoodDatabase {
     return results.take(limit).toList(growable: false);
   }
 
+  static String _removeDiacritics(String str) {
+    var withDia = 'áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇ';
+    var withoutDia = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC';
+    for (int i = 0; i < withDia.length; i++) {
+      str = str.replaceAll(withDia[i], withoutDia[i]);
+    }
+    return str;
+  }
+
   /// Search foods by name (case insensitive, partial match)
   static List<Map<String, dynamic>> search(String query) {
     if (query.isEmpty) return [];
-    
-    final lowerQuery = query.toLowerCase();
+
+    final normalizedQuery = _removeDiacritics(query.toLowerCase());
     final results = foods.where((food) {
-      final name = (food['name'] as String).toLowerCase();
-      final brand = (food['brand'] as String?)?.toLowerCase() ?? '';
-      return name.contains(lowerQuery) || brand.contains(lowerQuery);
+      final name = _removeDiacritics((food['name'] as String).toLowerCase());
+      final brand = _removeDiacritics(
+        (food['brand'] as String?)?.toLowerCase() ?? '',
+      );
+      return name.contains(normalizedQuery) || brand.contains(normalizedQuery);
     }).toList();
 
     results.sort((a, b) {
-      final scoreA = _matchScore(a, lowerQuery);
-      final scoreB = _matchScore(b, lowerQuery);
+      final scoreA = _matchScore(a, normalizedQuery);
+      final scoreB = _matchScore(b, normalizedQuery);
       if (scoreA != scoreB) return scoreA.compareTo(scoreB);
       final rankA = _popularRank[a['id']] ?? 9999;
       final rankB = _popularRank[b['id']] ?? 9999;
@@ -2940,17 +2960,20 @@ class LocalFoodDatabase {
     return results;
   }
 
-  static int _matchScore(Map<String, dynamic> food, String query) {
-    final name = (food['name'] as String).toLowerCase();
-    final brand = (food['brand'] as String?)?.toLowerCase() ?? '';
+  static int _matchScore(Map<String, dynamic> food, String normalizedQuery) {
+    final name = _removeDiacritics((food['name'] as String).toLowerCase());
+    final brand = _removeDiacritics(
+      (food['brand'] as String?)?.toLowerCase() ?? '',
+    );
 
-    if (name.startsWith(query) || brand.startsWith(query)) {
+    if (name.startsWith(normalizedQuery) || brand.startsWith(normalizedQuery)) {
       return 0;
     }
-    if (name.contains(' $query') || brand.contains(' $query')) {
+    if (name.contains(' $normalizedQuery') ||
+        brand.contains(' $normalizedQuery')) {
       return 1;
     }
-    if (name.contains(query) || brand.contains(query)) {
+    if (name.contains(normalizedQuery) || brand.contains(normalizedQuery)) {
       return 2;
     }
     return 3;

@@ -11,7 +11,10 @@ import 'package:nutriz/features/profile/presentation/notifiers/profile_notifier.
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
+import '../../../../core/analytics/paywall_analytics_tracker.dart';
 import '../../../../core/analytics/analytics_providers.dart';
+import '../../domain/entities/paywall_variant.dart';
+import '../providers/paywall_variant_provider.dart';
 import '../providers/subscription_provider.dart';
 
 class PremiumScreen extends ConsumerStatefulWidget {
@@ -25,6 +28,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   PremiumPlan _selectedPlan = PremiumPlan.annual;
   bool _isRestoring = false;
   late final PageController _pageController;
+  late final PaywallVariant _paywallVariant;
+  late final PaywallAnalyticsTracker _tracker;
   int _stepIndex = 0;
 
   Future<void> _handleClose() async {
@@ -32,7 +37,13 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
     final router = GoRouter.of(context);
     final isPro = ref.read(subscriptionProvider).isPro;
     if (!isPro) {
-      await ref.read(mealLogGateProvider).recordPaywallDismissed();
+      await ref
+          .read(mealLogGateProvider)
+          .recordPaywallDismissed(
+            paywallId: 'premium_screen',
+            paywallVariant: _paywallVariant.analyticsValue,
+            source: 'close_button',
+          );
       ref
           .read(promoOfferProvider.notifier)
           .ensureActive(
@@ -109,31 +120,33 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   @override
   void initState() {
     super.initState();
+    _paywallVariant = ref.read(paywallVariantProvider);
+    _selectedPlan = _paywallVariant == PaywallVariant.variantA
+        ? PremiumPlan.annual
+        : PremiumPlan.monthly;
+    _tracker = PaywallAnalyticsTracker(
+      paywallId: 'premium_screen',
+      variant: _paywallVariant,
+      logEvent: (name, props) {
+        return ref.read(analyticsServiceProvider).logEvent(name, props);
+      },
+    );
     _pageController = PageController();
     Future.microtask(() {
-      final analytics = ref.read(analyticsServiceProvider);
-      analytics.logEvent('paywall_view', {'paywall_id': 'premium_screen'});
-      analytics.logEvent('paywall_step_view', {
-        'paywall_id': 'premium_screen',
-        'step': 0,
-      });
+      _tracker.trackPaywallView();
+      _tracker.logEvent('paywall_step_view', _tracker.withBase({'step': 0}));
     });
   }
 
-  Package? _packageForPlan(Offerings? offerings, PremiumPlan plan) {
-    final current = offerings?.current;
-    if (current == null) return null;
-
-    final packages = current.availablePackages;
+  RevenueCatPackageLookupResult _lookupForPlan(
+    Offerings? offerings,
+    PremiumPlan plan,
+  ) {
     final wantedType = switch (plan) {
       PremiumPlan.annual => PackageType.annual,
       PremiumPlan.monthly => PackageType.monthly,
     };
-
-    for (final p in packages) {
-      if (p.packageType == wantedType) return p;
-    }
-    return null;
+    return findPackageForPlanDetailed(offerings, wantedType);
   }
 
   String _priceLabel(Package? package, {required String fallback}) {
@@ -150,8 +163,10 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
     final offerings = offeringsAsync.asData?.value;
     final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
 
-    final annualPackage = _packageForPlan(offerings, PremiumPlan.annual);
-    final monthlyPackage = _packageForPlan(offerings, PremiumPlan.monthly);
+    final annualLookup = _lookupForPlan(offerings, PremiumPlan.annual);
+    final monthlyLookup = _lookupForPlan(offerings, PremiumPlan.monthly);
+    final annualPackage = annualLookup.package;
+    final monthlyPackage = monthlyLookup.package;
     final isLastStep = _stepIndex == 2;
 
     return Scaffold(
@@ -231,9 +246,9 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
             onPageChanged: (index) {
               setState(() => _stepIndex = index);
               unawaited(
-                ref.read(analyticsServiceProvider).logEvent(
+                _tracker.logEvent(
                   'paywall_step_view',
-                  {'paywall_id': 'premium_screen', 'step': index},
+                  _tracker.withBase({'step': index}),
                 ),
               );
             },
@@ -353,24 +368,45 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     const SizedBox(height: AppSpacing.sm),
                     const _BenefitsList(),
                     const SizedBox(height: AppSpacing.lg),
-                    _PlanTile(
-                      title: '12 meses',
-                      price: _priceLabel(annualPackage, fallback: '—'),
-                      subtitle: 'Mais popular • melhor custo',
-                      badge: 'Mais popular',
-                      isSelected: _selectedPlan == PremiumPlan.annual,
-                      onTap: () =>
-                          setState(() => _selectedPlan = PremiumPlan.annual),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    _PlanTile(
-                      title: '1 mês',
-                      price: _priceLabel(monthlyPackage, fallback: '—'),
-                      subtitle: 'Para começar agora',
-                      isSelected: _selectedPlan == PremiumPlan.monthly,
-                      onTap: () =>
-                          setState(() => _selectedPlan = PremiumPlan.monthly),
-                    ),
+                    if (_paywallVariant == PaywallVariant.variantA) ...[
+                      _PlanTile(
+                        title: '12 meses',
+                        price: _priceLabel(annualPackage, fallback: '—'),
+                        subtitle: 'Mais popular • melhor custo',
+                        badge: 'Mais popular',
+                        isSelected: _selectedPlan == PremiumPlan.annual,
+                        onTap: () =>
+                            setState(() => _selectedPlan = PremiumPlan.annual),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      _PlanTile(
+                        title: '1 mês',
+                        price: _priceLabel(monthlyPackage, fallback: '—'),
+                        subtitle: 'Para começar agora',
+                        isSelected: _selectedPlan == PremiumPlan.monthly,
+                        onTap: () =>
+                            setState(() => _selectedPlan = PremiumPlan.monthly),
+                      ),
+                    ] else ...[
+                      _PlanTile(
+                        title: '1 mês',
+                        price: _priceLabel(monthlyPackage, fallback: '—'),
+                        subtitle: 'Mais flexível para começar',
+                        badge: 'Sem compromisso',
+                        isSelected: _selectedPlan == PremiumPlan.monthly,
+                        onTap: () =>
+                            setState(() => _selectedPlan = PremiumPlan.monthly),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      _PlanTile(
+                        title: '12 meses',
+                        price: _priceLabel(annualPackage, fallback: '—'),
+                        subtitle: 'Melhor preço no longo prazo',
+                        isSelected: _selectedPlan == PremiumPlan.annual,
+                        onTap: () =>
+                            setState(() => _selectedPlan = PremiumPlan.annual),
+                      ),
+                    ],
                     const SizedBox(height: AppSpacing.lg),
                     _SocialProofCard(),
                     const SizedBox(height: AppSpacing.lg),
@@ -416,41 +452,56 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
 
               if (!isLastStep) {
                 unawaited(
-                  ref.read(analyticsServiceProvider).logEvent(
+                  _tracker.logEvent(
                     'paywall_next_tap',
-                    {'paywall_id': 'premium_screen', 'step': _stepIndex},
+                    _tracker.withBase({'step': _stepIndex}),
                   ),
                 );
                 _goToStep(_stepIndex + 1);
                 return;
               }
 
-              final analytics = ref.read(analyticsServiceProvider);
-              await analytics.logEvent('paywall_cta_tap', {
-                'paywall_id': 'premium_screen',
-                'plan_id': _selectedPlan.planId,
-                'plan': _selectedPlan.label,
-              });
+              await _tracker.trackCtaTap(
+                planId: _selectedPlan.planId,
+                plan: _selectedPlan.label,
+              );
               if (!mounted) return;
 
               final selectedPackage = _selectedPlan == PremiumPlan.annual
                   ? annualPackage
                   : monthlyPackage;
+              final selectedLookup = _selectedPlan == PremiumPlan.annual
+                  ? annualLookup
+                  : monthlyLookup;
 
               if (selectedPackage == null) {
-                await analytics.logEvent('purchase_failed', {
-                  'reason': 'package_not_found',
-                  'paywall_id': 'premium_screen',
-                  'plan_id': _selectedPlan.planId,
-                  'plan': _selectedPlan.label,
-                  'product_id': 'unavailable',
-                });
+                final reason = revenueCatSelectedPackageNullReason(
+                  offerings: offerings,
+                  lookup: selectedLookup,
+                  offeringsError: offeringsError,
+                );
+                final technicalReason = revenueCatSelectedPackageNullTechnicalReason(
+                  offerings: offerings,
+                  lookup: selectedLookup,
+                  offeringsError: offeringsError,
+                );
+                logRevenueCatRuntime(
+                  'selected_package_null screen=premium_screen plan=${_selectedPlan.planId} '
+                  'reason=$reason details="$technicalReason"',
+                );
+                await _tracker.trackPurchaseFailed(
+                  planId: _selectedPlan.planId,
+                  plan: _selectedPlan.label,
+                  productId: 'unavailable',
+                  reason: reason,
+                );
                 messenger.showSnackBar(
                   SnackBar(
                     content: Text(
                       revenueCatPackageNotFoundMessage(
                         planLabel: _selectedPlan.label,
                         offeringsError: offeringsError,
+                        technicalReason: technicalReason,
                       ),
                     ),
                   ),
@@ -460,24 +511,22 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
               }
 
               try {
-                await analytics.logEvent('purchase_start', {
-                  'paywall_id': 'premium_screen',
-                  'plan_id': _selectedPlan.planId,
-                  'plan': _selectedPlan.label,
-                  'product_id': selectedPackage.storeProduct.identifier,
-                });
+                await _tracker.trackPurchaseStart(
+                  planId: _selectedPlan.planId,
+                  plan: _selectedPlan.label,
+                  productId: selectedPackage.storeProduct.identifier,
+                );
 
                 await ref
                     .read(subscriptionProvider.notifier)
                     .purchasePackage(selectedPackage);
                 await ref.read(subscriptionProvider.notifier).refresh();
 
-                await analytics.logEvent('purchase_complete', {
-                  'paywall_id': 'premium_screen',
-                  'plan_id': _selectedPlan.planId,
-                  'plan': _selectedPlan.label,
-                  'product_id': selectedPackage.storeProduct.identifier,
-                });
+                await _tracker.trackPurchaseComplete(
+                  planId: _selectedPlan.planId,
+                  plan: _selectedPlan.label,
+                  productId: selectedPackage.storeProduct.identifier,
+                );
 
                 if (!mounted) return;
                 messenger.showSnackBar(
@@ -486,13 +535,12 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
               } on PlatformException catch (e) {
                 final code = PurchasesErrorHelper.getErrorCode(e);
                 if (code == PurchasesErrorCode.purchaseCancelledError) {
-                  await analytics.logEvent('purchase_failed', {
-                    'reason': 'cancelled',
-                    'paywall_id': 'premium_screen',
-                    'plan_id': _selectedPlan.planId,
-                    'plan': _selectedPlan.label,
-                    'product_id': selectedPackage.storeProduct.identifier,
-                  });
+                  await _tracker.trackPurchaseFailed(
+                    planId: _selectedPlan.planId,
+                    plan: _selectedPlan.label,
+                    productId: selectedPackage.storeProduct.identifier,
+                    reason: 'cancelled',
+                  );
                   if (!mounted) return;
                   messenger.showSnackBar(
                     const SnackBar(content: Text('Compra cancelada.')),
@@ -500,37 +548,34 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                   return;
                 }
 
-                await analytics.logEvent('purchase_failed', {
-                  'reason': code.name,
-                  'paywall_id': 'premium_screen',
-                  'plan_id': _selectedPlan.planId,
-                  'plan': _selectedPlan.label,
-                  'product_id': selectedPackage.storeProduct.identifier,
-                });
+                await _tracker.trackPurchaseFailed(
+                  planId: _selectedPlan.planId,
+                  plan: _selectedPlan.label,
+                  productId: selectedPackage.storeProduct.identifier,
+                  reason: code.name,
+                );
                 if (!mounted) return;
                 messenger.showSnackBar(
                   SnackBar(content: Text('Erro na compra: ${code.name}')),
                 );
               } on StateError catch (e) {
-                await analytics.logEvent('purchase_failed', {
-                  'reason': 'sdk_not_configured',
-                  'paywall_id': 'premium_screen',
-                  'plan_id': _selectedPlan.planId,
-                  'plan': _selectedPlan.label,
-                  'product_id': selectedPackage.storeProduct.identifier,
-                });
+                await _tracker.trackPurchaseFailed(
+                  planId: _selectedPlan.planId,
+                  plan: _selectedPlan.label,
+                  productId: selectedPackage.storeProduct.identifier,
+                  reason: 'sdk_not_configured',
+                );
                 if (!mounted) return;
                 messenger.showSnackBar(
                   SnackBar(content: Text(e.message.toString())),
                 );
               } catch (_) {
-                await analytics.logEvent('purchase_failed', {
-                  'reason': 'unknown',
-                  'paywall_id': 'premium_screen',
-                  'plan_id': _selectedPlan.planId,
-                  'plan': _selectedPlan.label,
-                  'product_id': selectedPackage.storeProduct.identifier,
-                });
+                await _tracker.trackPurchaseFailed(
+                  planId: _selectedPlan.planId,
+                  plan: _selectedPlan.label,
+                  productId: selectedPackage.storeProduct.identifier,
+                  reason: 'unknown',
+                );
                 if (!mounted) return;
                 messenger.showSnackBar(
                   const SnackBar(content: Text('Erro ao processar compra.')),

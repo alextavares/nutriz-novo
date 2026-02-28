@@ -14,20 +14,26 @@ enum ActivityLevel {
 
 enum MainGoal { loseWeight, maintain, buildMuscle }
 
-enum DietaryPreference { classic, pescetarian, vegetarian, vegan }
+enum DietaryPreference {
+  artificialIntelligence,
+  balanced,
+  highProtein,
+  lowCarb,
+  keto,
+  mediterranean,
+  paleo,
+  lowFat,
+  dash,
+  pescetarian,
+  vegetarian,
+  vegan,
+}
 
 enum SleepDuration { lessThan5, fiveToSix, sevenToEight, moreThan8 }
 
 enum WaterIntake { lessThan1L, oneToTwoL, twoToThreeL, moreThan3L }
 
-enum FoodLoggingMethod {
-  notNow,
-  gallery,
-  photo,
-  barcode,
-  type,
-  voice,
-}
+enum FoodLoggingMethod { notNow, gallery, photo, barcode, type, voice }
 
 @freezed
 class UserProfile with _$UserProfile {
@@ -38,6 +44,7 @@ class UserProfile with _$UserProfile {
     required DateTime birthDate,
     required int height, // cm
     required double currentWeight, // kg
+    required double startWeight, // kg
     required double targetWeight, // kg
     /// Desired weight change per week in kg.
     /// Negative for weight loss, positive for gain.

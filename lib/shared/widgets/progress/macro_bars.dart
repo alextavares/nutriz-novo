@@ -12,6 +12,7 @@ class MacroBars extends StatelessWidget {
   final String carbsLabel;
   final String proteinLabel;
   final String fatLabel;
+  final bool isDarkBackground;
 
   const MacroBars({
     super.key,
@@ -24,6 +25,7 @@ class MacroBars extends StatelessWidget {
     this.carbsLabel = 'Carbo',
     this.proteinLabel = 'Proteína',
     this.fatLabel = 'Gordura',
+    this.isDarkBackground = false,
   });
 
   @override
@@ -39,6 +41,7 @@ class MacroBars extends StatelessWidget {
             goal: carbsGoal,
             color: AppColors.carbs,
             theme: theme,
+            isDarkBackground: isDarkBackground,
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -49,6 +52,7 @@ class MacroBars extends StatelessWidget {
             goal: proteinGoal,
             color: AppColors.protein,
             theme: theme,
+            isDarkBackground: isDarkBackground,
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
@@ -59,6 +63,7 @@ class MacroBars extends StatelessWidget {
             goal: fatGoal,
             color: AppColors.fat,
             theme: theme,
+            isDarkBackground: isDarkBackground,
           ),
         ),
       ],
@@ -72,6 +77,7 @@ class _MacroBarItem extends StatelessWidget {
   final double goal;
   final Color color;
   final ThemeData theme;
+  final bool isDarkBackground;
 
   const _MacroBarItem({
     required this.label,
@@ -79,6 +85,7 @@ class _MacroBarItem extends StatelessWidget {
     required this.goal,
     required this.color,
     required this.theme,
+    required this.isDarkBackground,
   });
 
   @override
@@ -94,7 +101,7 @@ class _MacroBarItem extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: theme.textTheme.labelMedium?.copyWith(
-            color: AppColors.textSecondary,
+            color: isDarkBackground ? Colors.white70 : AppColors.textSecondary,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -103,17 +110,23 @@ class _MacroBarItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(999),
           child: LinearProgressIndicator(
             value: safeProgress,
-            backgroundColor: color.withValues(alpha: 0.15),
+            backgroundColor: color.withValues(
+              alpha: isDarkBackground ? 0.3 : 0.15,
+            ),
             valueColor: AlwaysStoppedAnimation<Color>(color),
             minHeight: 6,
           ),
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          goal > 0 ? '${value.toInt()}/${goal.toInt()} g' : '${value.toInt()} g',
+          goal > 0
+              ? '${value.toInt()}/${goal.toInt()} g'
+              : '${value.toInt()} g',
           style: theme.textTheme.bodySmall?.copyWith(
             fontWeight: FontWeight.w700,
-            color: AppColors.textPrimary.withValues(alpha: 0.82),
+            color: isDarkBackground
+                ? Colors.white
+                : AppColors.textPrimary.withValues(alpha: 0.82),
           ),
         ),
       ],

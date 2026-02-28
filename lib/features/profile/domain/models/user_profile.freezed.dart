@@ -26,6 +26,7 @@ mixin _$UserProfile {
   DateTime get birthDate => throw _privateConstructorUsedError;
   int get height => throw _privateConstructorUsedError; // cm
   double get currentWeight => throw _privateConstructorUsedError; // kg
+  double get startWeight => throw _privateConstructorUsedError; // kg
   double get targetWeight => throw _privateConstructorUsedError; // kg
   /// Desired weight change per week in kg.
   /// Negative for weight loss, positive for gain.
@@ -78,6 +79,7 @@ abstract class $UserProfileCopyWith<$Res> {
       DateTime birthDate,
       int height,
       double currentWeight,
+      double startWeight,
       double targetWeight,
       double weeklyGoal,
       ActivityLevel activityLevel,
@@ -123,6 +125,7 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
     Object? birthDate = null,
     Object? height = null,
     Object? currentWeight = null,
+    Object? startWeight = null,
     Object? targetWeight = null,
     Object? weeklyGoal = null,
     Object? activityLevel = null,
@@ -172,6 +175,10 @@ class _$UserProfileCopyWithImpl<$Res, $Val extends UserProfile>
       currentWeight: null == currentWeight
           ? _value.currentWeight
           : currentWeight // ignore: cast_nullable_to_non_nullable
+              as double,
+      startWeight: null == startWeight
+          ? _value.startWeight
+          : startWeight // ignore: cast_nullable_to_non_nullable
               as double,
       targetWeight: null == targetWeight
           ? _value.targetWeight
@@ -288,6 +295,7 @@ abstract class _$$UserProfileImplCopyWith<$Res>
       DateTime birthDate,
       int height,
       double currentWeight,
+      double startWeight,
       double targetWeight,
       double weeklyGoal,
       ActivityLevel activityLevel,
@@ -331,6 +339,7 @@ class __$$UserProfileImplCopyWithImpl<$Res>
     Object? birthDate = null,
     Object? height = null,
     Object? currentWeight = null,
+    Object? startWeight = null,
     Object? targetWeight = null,
     Object? weeklyGoal = null,
     Object? activityLevel = null,
@@ -380,6 +389,10 @@ class __$$UserProfileImplCopyWithImpl<$Res>
       currentWeight: null == currentWeight
           ? _value.currentWeight
           : currentWeight // ignore: cast_nullable_to_non_nullable
+              as double,
+      startWeight: null == startWeight
+          ? _value.startWeight
+          : startWeight // ignore: cast_nullable_to_non_nullable
               as double,
       targetWeight: null == targetWeight
           ? _value.targetWeight
@@ -491,6 +504,7 @@ class _$UserProfileImpl implements _UserProfile {
       required this.birthDate,
       required this.height,
       required this.currentWeight,
+      required this.startWeight,
       required this.targetWeight,
       required this.weeklyGoal,
       required this.activityLevel,
@@ -536,6 +550,9 @@ class _$UserProfileImpl implements _UserProfile {
 // cm
   @override
   final double currentWeight;
+// kg
+  @override
+  final double startWeight;
 // kg
   @override
   final double targetWeight;
@@ -628,7 +645,7 @@ class _$UserProfileImpl implements _UserProfile {
 
   @override
   String toString() {
-    return 'UserProfile(id: $id, name: $name, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted, foodLoggingMethod: $foodLoggingMethod)';
+    return 'UserProfile(id: $id, name: $name, gender: $gender, birthDate: $birthDate, height: $height, currentWeight: $currentWeight, startWeight: $startWeight, targetWeight: $targetWeight, weeklyGoal: $weeklyGoal, activityLevel: $activityLevel, mainGoal: $mainGoal, dietaryPreference: $dietaryPreference, sleepDuration: $sleepDuration, waterIntake: $waterIntake, badHabits: $badHabits, motivations: $motivations, calculatedCalories: $calculatedCalories, proteinGrams: $proteinGrams, carbsGrams: $carbsGrams, fatGrams: $fatGrams, weeksToGoal: $weeksToGoal, estimatedGoalDate: $estimatedGoalDate, favoriteFoodKeys: $favoriteFoodKeys, freeMealsRemaining: $freeMealsRemaining, challengeStartedAt: $challengeStartedAt, challengeLastMealAt: $challengeLastMealAt, challengeMealsRemaining: $challengeMealsRemaining, paywallDismissCount: $paywallDismissCount, committedToLogDaily: $committedToLogDaily, isOnboardingCompleted: $isOnboardingCompleted, foodLoggingMethod: $foodLoggingMethod)';
   }
 
   @override
@@ -644,6 +661,8 @@ class _$UserProfileImpl implements _UserProfile {
             (identical(other.height, height) || other.height == height) &&
             (identical(other.currentWeight, currentWeight) ||
                 other.currentWeight == currentWeight) &&
+            (identical(other.startWeight, startWeight) ||
+                other.startWeight == startWeight) &&
             (identical(other.targetWeight, targetWeight) ||
                 other.targetWeight == targetWeight) &&
             (identical(other.weeklyGoal, weeklyGoal) ||
@@ -705,6 +724,7 @@ class _$UserProfileImpl implements _UserProfile {
         birthDate,
         height,
         currentWeight,
+        startWeight,
         targetWeight,
         weeklyGoal,
         activityLevel,
@@ -753,6 +773,7 @@ abstract class _UserProfile implements UserProfile {
       required final DateTime birthDate,
       required final int height,
       required final double currentWeight,
+      required final double startWeight,
       required final double targetWeight,
       required final double weeklyGoal,
       required final ActivityLevel activityLevel,
@@ -793,6 +814,8 @@ abstract class _UserProfile implements UserProfile {
   int get height;
   @override // cm
   double get currentWeight;
+  @override // kg
+  double get startWeight;
   @override // kg
   double get targetWeight;
   @override // kg

@@ -60,7 +60,13 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
   void initState() {
     super.initState();
     _food = widget.foodItem.toDomain();
-    _amount = _food.servingSize == 0 ? 100 : _food.servingSize;
+
+    _amount = _food.servingSize;
+    if (_amount <= 0) {
+      final unit = _food.servingUnit.toLowerCase();
+      _amount = (unit == 'g' || unit == 'ml') ? 100 : 1;
+    }
+
     _amountController = TextEditingController(text: _formatAmount(_amount));
   }
 
@@ -103,8 +109,15 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
 
   List<_QuickPortion> get _quickPortions {
     final unit = _food.servingUnit.toLowerCase();
-    final defaults =
-        unit == 'ml' ? <double>[100, 200, 300] : <double>[50, 100, 150, 200];
+
+    List<double> defaults;
+    if (unit == 'ml') {
+      defaults = <double>[100, 200, 300];
+    } else if (unit == 'g') {
+      defaults = <double>[50, 100, 150, 200];
+    } else {
+      defaults = <double>[0.5, 1, 1.5, 2];
+    }
     final portions = <_QuickPortion>[];
     final preset = _portionPresets[widget.foodItem.id];
 
@@ -121,8 +134,7 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
   }
 
   String _portionLabel(_QuickPortion portion) {
-    final valueLabel =
-        '${_formatAmount(portion.amount)} ${_food.servingUnit}';
+    final valueLabel = '${_formatAmount(portion.amount)} ${_food.servingUnit}';
     final label = portion.label?.trim();
     if (label == null || label.isEmpty) {
       return valueLabel;
@@ -135,7 +147,9 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
     final theme = Theme.of(context);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
-    final multiplier = _food.servingSize > 0 ? _amount / _food.servingSize : 1.0;
+    final multiplier = _food.servingSize > 0
+        ? _amount / _food.servingSize
+        : 1.0;
 
     final currentCalories = (_food.calories.value * multiplier).round();
     final currentCarbs = _food.macros.carbs * multiplier;
@@ -292,7 +306,9 @@ class _FoodDetailSheetState extends State<FoodDetailSheet> {
                 width: double.infinity,
                 height: 54,
                 child: ElevatedButton.icon(
-                  onPressed: _amount > 0 ? () => widget.onAdd(multiplier) : null,
+                  onPressed: _amount > 0
+                      ? () => widget.onAdd(multiplier)
+                      : null,
                   icon: const Icon(Icons.add_rounded),
                   label: const Text('Adicionar ao diário'),
                   style: ElevatedButton.styleFrom(
@@ -435,7 +451,9 @@ class _AmountCard extends StatelessWidget {
             child: TextField(
               controller: controller,
               onChanged: onChanged,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               textAlign: TextAlign.center,
               style: theme.textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w900,

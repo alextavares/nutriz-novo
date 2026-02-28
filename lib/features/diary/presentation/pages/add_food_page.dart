@@ -164,23 +164,15 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
     required String foodName,
     required int calories,
   }) {
-    final media = MediaQuery.of(pageContext);
-    final keyboardInset = media.viewInsets.bottom;
-    final bottomSafe = media.padding.bottom;
-    final isKeyboardOpen = keyboardInset > 0;
-    final bottomTabsHeight = kBottomNavigationBarHeight + bottomSafe;
-    final showDoneBar = _sessionAddedCount > 0 && !isKeyboardOpen;
-    final doneBarHeight = showDoneBar ? 80.0 : 0.0;
-    final bottomMargin =
-        12 +
-        (isKeyboardOpen ? keyboardInset : bottomTabsHeight + doneBarHeight);
-
     ScaffoldMessenger.of(pageContext).hideCurrentSnackBar();
     ScaffoldMessenger.of(pageContext).showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
-        duration: const Duration(milliseconds: 1400),
-        margin: EdgeInsets.fromLTRB(12, 0, 12, bottomMargin),
+        dismissDirection: DismissDirection
+            .horizontal, // Permite deslizar para o lado para apagar
+        duration: const Duration(
+          milliseconds: 1200,
+        ), // Tempo um pouquinho menor
         content: Text('Adicionado: $foodName (+$calories kcal)'),
         action: SnackBarAction(
           label: 'Diário',
@@ -327,11 +319,16 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
               'food_id': food.id,
               'calories': food.calories.value.round(),
             });
-            await analytics.logTimeToFirstMealIfNeeded(mealType: widget.mealType);
+            await analytics.logTimeToFirstMealIfNeeded(
+              mealType: widget.mealType,
+            );
             if (mounted) setState(() => _sessionAddedCount += 1);
-            unawaited(ref.read(foodSearchNotifierProvider.notifier).loadRecents());
+            unawaited(
+              ref.read(foodSearchNotifierProvider.notifier).loadRecents(),
+            );
             ref.read(aiFoodNotifierProvider.notifier).clearResult();
-            if (sheetContext.mounted) Navigator.pop(sheetContext); // Fecha sheet
+            if (sheetContext.mounted)
+              Navigator.pop(sheetContext); // Fecha sheet
             if (!mounted) return;
             _showAddedSnackBar(
               pageContext: context,
@@ -425,9 +422,13 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
               'food_id': food.id,
               'calories': food.calories.round(),
             });
-            await analytics.logTimeToFirstMealIfNeeded(mealType: widget.mealType);
+            await analytics.logTimeToFirstMealIfNeeded(
+              mealType: widget.mealType,
+            );
             if (mounted) setState(() => _sessionAddedCount += 1);
-            unawaited(ref.read(foodSearchNotifierProvider.notifier).loadRecents());
+            unawaited(
+              ref.read(foodSearchNotifierProvider.notifier).loadRecents(),
+            );
             if (sheetContext.mounted) Navigator.pop(sheetContext);
             if (!mounted) return;
             _showAddedSnackBar(
@@ -996,7 +997,10 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
                   right: 0,
                   bottom: doneBarBottom,
                   child: Container(
-                    padding: const EdgeInsets.all(AppSpacing.md),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
+                      vertical: AppSpacing.sm, // Menos espaço vertical
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.surface,
                       border: Border(top: BorderSide(color: AppColors.border)),
@@ -1026,14 +1030,18 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
                             backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                             padding: EdgeInsets.symmetric(
-                              vertical: isKeyboardOpen ? 12 : 16,
+                              vertical: isKeyboardOpen
+                                  ? 10
+                                  : 12, // Botão um pouco mais fino
                             ),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             elevation: 0,
                             textStyle: theme.textTheme.titleSmall?.copyWith(
                               fontWeight: FontWeight.w900,
+                              fontSize:
+                                  15, // Fonte levemente menor para compensar
                             ),
                           ),
                           child: Text(_doneLabel),

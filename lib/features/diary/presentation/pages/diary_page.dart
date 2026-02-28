@@ -21,6 +21,7 @@ import '../widgets/edit_quantity_sheet.dart';
 import '../../../profile/presentation/notifiers/profile_notifier.dart';
 import 'package:nutriz/core/analytics/analytics_providers.dart';
 import 'package:nutriz/core/monetization/meal_log_gate.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DiaryPage extends ConsumerStatefulWidget {
   final String? quickAddMealType;
@@ -41,6 +42,19 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
   bool _loggedView = false;
   final Set<String> _dismissedFirstMealCtaDates = {};
   final Set<String> _loggedChallengeBannerDates = {};
+  late final PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 10000);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -53,6 +67,28 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
       ref.read(analyticsServiceProvider).logEvent('diary_view', {
         'date': s.selectedDate.toIso8601String().split('T').first,
       });
+      _checkAndLogD1Retention();
+    }
+  }
+
+  Future<void> _checkAndLogD1Retention() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final hasLoggedD1 = prefs.getBool('has_logged_d1') ?? false;
+      if (hasLoggedD1) return;
+
+      final firstOpenStr = prefs.getString('first_open_date');
+      final todayStr = DateTime.now().toIso8601String().split('T').first;
+
+      if (firstOpenStr == null) {
+        await prefs.setString('first_open_date', todayStr);
+      } else if (firstOpenStr != todayStr) {
+        // Different day from first open means D1 retention
+        await prefs.setBool('has_logged_d1', true);
+        ref.read(analyticsServiceProvider).logEvent('d1_retained', {});
+      }
+    } catch (_) {
+      // Ignore errors silently for analytics
     }
   }
 
@@ -193,7 +229,10 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                     final mealType = _suggestFirstMealType();
                     final profile = ref.read(profileNotifierProvider);
                     final gate = ref.read(mealLogGateProvider);
-                    final reason = gate.peekBlockReason(profile, DateTime.now());
+                    final reason = gate.peekBlockReason(
+                      profile,
+                      DateTime.now(),
+                    );
                     if (reason == MealLogBlockReason.challengeUsedToday) {
                       ref.read(analyticsServiceProvider).logEvent(
                         'challenge_used_today_blocked',
@@ -351,130 +390,8 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
 
     return Scaffold(
       backgroundColor: AppColors.surfaceVariant,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(88),
-        child: SafeArea(
-          bottom: false,
-          child: Container(
-            color: AppColors.surfaceVariant,
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md,
-              10,
-              AppSpacing.md,
-              12,
-            ),
-            child: diaryState.diaryDay.when(
-              data: (day) => Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _getDateTitle(day.date),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.black,
-                            height: 1.05,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Semana ${_weekOfYear(day.date)}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(
-                            minWidth: 40,
-                            minHeight: 40,
-                          ),
-                          icon: const Icon(
-                            Icons.account_circle_outlined,
-                            color: AppColors.textPrimary,
-                            size: 28,
-                          ),
-                          onPressed: () => context.go('/profile'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              loading: () => Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 22,
-                          width: 120,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.06),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          height: 14,
-                          width: 90,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.04),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    height: 36,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.04),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                ],
-              ),
-              error: (_, _) => Row(
-                children: [
-                  const Expanded(child: SizedBox.shrink()),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.account_circle_outlined,
-                      color: AppColors.textPrimary,
-                      size: 28,
-                    ),
-                    onPressed: () => context.go('/profile'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
       body: PageView.builder(
-        controller: PageController(initialPage: 10000),
+        controller: _pageController,
         onPageChanged: (index) {
           final today = DateTime.now();
           final diff = index - 10000;
@@ -516,273 +433,318 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
               final challengeDaysSinceStart = startedAt == null
                   ? null
                   : DateTime(today.year, today.month, today.day)
-                      .difference(
-                        DateTime(
-                          startedAt.year,
-                          startedAt.month,
-                          startedAt.day,
-                        ),
-                      )
-                      .inDays;
+                        .difference(
+                          DateTime(
+                            startedAt.year,
+                            startedAt.month,
+                            startedAt.day,
+                          ),
+                        )
+                        .inDays;
               final challengeActive =
                   startedAt != null && (challengeDaysSinceStart ?? 99) <= 2;
-              final challengeDayIndex =
-                  challengeActive ? (challengeDaysSinceStart! + 1).clamp(1, 3) : null;
+              final challengeDayIndex = challengeActive
+                  ? (challengeDaysSinceStart! + 1).clamp(1, 3)
+                  : null;
               final lastMealAt = profile.challengeLastMealAt;
-              final usedChallengeToday = lastMealAt != null &&
+              final usedChallengeToday =
+                  lastMealAt != null &&
                   DateTime(today.year, today.month, today.day) ==
-                      DateTime(lastMealAt.year, lastMealAt.month, lastMealAt.day);
-              final remainingProtein = (profile.proteinGrams - day.totalMacros.protein)
-                  .round()
-                  .clamp(0, 9999);
+                      DateTime(
+                        lastMealAt.year,
+                        lastMealAt.month,
+                        lastMealAt.day,
+                      );
+              final remainingProtein =
+                  (profile.proteinGrams - day.totalMacros.protein)
+                      .round()
+                      .clamp(0, 9999);
 
-              if (isToday && challengeActive && !_loggedChallengeBannerDates.contains(dateKey)) {
+              if (isToday &&
+                  challengeActive &&
+                  !_loggedChallengeBannerDates.contains(dateKey)) {
                 _loggedChallengeBannerDates.add(dateKey);
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (!mounted) return;
-                  ref.read(analyticsServiceProvider).logEvent(
-                    'challenge_banner_view',
-                    {
-                      'day': challengeDayIndex,
-                      'meals_remaining': profile.challengeMealsRemaining,
-                      'used_today': usedChallengeToday,
-                      'remaining_protein_g': remainingProtein,
-                    },
-                  );
+                  ref
+                      .read(analyticsServiceProvider)
+                      .logEvent('challenge_banner_view', {
+                        'day': challengeDayIndex,
+                        'meals_remaining': profile.challengeMealsRemaining,
+                        'used_today': usedChallengeToday,
+                        'remaining_protein_g': remainingProtein,
+                      });
                 });
               }
 
               return ListView(
-                padding: EdgeInsets.fromLTRB(
-                  AppSpacing.md,
-                  0,
-                  AppSpacing.md,
-                  MediaQuery.of(context).padding.bottom + 220,
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).padding.bottom + 120,
                 ),
                 children: [
-                  const SizedBox(height: AppSpacing.sm),
-
-                  // Summary Section Header
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 80),
-                    child: SectionHeader(
-                      title: 'Resumo',
-                      actionLabel: 'Detalhes',
-                      onAction: () =>
-                          context.push('/nutrition-detail', extra: day),
+                  // Full-bleed gradient header
+                  DailySummaryHeaderImproved(
+                    diaryDay: day,
+                    calorieGoal: ref
+                        .watch(profileNotifierProvider)
+                        .calculatedCalories,
+                    onDetailsTap: () =>
+                        context.push('/nutrition-detail', extra: day),
+                    onPreviousDay: () => _pageController.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    ),
+                    onNextDay: () => _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    ),
+                    dateLabel: _getFormattedDateHeader(dayDate),
+                    profileIcon: IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 40,
+                        minHeight: 40,
+                      ),
+                      icon: const Icon(
+                        Icons.account_circle_outlined,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      onPressed: () => context.go('/profile'),
                     ),
                   ),
 
-                  // Summary Card (Styles: Bento Grid)
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 100),
-                    child: DailySummaryHeaderImproved(
-                      diaryDay: day,
-                      calorieGoal: ref
-                          .watch(profileNotifierProvider)
-                          .calculatedCalories,
+                  // Content below the gradient
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.md,
                     ),
-                  ),
-                  if (isToday && challengeActive && challengeDayIndex != null) ...[
-                    const SizedBox(height: AppSpacing.sm),
-                    _ChallengeBanner(
-                      dayIndex: challengeDayIndex,
-                      mealsRemaining: profile.challengeMealsRemaining,
-                      usedToday: usedChallengeToday,
-                      remainingProteinGrams: remainingProtein,
-                      onLogMealTap: () {
-                        ref.read(analyticsServiceProvider).logEvent(
-                          'challenge_banner_log_meal_tap',
-                          {'day': challengeDayIndex, 'used_today': usedChallengeToday},
-                        );
-                        if (usedChallengeToday) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: const Text(
-                                'Você já registrou a refeição do desafio hoje. Volte amanhã.',
-                              ),
-                              action: SnackBarAction(
-                                label: 'Premium',
-                                onPressed: () => context.push('/premium'),
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                        final mealType = _suggestFirstMealType();
-                        context.push('/food-search/$mealType?tab=search&focus=1');
-                      },
-                      onTipsTap: () {
-                        ref.read(analyticsServiceProvider).logEvent(
-                          'challenge_banner_tips_tap',
-                          {'day': challengeDayIndex},
-                        );
-                        _showChallengeTipsSheet(
-                          context,
-                          remainingProteinGrams: remainingProtein,
-                        );
-                      },
-                      onPremiumTap: () => context.push('/premium'),
-                    ),
-                  ] else if (isReadOnlyLocked) ...[
-                    const SizedBox(height: AppSpacing.sm),
-                    _ReadOnlyBanner(
-                      onCtaTap: () => context.push('/premium'),
-                    ),
-                  ],
-                  if (showFirstMealCta) ...[
-                    _buildFirstMealCta(
-                      show: true,
-                      title: isToday
-                          ? 'Registrar 1ª refeição'
-                          : 'Adicionar refeição',
-                      subtitle: isToday
-                          ? 'Toque para adicionar um alimento e atualizar seus Restantes.'
-                          : 'Adicione um alimento neste dia e atualize seus Restantes.',
-                      dateKey: dateKey,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                  ] else if (showCollapsedCta) ...[
-                    const SizedBox(height: AppSpacing.xs),
-                    _buildFirstMealCtaCollapsed(show: true, dateKey: dateKey),
-                    const SizedBox(height: AppSpacing.sm),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: AppSpacing.md),
+                        if (isToday &&
+                            challengeActive &&
+                            challengeDayIndex != null) ...[
+                          const SizedBox(height: AppSpacing.sm),
+                          _ChallengeBanner(
+                            dayIndex: challengeDayIndex,
+                            mealsRemaining: profile.challengeMealsRemaining,
+                            usedToday: usedChallengeToday,
+                            remainingProteinGrams: remainingProtein,
+                            onLogMealTap: () {
+                              ref
+                                  .read(analyticsServiceProvider)
+                                  .logEvent('challenge_banner_log_meal_tap', {
+                                    'day': challengeDayIndex,
+                                    'used_today': usedChallengeToday,
+                                  });
+                              if (usedChallengeToday) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                      'Você já registrou a refeição do desafio hoje. Volte amanhã.',
+                                    ),
+                                    action: SnackBarAction(
+                                      label: 'Premium',
+                                      onPressed: () => context.push('/premium'),
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              final mealType = _suggestFirstMealType();
+                              context.push(
+                                '/food-search/$mealType?tab=search&focus=1',
+                              );
+                            },
+                            onTipsTap: () {
+                              ref.read(analyticsServiceProvider).logEvent(
+                                'challenge_banner_tips_tap',
+                                {'day': challengeDayIndex},
+                              );
+                              _showChallengeTipsSheet(
+                                context,
+                                remainingProteinGrams: remainingProtein,
+                              );
+                            },
+                            onPremiumTap: () => context.push('/premium'),
+                          ),
+                        ] else if (isReadOnlyLocked) ...[
+                          const SizedBox(height: AppSpacing.sm),
+                          _ReadOnlyBanner(
+                            onCtaTap: () => context.push('/premium'),
+                          ),
+                        ],
+                        if (showFirstMealCta) ...[
+                          _buildFirstMealCta(
+                            show: true,
+                            title: isToday
+                                ? 'Registrar 1ª refeição'
+                                : 'Adicionar refeição',
+                            subtitle: isToday
+                                ? 'Toque para adicionar um alimento e atualizar seus Restantes.'
+                                : 'Adicione um alimento neste dia e atualize seus Restantes.',
+                            dateKey: dateKey,
+                          ),
+                          const SizedBox(height: AppSpacing.md),
+                        ] else if (showCollapsedCta) ...[
+                          const SizedBox(height: AppSpacing.xs),
+                          _buildFirstMealCtaCollapsed(
+                            show: true,
+                            dateKey: dateKey,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
 
-                  // Nutrition Section Header
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 200),
-                    child: SectionHeader(
-                      title: 'Nutrição',
-                      actionLabel: 'Ver mais',
-                      onAction: () =>
-                          context.push('/nutrition-detail', extra: day),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
+                        // Nutrition Section Header
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 200),
+                          child: SectionHeader(
+                            title: 'Nutrição',
+                            actionLabel: 'Ver mais',
+                            onAction: () =>
+                                context.push('/nutrition-detail', extra: day),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
 
-                  // Meals
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 300),
-                    child: MealSectionImproved(
-                      mealType: MealType.breakfast,
-                      title: 'Café da Manhã',
-                      meals: day.getMealsByType(MealType.breakfast),
-                      onAddPressed: () => _onMealAddTap(MealType.breakfast),
-                      onRemoveFood: (mealId) {
-                        _onMealRemoveTap(MealType.breakfast, mealId);
-                      },
-                      onFoodTap: (meal, foodItem) =>
-                          _showEditSheet(context, ref, meal, foodItem),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 400),
-                    child: MealSectionImproved(
-                      mealType: MealType.lunch,
-                      title: 'Almoço',
-                      meals: day.getMealsByType(MealType.lunch),
-                      onAddPressed: () => _onMealAddTap(MealType.lunch),
-                      onRemoveFood: (mealId) {
-                        _onMealRemoveTap(MealType.lunch, mealId);
-                      },
-                      onFoodTap: (meal, foodItem) =>
-                          _showEditSheet(context, ref, meal, foodItem),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 500),
-                    child: MealSectionImproved(
-                      mealType: MealType.dinner,
-                      title: 'Jantar',
-                      meals: day.getMealsByType(MealType.dinner),
-                      onAddPressed: () => _onMealAddTap(MealType.dinner),
-                      onRemoveFood: (mealId) {
-                        _onMealRemoveTap(MealType.dinner, mealId);
-                      },
-                      onFoodTap: (meal, foodItem) =>
-                          _showEditSheet(context, ref, meal, foodItem),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 600),
-                    child: MealSectionImproved(
-                      mealType: MealType.snack,
-                      title: 'Lanches',
-                      meals: day.getMealsByType(MealType.snack),
-                      onAddPressed: () => _onMealAddTap(MealType.snack),
-                      onRemoveFood: (mealId) {
-                        _onMealRemoveTap(MealType.snack, mealId);
-                      },
-                      onFoodTap: (meal, foodItem) =>
-                          _showEditSheet(context, ref, meal, foodItem),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
+                        // Meals
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 300),
+                          child: MealSectionImproved(
+                            mealType: MealType.breakfast,
+                            title: 'Café da Manhã',
+                            meals: day.getMealsByType(MealType.breakfast),
+                            onAddPressed: () =>
+                                _onMealAddTap(MealType.breakfast),
+                            onRemoveFood: (mealId) {
+                              _onMealRemoveTap(MealType.breakfast, mealId);
+                            },
+                            onFoodTap: (meal, foodItem) =>
+                                _showEditSheet(context, ref, meal, foodItem),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 400),
+                          child: MealSectionImproved(
+                            mealType: MealType.lunch,
+                            title: 'Almoço',
+                            meals: day.getMealsByType(MealType.lunch),
+                            onAddPressed: () => _onMealAddTap(MealType.lunch),
+                            onRemoveFood: (mealId) {
+                              _onMealRemoveTap(MealType.lunch, mealId);
+                            },
+                            onFoodTap: (meal, foodItem) =>
+                                _showEditSheet(context, ref, meal, foodItem),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 500),
+                          child: MealSectionImproved(
+                            mealType: MealType.dinner,
+                            title: 'Jantar',
+                            meals: day.getMealsByType(MealType.dinner),
+                            onAddPressed: () => _onMealAddTap(MealType.dinner),
+                            onRemoveFood: (mealId) {
+                              _onMealRemoveTap(MealType.dinner, mealId);
+                            },
+                            onFoodTap: (meal, foodItem) =>
+                                _showEditSheet(context, ref, meal, foodItem),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 600),
+                          child: MealSectionImproved(
+                            mealType: MealType.snack,
+                            title: 'Lanches',
+                            meals: day.getMealsByType(MealType.snack),
+                            onAddPressed: () => _onMealAddTap(MealType.snack),
+                            onRemoveFood: (mealId) {
+                              _onMealRemoveTap(MealType.snack, mealId);
+                            },
+                            onFoodTap: (meal, foodItem) =>
+                                _showEditSheet(context, ref, meal, foodItem),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
 
-                  // Water Section
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 680),
-                    child: const SectionHeader(title: 'Água'),
-                  ),
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 700),
-                    child: WaterTrackerConnected(date: day.date),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
+                        // Water Section
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 680),
+                          child: const SectionHeader(title: 'Água'),
+                        ),
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 700),
+                          child: WaterTrackerConnected(date: day.date),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
 
-                  // Quick Weight Log
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 780),
-                    child: SectionHeader(
-                      title: 'Medidas',
-                      actionLabel: 'Ver mais',
-                      onAction: () => context.push('/measurements'),
-                    ),
-                  ),
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 800),
-                    child: QuickWeightLogCard(
-                      currentWeight: 72.5, // TODO: Connect to real data
-                      startWeight: 75.0,
-                      goalWeight: 68.0,
-                      onWeightChanged: (newWeight) {
-                        // TODO: Save weight
-                      },
-                      onTapMore: () {
-                        context.push('/measurements');
-                      },
-                    ),
-                  ),
+                        // Quick Weight Log
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 780),
+                          child: SectionHeader(
+                            title: 'Medidas',
+                            actionLabel: 'Ver mais',
+                            onAction: () => context.push('/measurements'),
+                          ),
+                        ),
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 800),
+                          child: QuickWeightLogCard(
+                            currentWeight: profile.currentWeight,
+                            startWeight: profile.startWeight,
+                            goalWeight: profile.targetWeight,
+                            onWeightChanged: (newWeight) {
+                              ref
+                                  .read(profileNotifierProvider.notifier)
+                                  .updateWeight(newWeight);
+                              ref.read(analyticsServiceProvider).logEvent(
+                                'weight_logged',
+                                {
+                                  'source': 'diary_quick_log',
+                                  'weight': newWeight,
+                                },
+                              );
+                            },
+                            onTapMore: () {
+                              context.push('/measurements');
+                            },
+                          ),
+                        ),
 
-                  const SizedBox(height: AppSpacing.md),
+                        const SizedBox(height: AppSpacing.md),
 
-                  // Measurements Section (Old - pode remover depois)
-                  // EntryAnimation(
-                  //   delay: const Duration(milliseconds: 800),
-                  //   child: MeasurementsCard(
-                  //     currentWeight: 72.5,
-                  //     startWeight: 75.0,
-                  //     goalWeight: 68.0,
-                  //     onTap: () {
-                  //       // Navigate to measurements details
-                  //     },
-                  //   ),
-                  // ),
-                  const SizedBox(height: AppSpacing.md),
+                        // Measurements Section (Old - pode remover depois)
+                        // EntryAnimation(
+                        //   delay: const Duration(milliseconds: 800),
+                        //   child: MeasurementsCard(
+                        //     currentWeight: 72.5,
+                        //     startWeight: 75.0,
+                        //     goalWeight: 68.0,
+                        //     onTap: () {
+                        //       // Navigate to measurements details
+                        //     },
+                        //   ),
+                        // ),
+                        const SizedBox(height: AppSpacing.md),
 
-                  // Notes Section
-                  EntryAnimation(
-                    delay: const Duration(milliseconds: 900),
-                    child: NotesCard(
-                      initialNote: day.notes,
-                      onSave: (note) {
-                        ref
-                            .read(diaryNotifierProvider.notifier)
-                            .updateNotes(note);
-                      },
+                        // Notes Section
+                        EntryAnimation(
+                          delay: const Duration(milliseconds: 900),
+                          child: NotesCard(
+                            initialNote: day.notes,
+                            onSave: (note) {
+                              ref
+                                  .read(diaryNotifierProvider.notifier)
+                                  .updateNotes(note);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -829,6 +791,41 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
         'dez',
       ];
       return '${weekdays[date.weekday - 1]}, ${date.day} ${months[date.month - 1]}';
+    }
+  }
+
+  String _getFormattedDateHeader(DateTime date) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final checkDate = DateTime(date.year, date.month, date.day);
+
+    final months = [
+      'JAN',
+      'FEV',
+      'MAR',
+      'ABR',
+      'MAI',
+      'JUN',
+      'JUL',
+      'AGO',
+      'SET',
+      'OUT',
+      'NOV',
+      'DEZ',
+    ];
+    final monthStr = months[date.month - 1];
+    final dateSuffix = '${date.day} $monthStr';
+
+    if (checkDate == today) {
+      return 'HOJE, $dateSuffix';
+    } else if (checkDate == today.subtract(const Duration(days: 1))) {
+      return 'ONTEM, $dateSuffix';
+    } else if (checkDate == today.add(const Duration(days: 1))) {
+      return 'AMANHÃ, $dateSuffix';
+    } else {
+      final weekdays = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
+      final weekdayStr = weekdays[date.weekday - 1];
+      return '$weekdayStr, $dateSuffix';
     }
   }
 
@@ -941,7 +938,8 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
               const SizedBox(height: AppSpacing.md),
               const _ChallengeTipRow(
                 title: 'Opções rápidas',
-                subtitle: 'Ovos • iogurte grego • frango/peixe • cottage • whey.',
+                subtitle:
+                    'Ovos • iogurte grego • frango/peixe • cottage • whey.',
               ),
               const SizedBox(height: AppSpacing.sm),
               const _ChallengeTipRow(
@@ -1031,10 +1029,10 @@ class _ReadOnlyBanner extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                    Text(
-                      title,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
+                Text(
+                  title,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
                     color: AppColors.textPrimary,
                   ),
                 ),
@@ -1169,7 +1167,9 @@ class _ChallengeBanner extends StatelessWidget {
               value: progress,
               minHeight: 8,
               backgroundColor: Colors.black.withValues(alpha: 0.06),
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.premium),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AppColors.premium,
+              ),
             ),
           ),
           const SizedBox(height: AppSpacing.sm),

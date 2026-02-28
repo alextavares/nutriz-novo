@@ -1,6 +1,7 @@
 package com.nutriz.app
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
@@ -12,6 +13,7 @@ import io.flutter.plugin.common.MethodChannel
 class MainActivity : FlutterActivity() {
   companion object {
     private const val CHANNEL_NAME = "com.nutriz.app/notifications"
+    private const val SHARE_CHANNEL = "com.nutriz.app/share"
     private const val REQUEST_CODE_NOTIFICATIONS = 7451
   }
 
@@ -24,6 +26,20 @@ class MainActivity : FlutterActivity() {
       .setMethodCallHandler { call, result ->
         when (call.method) {
           "requestPermission" -> requestNotificationsPermission(result)
+          else -> result.notImplemented()
+        }
+      }
+
+    MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SHARE_CHANNEL)
+      .setMethodCallHandler { call, result ->
+        val text = call.argument<String>("text") ?: ""
+        when (call.method) {
+          "shareText" -> {
+            result.success(shareText(text))
+          }
+          "shareWhatsApp" -> {
+            result.success(shareWhatsApp(text))
+          }
           else -> result.notImplemented()
         }
       }
@@ -70,5 +86,47 @@ class MainActivity : FlutterActivity() {
     val granted = grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
     pendingPermissionResult?.success(granted)
     pendingPermissionResult = null
+  }
+
+  private fun shareText(text: String): Boolean {
+    if (text.isBlank()) return false
+
+    return try {
+      val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, text)
+      }
+      val chooser = Intent.createChooser(sendIntent, "Compartilhar")
+      startActivity(chooser)
+      true
+    } catch (e: Exception) {
+      false
+    }
+  }
+
+  private fun shareWhatsApp(text: String): Boolean {
+    if (text.isBlank()) return false
+
+    val packages = listOf("com.whatsapp", "com.whatsapp.w4b")
+    val chosen = packages.firstOrNull { pkg ->
+      try {
+        packageManager.getPackageInfo(pkg, 0)
+        true
+      } catch (_: Exception) {
+        false
+      }
+    } ?: return false
+
+    return try {
+      val sendIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, text)
+        setPackage(chosen)
+      }
+      startActivity(sendIntent)
+      true
+    } catch (e: Exception) {
+      false
+    }
   }
 }

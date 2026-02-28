@@ -218,7 +218,7 @@ class _LongTermResultsChartPainter extends CustomPainter {
       );
       _drawText(
         canvas,
-        'DietAI - Mês 6',
+        'Nutriz - Mês 6',
         Offset(rect.right - 120, axisY + 14),
         textStyle.copyWith(color: const Color(0xFF22C55E).withAlpha(alpha)),
       );

@@ -1,21 +1,72 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../core/debug/debug_flags.dart';
+import '../../core/monetization/promo_offer.dart';
+import '../../core/monetization/promo_offer_badge.dart';
+import '../../features/premium/presentation/providers/subscription_provider.dart';
 import 'bottom_nav_bar.dart';
+
+class _TryFreePill extends StatelessWidget {
+  final VoidCallback? onTap;
+
+  const _TryFreePill({this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.orange,
+            borderRadius: BorderRadius.circular(999),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.18),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'TRY FREE',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 12,
+                  letterSpacing: 0.2,
+                ),
+              ),
+              SizedBox(width: 6),
+              Icon(Icons.workspace_premium, size: 16, color: Colors.white),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 /// MainScaffold with WidgetsBindingObserver to intercept the back button
 /// at the platform level, before GoRouter processes it.
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends ConsumerStatefulWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  ConsumerState<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold>
+class _MainScaffoldState extends ConsumerState<MainScaffold>
     with WidgetsBindingObserver {
   @override
   void initState() {
@@ -33,28 +84,26 @@ class _MainScaffoldState extends State<MainScaffold>
   Future<bool> didPopRoute() async {
     final currentIndex = _calculateSelectedIndex(context);
 
-    // Debug print to verify this is being called
     if (DebugFlags.canVerbose) {
       debugPrint('DEBUG: didPopRoute called, currentIndex=$currentIndex');
     }
 
-    // If we're NOT on the home/diary tab, navigate to diary instead of exiting
     if (currentIndex != 0) {
       context.go('/diary');
-      return true; // We handled it, prevent default behavior (exit)
+      return true;
     }
 
-    // If on diary, let the system handle it (exit app)
     return false;
   }
 
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.path;
     if (location.startsWith('/diary')) return 0;
-    if (location.startsWith('/fasting')) return 1;
-    if (location.startsWith('/recipes')) return 2;
-    if (location.startsWith('/profile')) return 3;
-    if (location.startsWith('/premium')) return 4;
+    if (location.startsWith('/coach')) return 1;
+    if (location.startsWith('/fasting')) return 2;
+    if (location.startsWith('/diet')) return 3;
+    if (location.startsWith('/recipes')) return 3;
+    if (location.startsWith('/profile')) return 4;
     return 0;
   }
 
@@ -64,16 +113,16 @@ class _MainScaffoldState extends State<MainScaffold>
         context.go('/diary');
         break;
       case 1:
-        context.go('/fasting');
+        context.go('/coach');
         break;
       case 2:
-        context.go('/recipes');
+        context.go('/fasting');
         break;
       case 3:
-        context.go('/profile');
+        context.go('/diet');
         break;
       case 4:
-        context.go('/premium');
+        context.go('/profile');
         break;
     }
   }
@@ -82,9 +131,34 @@ class _MainScaffoldState extends State<MainScaffold>
   Widget build(BuildContext context) {
     final currentIndex = _calculateSelectedIndex(context);
 
+    final isPro = ref.watch(subscriptionProvider).isPro;
+    final offer = ref.watch(promoOfferProvider);
+    final showOfferBadge = !isPro && offer.isActive;
+    final bottomOffset =
+        MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight + 36;
+    final topOffset = MediaQuery.of(context).padding.top + 8;
+
     return Scaffold(
       extendBody: true,
-      body: widget.child,
+      body: Stack(
+        children: [
+          widget.child,
+          if (!isPro && currentIndex != 4)
+            Positioned(
+              top: topOffset,
+              right: 16,
+              child: _TryFreePill(onTap: () => context.push('/premium')),
+            ),
+          if (showOfferBadge)
+            Positioned(
+              right: 16,
+              bottom: bottomOffset,
+              child: PromoOfferBadge(
+                onTap: () => context.push('/premium/offer'),
+              ),
+            ),
+        ],
+      ),
       bottomNavigationBar: NutrizBottomNavBar(
         currentIndex: currentIndex,
         onTap: (index) => _onItemTapped(index, context),

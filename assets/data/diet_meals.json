@@ -1,0 +1,1829 @@
+[
+  {
+    "id": "brk_tapioca_egg_banana",
+    "mealType": "breakfast",
+    "title": "Tapioca com ovo e banana",
+    "kcal": 420,
+    "protein_g": 22,
+    "carbs_g": 55,
+    "fat_g": 12,
+    "ingredients": [
+      "2 colheres (sopa) de goma de tapioca",
+      "1 ovo",
+      "1 banana pequena",
+      "1 colher (chá) de azeite ou manteiga"
+    ],
+    "steps": [
+      "Aqueça uma frigideira antiaderente e espalhe a goma de tapioca.",
+      "Quando firmar, recheie com o ovo mexido e dobre.",
+      "Finalize com a banana ao lado."
+    ]
+  },
+  {
+    "id": "brk_yogurt_granola_fruit",
+    "mealType": "breakfast",
+    "title": "Iogurte com granola e frutas",
+    "kcal": 380,
+    "protein_g": 20,
+    "carbs_g": 48,
+    "fat_g": 12,
+    "ingredients": [
+      "170g de iogurte natural",
+      "30g de granola",
+      "1 porção de fruta (ex.: morango ou mamão)"
+    ],
+    "steps": [
+      "Misture o iogurte com a granola.",
+      "Adicione a fruta por cima."
+    ]
+  },
+  {
+    "id": "brk_oats_peanut_banana",
+    "mealType": "breakfast",
+    "title": "Aveia com pasta de amendoim e banana",
+    "kcal": 450,
+    "protein_g": 18,
+    "carbs_g": 55,
+    "fat_g": 18,
+    "ingredients": [
+      "50g de aveia",
+      "200ml de leite ou bebida vegetal",
+      "1 colher (sopa) de pasta de amendoim",
+      "1 banana"
+    ],
+    "steps": [
+      "Cozinhe a aveia no leite até engrossar.",
+      "Finalize com a pasta de amendoim e a banana fatiada."
+    ]
+  },
+  {
+    "id": "brk_bread_eggs_cheese",
+    "mealType": "breakfast",
+    "title": "Pão com ovos e queijo",
+    "kcal": 430,
+    "protein_g": 26,
+    "carbs_g": 35,
+    "fat_g": 20,
+    "ingredients": [
+      "2 fatias de pão integral",
+      "2 ovos",
+      "1 fatia de queijo minas"
+    ],
+    "steps": [
+      "Prepare os ovos mexidos ou omelete.",
+      "Monte no pão com o queijo."
+    ]
+  },
+  {
+    "id": "brk_smoothie_protein",
+    "mealType": "breakfast",
+    "title": "Vitamina de banana com proteína",
+    "kcal": 400,
+    "protein_g": 28,
+    "carbs_g": 45,
+    "fat_g": 10,
+    "ingredients": [
+      "1 banana",
+      "250ml de leite",
+      "1 scoop de proteína (opcional)",
+      "Canela a gosto"
+    ],
+    "steps": [
+      "Bata tudo no liquidificador.",
+      "Sirva gelado."
+    ]
+  },
+  {
+    "id": "lch_grilled_chicken_rice_salad",
+    "mealType": "lunch",
+    "title": "Frango grelhado com arroz e salada",
+    "kcal": 520,
+    "protein_g": 40,
+    "carbs_g": 55,
+    "fat_g": 14,
+    "ingredients": [
+      "120g de peito de frango",
+      "1/2 xícara de arroz cozido",
+      "Salada (alface, tomate, pepino)",
+      "1 colher (sopa) de azeite"
+    ],
+    "steps": [
+      "Grelhe o frango com sal e pimenta.",
+      "Sirva com o arroz e a salada temperada."
+    ]
+  },
+  {
+    "id": "lch_beef_veg_puree",
+    "mealType": "lunch",
+    "title": "Patinho moído com legumes e purê",
+    "kcal": 560,
+    "protein_g": 38,
+    "carbs_g": 50,
+    "fat_g": 22,
+    "ingredients": [
+      "120g de patinho moído",
+      "Legumes refogados (brócolis, cenoura, abobrinha)",
+      "200g de batata-doce cozida (purê)"
+    ],
+    "steps": [
+      "Refogue o patinho com cebola e alho.",
+      "Sirva com legumes e purê de batata-doce."
+    ]
+  },
+  {
+    "id": "lch_fish_beans_rice",
+    "mealType": "lunch",
+    "title": "Peixe com feijão e arroz",
+    "kcal": 570,
+    "protein_g": 36,
+    "carbs_g": 70,
+    "fat_g": 14,
+    "ingredients": [
+      "150g de peixe (tilápia)",
+      "1/2 xícara de arroz cozido",
+      "1/2 concha de feijão",
+      "Salada"
+    ],
+    "steps": [
+      "Grelhe o peixe com limão e sal.",
+      "Sirva com arroz, feijão e salada."
+    ]
+  },
+  {
+    "id": "lch_omelette_sweet_potato_salad",
+    "mealType": "lunch",
+    "title": "Omelete de legumes com batata-doce",
+    "kcal": 500,
+    "protein_g": 28,
+    "carbs_g": 55,
+    "fat_g": 18,
+    "ingredients": [
+      "3 ovos",
+      "Legumes (tomate, cebola, espinafre)",
+      "200g de batata-doce cozida",
+      "Salada"
+    ],
+    "steps": [
+      "Faça a omelete com os legumes.",
+      "Sirva com batata-doce e salada."
+    ]
+  },
+  {
+    "id": "lch_chicken_pasta_tomato",
+    "mealType": "lunch",
+    "title": "Macarrão com frango e molho de tomate",
+    "kcal": 610,
+    "protein_g": 38,
+    "carbs_g": 75,
+    "fat_g": 14,
+    "ingredients": [
+      "1 prato raso de macarrão cozido",
+      "120g de frango desfiado",
+      "Molho de tomate",
+      "Manjericão"
+    ],
+    "steps": [
+      "Aqueça o molho de tomate e misture o frango.",
+      "Envolva no macarrão e finalize com manjericão."
+    ]
+  },
+  {
+    "id": "din_veg_omelette_salad",
+    "mealType": "dinner",
+    "title": "Omelete de legumes com salada",
+    "kcal": 430,
+    "protein_g": 28,
+    "carbs_g": 18,
+    "fat_g": 26,
+    "ingredients": [
+      "3 ovos",
+      "Legumes (espinafre, cebola, tomate)",
+      "Salada verde",
+      "1 colher (chá) de azeite"
+    ],
+    "steps": [
+      "Prepare a omelete com os legumes.",
+      "Sirva com salada."
+    ]
+  },
+  {
+    "id": "din_chicken_soup",
+    "mealType": "dinner",
+    "title": "Sopa de frango com legumes",
+    "kcal": 420,
+    "protein_g": 34,
+    "carbs_g": 28,
+    "fat_g": 16,
+    "ingredients": [
+      "120g de frango",
+      "Legumes (cenoura, abobrinha, chuchu)",
+      "Caldo caseiro",
+      "Salsinha"
+    ],
+    "steps": [
+      "Cozinhe o frango e desfie.",
+      "Junte os legumes e cozinhe até ficarem macios.",
+      "Finalize com salsinha."
+    ]
+  },
+  {
+    "id": "din_salmon_quinoa_veg",
+    "mealType": "dinner",
+    "title": "Salmão com quinoa e legumes",
+    "kcal": 560,
+    "protein_g": 34,
+    "carbs_g": 45,
+    "fat_g": 26,
+    "ingredients": [
+      "150g de salmão",
+      "1/2 xícara de quinoa cozida",
+      "Legumes no vapor"
+    ],
+    "steps": [
+      "Asse ou grelhe o salmão.",
+      "Sirva com quinoa e legumes."
+    ]
+  },
+  {
+    "id": "din_beef_salad",
+    "mealType": "dinner",
+    "title": "Carne grelhada com salada reforçada",
+    "kcal": 520,
+    "protein_g": 38,
+    "carbs_g": 22,
+    "fat_g": 30,
+    "ingredients": [
+      "150g de carne magra",
+      "Salada (folhas, tomate, grão-de-bico)",
+      "1 colher (sopa) de azeite"
+    ],
+    "steps": [
+      "Grelhe a carne.",
+      "Monte a salada e tempere com azeite."
+    ]
+  },
+  {
+    "id": "din_tuna_sandwich",
+    "mealType": "dinner",
+    "title": "Sanduíche de atum no integral",
+    "kcal": 480,
+    "protein_g": 30,
+    "carbs_g": 46,
+    "fat_g": 18,
+    "ingredients": [
+      "2 fatias de pão integral",
+      "1 lata de atum (escorrido)",
+      "Iogurte ou maionese light (1 colher)",
+      "Alface e tomate"
+    ],
+    "steps": [
+      "Misture o atum com iogurte/maionese.",
+      "Monte o sanduíche com alface e tomate."
+    ]
+  },
+  {
+    "id": "snk_fruit_nuts",
+    "mealType": "snack",
+    "title": "Fruta com castanhas",
+    "kcal": 240,
+    "protein_g": 6,
+    "carbs_g": 28,
+    "fat_g": 12,
+    "ingredients": [
+      "1 fruta (maçã/pera/banana)",
+      "15g de castanhas"
+    ],
+    "steps": [
+      "Consuma a fruta com as castanhas."
+    ]
+  },
+  {
+    "id": "snk_cottage_toast",
+    "mealType": "snack",
+    "title": "Torrada integral com cottage",
+    "kcal": 260,
+    "protein_g": 16,
+    "carbs_g": 30,
+    "fat_g": 8,
+    "ingredients": [
+      "2 torradas integrais",
+      "3 colheres (sopa) de cottage"
+    ],
+    "steps": [
+      "Passe o cottage nas torradas."
+    ]
+  },
+  {
+    "id": "snk_protein_yogurt",
+    "mealType": "snack",
+    "title": "Iogurte proteico",
+    "kcal": 180,
+    "protein_g": 18,
+    "carbs_g": 16,
+    "fat_g": 4,
+    "ingredients": [
+      "170g de iogurte proteico"
+    ],
+    "steps": [
+      "Consumir gelado."
+    ]
+  },
+  {
+    "id": "snk_cheese_fruit",
+    "mealType": "snack",
+    "title": "Queijo minas com fruta",
+    "kcal": 260,
+    "protein_g": 14,
+    "carbs_g": 22,
+    "fat_g": 12,
+    "ingredients": [
+      "60g de queijo minas",
+      "1 fruta (mamão ou uva)"
+    ],
+    "steps": [
+      "Corte o queijo e consuma com a fruta."
+    ]
+  },
+  {
+    "id": "snk_eggs",
+    "mealType": "snack",
+    "title": "Ovos cozidos",
+    "kcal": 210,
+    "protein_g": 18,
+    "carbs_g": 2,
+    "fat_g": 14,
+    "ingredients": [
+      "3 ovos"
+    ],
+    "steps": [
+      "Cozinhe os ovos por 10 minutos.",
+      "Tempere com sal e pimenta."
+    ]
+  },
+  {
+    "id": "brk_cuscuz_eggs",
+    "mealType": "breakfast",
+    "title": "Cuscuz com ovos",
+    "kcal": 410,
+    "protein_g": 20,
+    "carbs_g": 52,
+    "fat_g": 14,
+    "ingredients": [
+      "1 porção de cuscuz",
+      "2 ovos",
+      "1 colher (chá) de manteiga"
+    ],
+    "steps": [
+      "Prepare o cuscuz no vapor.",
+      "Faça os ovos mexidos e sirva junto."
+    ]
+  },
+  {
+    "id": "brk_pao_queijo_coffee",
+    "mealType": "breakfast",
+    "title": "Pão de queijo (porção) com café",
+    "kcal": 360,
+    "protein_g": 12,
+    "carbs_g": 42,
+    "fat_g": 16,
+    "ingredients": [
+      "3 unidades pequenas de pão de queijo",
+      "Café sem açúcar (opcional)"
+    ],
+    "steps": [
+      "Asse o pão de queijo conforme instruções.",
+      "Acompanhe com café."
+    ]
+  },
+  {
+    "id": "lch_chicken_bean_salad",
+    "mealType": "lunch",
+    "title": "Frango com feijão e salada",
+    "kcal": 590,
+    "protein_g": 42,
+    "carbs_g": 58,
+    "fat_g": 18,
+    "ingredients": [
+      "120g de peito de frango",
+      "1/2 concha de feijão",
+      "Salada variada",
+      "1 colher (sopa) de azeite"
+    ],
+    "steps": [
+      "Grelhe o frango.",
+      "Sirva com feijão e salada temperada."
+    ]
+  },
+  {
+    "id": "lch_turkey_wrap",
+    "mealType": "lunch",
+    "title": "Wrap integral de peito de peru",
+    "kcal": 520,
+    "protein_g": 30,
+    "carbs_g": 55,
+    "fat_g": 18,
+    "ingredients": [
+      "1 wrap integral",
+      "80g de peito de peru",
+      "Queijo branco (opcional)",
+      "Alface e tomate"
+    ],
+    "steps": [
+      "Monte o wrap com os ingredientes.",
+      "Sirva na hora."
+    ]
+  },
+  {
+    "id": "din_chicken_veg_stirfry",
+    "mealType": "dinner",
+    "title": "Frango salteado com legumes",
+    "kcal": 480,
+    "protein_g": 40,
+    "carbs_g": 26,
+    "fat_g": 22,
+    "ingredients": [
+      "150g de frango",
+      "Legumes (brócolis, cenoura, pimentão)",
+      "Molho shoyu light (opcional)"
+    ],
+    "steps": [
+      "Salteie o frango em tiras.",
+      "Junte os legumes e cozinhe até ficarem al dente."
+    ]
+  },
+  {
+    "id": "din_rice_beans_eggs",
+    "mealType": "dinner",
+    "title": "Arroz, feijão e ovos",
+    "kcal": 560,
+    "protein_g": 26,
+    "carbs_g": 78,
+    "fat_g": 16,
+    "ingredients": [
+      "1/2 xícara de arroz cozido",
+      "1/2 concha de feijão",
+      "2 ovos",
+      "Salada (opcional)"
+    ],
+    "steps": [
+      "Prepare os ovos mexidos ou cozidos.",
+      "Sirva com arroz e feijão."
+    ]
+  },
+  {
+    "id": "snk_banana_cinnamon",
+    "mealType": "snack",
+    "title": "Banana com canela",
+    "kcal": 160,
+    "protein_g": 2,
+    "carbs_g": 36,
+    "fat_g": 1,
+    "ingredients": [
+      "1 banana",
+      "Canela a gosto"
+    ],
+    "steps": [
+      "Fatie a banana e polvilhe canela."
+    ]
+  },
+  {
+    "id": "snk_popcorn",
+    "mealType": "snack",
+    "title": "Pipoca (porção) sem óleo",
+    "kcal": 180,
+    "protein_g": 6,
+    "carbs_g": 30,
+    "fat_g": 4,
+    "ingredients": [
+      "30g de milho para pipoca",
+      "Sal a gosto"
+    ],
+    "steps": [
+      "Estoure a pipoca em panela antiaderente ou pipoqueira.",
+      "Tempere com sal."
+    ]
+  },
+  {
+    "id": "brk_crepioca_chicken",
+    "mealType": "breakfast",
+    "title": "Crepioca de frango",
+    "kcal": 420,
+    "protein_g": 30,
+    "carbs_g": 28,
+    "fat_g": 20,
+    "ingredients": [
+      "1 ovo",
+      "2 colheres (sopa) de goma de tapioca",
+      "80g de frango desfiado",
+      "Sal e temperos a gosto"
+    ],
+    "steps": [
+      "Misture o ovo com a goma de tapioca e tempere.",
+      "Despeje na frigideira e doure dos dois lados.",
+      "Recheie com o frango e dobre."
+    ]
+  },
+  {
+    "id": "brk_tapioca_cheese_turkey",
+    "mealType": "breakfast",
+    "title": "Tapioca com queijo e peito de peru",
+    "kcal": 390,
+    "protein_g": 22,
+    "carbs_g": 44,
+    "fat_g": 14,
+    "ingredients": [
+      "2 colheres (sopa) de goma de tapioca",
+      "2 fatias de peito de peru",
+      "1 fatia de queijo minas",
+      "Orégano a gosto"
+    ],
+    "steps": [
+      "Prepare a tapioca na frigideira.",
+      "Recheie com peito de peru e queijo.",
+      "Finalize com orégano e dobre."
+    ]
+  },
+  {
+    "id": "brk_overnight_oats",
+    "mealType": "breakfast",
+    "title": "Overnight oats com iogurte e frutas",
+    "kcal": 410,
+    "protein_g": 22,
+    "carbs_g": 55,
+    "fat_g": 12,
+    "ingredients": [
+      "40g de aveia",
+      "170g de iogurte natural",
+      "1 colher (chá) de chia",
+      "1 porção de frutas (morango/banana)"
+    ],
+    "steps": [
+      "Misture aveia, iogurte e chia.",
+      "Leve à geladeira por pelo menos 4 horas.",
+      "Adicione as frutas na hora de comer."
+    ]
+  },
+  {
+    "id": "brk_papaya_granola",
+    "mealType": "breakfast",
+    "title": "Mamão com iogurte e granola",
+    "kcal": 360,
+    "protein_g": 18,
+    "carbs_g": 52,
+    "fat_g": 10,
+    "ingredients": [
+      "1/2 mamão",
+      "170g de iogurte natural",
+      "25g de granola"
+    ],
+    "steps": [
+      "Corte o mamão em cubos.",
+      "Misture com iogurte e granola."
+    ]
+  },
+  {
+    "id": "brk_omelette_cheese_spinach",
+    "mealType": "breakfast",
+    "title": "Omelete de espinafre com queijo",
+    "kcal": 400,
+    "protein_g": 28,
+    "carbs_g": 8,
+    "fat_g": 28,
+    "ingredients": [
+      "3 ovos",
+      "1 punhado de espinafre",
+      "1 fatia de queijo minas",
+      "Sal e pimenta"
+    ],
+    "steps": [
+      "Bata os ovos e misture o espinafre.",
+      "Cozinhe na frigideira e adicione o queijo.",
+      "Dobre e finalize."
+    ]
+  },
+  {
+    "id": "brk_pancake_banana_oats",
+    "mealType": "breakfast",
+    "title": "Panqueca de banana com aveia",
+    "kcal": 420,
+    "protein_g": 20,
+    "carbs_g": 60,
+    "fat_g": 12,
+    "ingredients": [
+      "1 banana",
+      "1 ovo",
+      "40g de aveia",
+      "Canela a gosto"
+    ],
+    "steps": [
+      "Amasse a banana e misture com ovo, aveia e canela.",
+      "Cozinhe porções em frigideira antiaderente.",
+      "Sirva na hora."
+    ]
+  },
+  {
+    "id": "brk_avocado_toast_egg",
+    "mealType": "breakfast",
+    "title": "Torrada integral com abacate e ovo",
+    "kcal": 430,
+    "protein_g": 20,
+    "carbs_g": 36,
+    "fat_g": 24,
+    "ingredients": [
+      "2 fatias de pão integral",
+      "1/2 abacate pequeno",
+      "1 ovo",
+      "Sal e limão"
+    ],
+    "steps": [
+      "Amasse o abacate com sal e limão.",
+      "Toste o pão e espalhe o abacate.",
+      "Finalize com o ovo por cima."
+    ]
+  },
+  {
+    "id": "brk_cottage_fruit",
+    "mealType": "breakfast",
+    "title": "Cottage com fruta e mel",
+    "kcal": 360,
+    "protein_g": 22,
+    "carbs_g": 42,
+    "fat_g": 10,
+    "ingredients": [
+      "150g de cottage",
+      "1 fruta (maçã/banana/mamão)",
+      "1 colher (chá) de mel (opcional)"
+    ],
+    "steps": [
+      "Misture o cottage com a fruta.",
+      "Finalize com mel, se desejar."
+    ]
+  },
+  {
+    "id": "brk_fruit_bowl_chia",
+    "mealType": "breakfast",
+    "title": "Bowl de frutas com chia",
+    "kcal": 340,
+    "protein_g": 10,
+    "carbs_g": 62,
+    "fat_g": 8,
+    "ingredients": [
+      "1 porção de frutas variadas",
+      "1 colher (sopa) de chia",
+      "Iogurte (opcional)"
+    ],
+    "steps": [
+      "Corte as frutas e misture com chia.",
+      "Adicione iogurte se quiser mais proteína."
+    ]
+  },
+  {
+    "id": "brk_scrambled_eggs_toast",
+    "mealType": "breakfast",
+    "title": "Ovos mexidos com torradas",
+    "kcal": 410,
+    "protein_g": 24,
+    "carbs_g": 34,
+    "fat_g": 20,
+    "ingredients": [
+      "2 ovos",
+      "2 torradas integrais",
+      "1 colher (chá) de manteiga",
+      "Sal e pimenta"
+    ],
+    "steps": [
+      "Prepare os ovos mexidos na manteiga.",
+      "Sirva com as torradas."
+    ]
+  },
+  {
+    "id": "brk_pao_integral_ricotta",
+    "mealType": "breakfast",
+    "title": "Pão integral com ricota temperada",
+    "kcal": 380,
+    "protein_g": 18,
+    "carbs_g": 44,
+    "fat_g": 14,
+    "ingredients": [
+      "2 fatias de pão integral",
+      "80g de ricota",
+      "Tomate e orégano",
+      "Sal a gosto"
+    ],
+    "steps": [
+      "Amasse a ricota e tempere com tomate, orégano e sal.",
+      "Passe no pão e sirva."
+    ]
+  },
+  {
+    "id": "brk_mingau_aveia_maca",
+    "mealType": "breakfast",
+    "title": "Mingau de aveia com maçã",
+    "kcal": 420,
+    "protein_g": 16,
+    "carbs_g": 66,
+    "fat_g": 10,
+    "ingredients": [
+      "50g de aveia",
+      "250ml de leite",
+      "1 maçã",
+      "Canela a gosto"
+    ],
+    "steps": [
+      "Cozinhe a aveia no leite até engrossar.",
+      "Adicione a maçã em cubos e canela."
+    ]
+  },
+  {
+    "id": "brk_mug_cake_oats",
+    "mealType": "breakfast",
+    "title": "Bolo de caneca de aveia",
+    "kcal": 390,
+    "protein_g": 18,
+    "carbs_g": 52,
+    "fat_g": 12,
+    "ingredients": [
+      "40g de aveia",
+      "1 ovo",
+      "1 banana pequena",
+      "Fermento (1/2 colher chá)"
+    ],
+    "steps": [
+      "Misture tudo em uma caneca e adicione o fermento.",
+      "Leve ao micro-ondas por 1:30–2:00.",
+      "Aguarde esfriar e consuma."
+    ]
+  },
+  {
+    "id": "brk_acai_yogurt_nuts",
+    "mealType": "breakfast",
+    "title": "Açaí com iogurte e castanhas",
+    "kcal": 460,
+    "protein_g": 18,
+    "carbs_g": 62,
+    "fat_g": 16,
+    "ingredients": [
+      "200g de açaí (polpa)",
+      "100g de iogurte",
+      "15g de castanhas"
+    ],
+    "steps": [
+      "Misture a polpa de açaí com o iogurte.",
+      "Finalize com castanhas."
+    ]
+  },
+  {
+    "id": "brk_cuscuz_chicken",
+    "mealType": "breakfast",
+    "title": "Cuscuz com frango desfiado",
+    "kcal": 450,
+    "protein_g": 28,
+    "carbs_g": 58,
+    "fat_g": 12,
+    "ingredients": [
+      "1 porção de cuscuz",
+      "90g de frango desfiado",
+      "Tomate e cebola (opcional)"
+    ],
+    "steps": [
+      "Prepare o cuscuz no vapor.",
+      "Misture o frango e finalize com tomate/cebola."
+    ]
+  },
+  {
+    "id": "brk_cheese_bread_protein",
+    "mealType": "breakfast",
+    "title": "Pão de queijo (porção) + iogurte",
+    "kcal": 420,
+    "protein_g": 18,
+    "carbs_g": 44,
+    "fat_g": 18,
+    "ingredients": [
+      "3 unidades pequenas de pão de queijo",
+      "170g de iogurte natural"
+    ],
+    "steps": [
+      "Asse o pão de queijo conforme instruções.",
+      "Consuma com iogurte."
+    ]
+  },
+  {
+    "id": "brk_bread_peanut_butter",
+    "mealType": "breakfast",
+    "title": "Pão integral com pasta de amendoim",
+    "kcal": 430,
+    "protein_g": 16,
+    "carbs_g": 44,
+    "fat_g": 22,
+    "ingredients": [
+      "2 fatias de pão integral",
+      "1 colher (sopa) de pasta de amendoim",
+      "1 fruta (opcional)"
+    ],
+    "steps": [
+      "Passe a pasta de amendoim no pão.",
+      "Consuma com fruta, se desejar."
+    ]
+  },
+  {
+    "id": "brk_cafe_milk_cheese",
+    "mealType": "breakfast",
+    "title": "Café com leite + pão com queijo",
+    "kcal": 450,
+    "protein_g": 22,
+    "carbs_g": 52,
+    "fat_g": 16,
+    "ingredients": [
+      "200ml de café com leite",
+      "1 pão francês pequeno",
+      "1 fatia de queijo minas"
+    ],
+    "steps": [
+      "Prepare o café com leite.",
+      "Monte o pão com queijo e consuma."
+    ]
+  },
+  {
+    "id": "lch_chicken_sweet_potato_veg",
+    "mealType": "lunch",
+    "title": "Frango com batata-doce e legumes",
+    "kcal": 610,
+    "protein_g": 45,
+    "carbs_g": 62,
+    "fat_g": 18,
+    "ingredients": [
+      "150g de peito de frango",
+      "250g de batata-doce cozida",
+      "Legumes (brócolis, cenoura)",
+      "1 colher (sopa) de azeite"
+    ],
+    "steps": [
+      "Grelhe o frango com sal e temperos.",
+      "Sirva com batata-doce e legumes.",
+      "Tempere com azeite."
+    ]
+  },
+  {
+    "id": "lch_beef_rice_beans_salad",
+    "mealType": "lunch",
+    "title": "Carne magra com arroz, feijão e salada",
+    "kcal": 650,
+    "protein_g": 40,
+    "carbs_g": 78,
+    "fat_g": 18,
+    "ingredients": [
+      "150g de carne magra",
+      "1/2 xícara de arroz cozido",
+      "1/2 concha de feijão",
+      "Salada variada"
+    ],
+    "steps": [
+      "Grelhe a carne e ajuste o sal.",
+      "Sirva com arroz, feijão e salada."
+    ]
+  },
+  {
+    "id": "lch_stroganoff_chicken_light",
+    "mealType": "lunch",
+    "title": "Strogonoff de frango (versão leve)",
+    "kcal": 620,
+    "protein_g": 42,
+    "carbs_g": 68,
+    "fat_g": 18,
+    "ingredients": [
+      "150g de frango em cubos",
+      "Molho de tomate",
+      "Iogurte natural (no lugar do creme)",
+      "1/2 xícara de arroz cozido"
+    ],
+    "steps": [
+      "Doure o frango e adicione molho de tomate.",
+      "Finalize com iogurte e aqueça sem ferver.",
+      "Sirva com arroz."
+    ]
+  },
+  {
+    "id": "lch_quinoa_turkey_bowl",
+    "mealType": "lunch",
+    "title": "Bowl de quinoa com frango e legumes",
+    "kcal": 590,
+    "protein_g": 38,
+    "carbs_g": 62,
+    "fat_g": 18,
+    "ingredients": [
+      "1/2 xícara de quinoa cozida",
+      "140g de frango desfiado",
+      "Legumes (pepino, cenoura, tomate)",
+      "Azeite e limão"
+    ],
+    "steps": [
+      "Monte a base com quinoa.",
+      "Adicione frango e legumes.",
+      "Tempere com azeite e limão."
+    ]
+  },
+  {
+    "id": "lch_lentils_rice_egg",
+    "mealType": "lunch",
+    "title": "Lentilha com arroz e ovos",
+    "kcal": 640,
+    "protein_g": 28,
+    "carbs_g": 90,
+    "fat_g": 16,
+    "ingredients": [
+      "1 porção de lentilha cozida",
+      "1/2 xícara de arroz cozido",
+      "2 ovos",
+      "Salada (opcional)"
+    ],
+    "steps": [
+      "Cozinhe a lentilha com temperos.",
+      "Prepare os ovos e sirva com arroz."
+    ]
+  },
+  {
+    "id": "lch_tilapia_puree_salad",
+    "mealType": "lunch",
+    "title": "Tilápia assada com purê e salada",
+    "kcal": 580,
+    "protein_g": 40,
+    "carbs_g": 55,
+    "fat_g": 20,
+    "ingredients": [
+      "170g de tilápia",
+      "Purê (batata ou mandioquinha)",
+      "Salada verde"
+    ],
+    "steps": [
+      "Asse a tilápia com limão e sal.",
+      "Prepare o purê e sirva com salada."
+    ]
+  },
+  {
+    "id": "lch_pork_loin_rice_beans",
+    "mealType": "lunch",
+    "title": "Lombo suíno com arroz e feijão",
+    "kcal": 650,
+    "protein_g": 38,
+    "carbs_g": 78,
+    "fat_g": 20,
+    "ingredients": [
+      "150g de lombo suíno",
+      "1/2 xícara de arroz cozido",
+      "1/2 concha de feijão",
+      "Salada"
+    ],
+    "steps": [
+      "Grelhe o lombo e ajuste temperos.",
+      "Sirva com arroz, feijão e salada."
+    ]
+  },
+  {
+    "id": "lch_ground_beef_pasta_integral",
+    "mealType": "lunch",
+    "title": "Macarrão integral com carne moída",
+    "kcal": 650,
+    "protein_g": 36,
+    "carbs_g": 78,
+    "fat_g": 20,
+    "ingredients": [
+      "1 prato de macarrão integral cozido",
+      "120g de patinho moído",
+      "Molho de tomate",
+      "Manjericão (opcional)"
+    ],
+    "steps": [
+      "Refogue a carne e adicione o molho de tomate.",
+      "Misture ao macarrão e finalize com manjericão."
+    ]
+  },
+  {
+    "id": "lch_shredded_chicken_potato",
+    "mealType": "lunch",
+    "title": "Frango desfiado com batata e salada",
+    "kcal": 610,
+    "protein_g": 42,
+    "carbs_g": 65,
+    "fat_g": 18,
+    "ingredients": [
+      "140g de frango desfiado",
+      "250g de batata cozida",
+      "Salada variada",
+      "Azeite"
+    ],
+    "steps": [
+      "Monte o prato com frango, batata e salada.",
+      "Tempere com azeite e sal."
+    ]
+  },
+  {
+    "id": "lch_salad_chicken_chickpeas",
+    "mealType": "lunch",
+    "title": "Salada reforçada com frango e grão-de-bico",
+    "kcal": 590,
+    "protein_g": 42,
+    "carbs_g": 50,
+    "fat_g": 22,
+    "ingredients": [
+      "120g de frango",
+      "1/2 xícara de grão-de-bico",
+      "Folhas, tomate e pepino",
+      "Azeite e limão"
+    ],
+    "steps": [
+      "Misture folhas, legumes e grão-de-bico.",
+      "Adicione o frango e tempere."
+    ]
+  },
+  {
+    "id": "lch_veg_chickpea_bowl",
+    "mealType": "lunch",
+    "title": "Bowl vegetariano de grão-de-bico",
+    "kcal": 610,
+    "protein_g": 22,
+    "carbs_g": 80,
+    "fat_g": 20,
+    "ingredients": [
+      "1 xícara de grão-de-bico cozido",
+      "Arroz (opcional)",
+      "Legumes (tomate, pepino)",
+      "Azeite"
+    ],
+    "steps": [
+      "Monte o bowl com grão-de-bico e legumes.",
+      "Tempere com azeite e limão."
+    ]
+  },
+  {
+    "id": "lch_tofu_rice_veg",
+    "mealType": "lunch",
+    "title": "Tofu grelhado com arroz e legumes",
+    "kcal": 600,
+    "protein_g": 26,
+    "carbs_g": 72,
+    "fat_g": 20,
+    "ingredients": [
+      "200g de tofu",
+      "1/2 xícara de arroz cozido",
+      "Legumes no vapor",
+      "Molho shoyu light (opcional)"
+    ],
+    "steps": [
+      "Grelhe o tofu e ajuste temperos.",
+      "Sirva com arroz e legumes."
+    ]
+  },
+  {
+    "id": "lch_sardine_rice_salad",
+    "mealType": "lunch",
+    "title": "Sardinha com arroz e salada",
+    "kcal": 630,
+    "protein_g": 34,
+    "carbs_g": 74,
+    "fat_g": 22,
+    "ingredients": [
+      "1 lata de sardinha (escorrida)",
+      "1/2 xícara de arroz cozido",
+      "Salada variada",
+      "Limão"
+    ],
+    "steps": [
+      "Aqueça a sardinha e ajuste temperos com limão.",
+      "Sirva com arroz e salada."
+    ]
+  },
+  {
+    "id": "lch_burrito_bowl",
+    "mealType": "lunch",
+    "title": "Bowl estilo burrito (arroz, feijão e frango)",
+    "kcal": 670,
+    "protein_g": 42,
+    "carbs_g": 86,
+    "fat_g": 18,
+    "ingredients": [
+      "1/2 xícara de arroz",
+      "1/2 concha de feijão",
+      "120g de frango",
+      "Milho e tomate"
+    ],
+    "steps": [
+      "Monte o bowl com arroz e feijão.",
+      "Adicione frango e finalize com milho e tomate."
+    ]
+  },
+  {
+    "id": "lch_beef_stew_pumpkin",
+    "mealType": "lunch",
+    "title": "Carne de panela com abóbora",
+    "kcal": 620,
+    "protein_g": 38,
+    "carbs_g": 58,
+    "fat_g": 24,
+    "ingredients": [
+      "160g de carne magra",
+      "Abóbora em cubos",
+      "Cebola e alho",
+      "Sal e temperos"
+    ],
+    "steps": [
+      "Cozinhe a carne até ficar macia.",
+      "Adicione a abóbora e cozinhe até desmanchar."
+    ]
+  },
+  {
+    "id": "lch_chicken_rice_veg",
+    "mealType": "lunch",
+    "title": "Frango com arroz e legumes salteados",
+    "kcal": 640,
+    "protein_g": 44,
+    "carbs_g": 76,
+    "fat_g": 16,
+    "ingredients": [
+      "150g de frango",
+      "1/2 xícara de arroz cozido",
+      "Legumes (brócolis, cenoura, pimentão)",
+      "Azeite"
+    ],
+    "steps": [
+      "Grelhe o frango e salteie os legumes.",
+      "Sirva com arroz."
+    ]
+  },
+  {
+    "id": "lch_egg_rice_beans_salad",
+    "mealType": "lunch",
+    "title": "Arroz, feijão e omelete",
+    "kcal": 640,
+    "protein_g": 26,
+    "carbs_g": 88,
+    "fat_g": 18,
+    "ingredients": [
+      "1/2 xícara de arroz cozido",
+      "1/2 concha de feijão",
+      "3 ovos",
+      "Salada (opcional)"
+    ],
+    "steps": [
+      "Prepare a omelete e ajuste temperos.",
+      "Sirva com arroz e feijão."
+    ]
+  },
+  {
+    "id": "lch_shrimp_rice_salad",
+    "mealType": "lunch",
+    "title": "Camarão com arroz e salada",
+    "kcal": 620,
+    "protein_g": 36,
+    "carbs_g": 78,
+    "fat_g": 16,
+    "ingredients": [
+      "160g de camarão",
+      "1/2 xícara de arroz cozido",
+      "Salada verde",
+      "Alho e limão"
+    ],
+    "steps": [
+      "Salteie o camarão com alho e limão.",
+      "Sirva com arroz e salada."
+    ]
+  },
+  {
+    "id": "din_pumpkin_chicken_soup",
+    "mealType": "dinner",
+    "title": "Caldo de abóbora com frango",
+    "kcal": 470,
+    "protein_g": 34,
+    "carbs_g": 40,
+    "fat_g": 18,
+    "ingredients": [
+      "Abóbora cozida",
+      "120g de frango desfiado",
+      "Cebola e alho",
+      "Sal e pimenta"
+    ],
+    "steps": [
+      "Bata a abóbora cozida com água/caldo.",
+      "Aqueça com frango desfiado e temperos."
+    ]
+  },
+  {
+    "id": "din_salad_tuna_chickpeas",
+    "mealType": "dinner",
+    "title": "Salada de atum com grão-de-bico",
+    "kcal": 520,
+    "protein_g": 34,
+    "carbs_g": 42,
+    "fat_g": 22,
+    "ingredients": [
+      "1 lata de atum (escorrido)",
+      "1/2 xícara de grão-de-bico",
+      "Folhas, tomate e pepino",
+      "Azeite e limão"
+    ],
+    "steps": [
+      "Misture folhas, legumes e grão-de-bico.",
+      "Adicione o atum e tempere."
+    ]
+  },
+  {
+    "id": "din_wrap_chicken",
+    "mealType": "dinner",
+    "title": "Wrap integral de frango",
+    "kcal": 520,
+    "protein_g": 34,
+    "carbs_g": 54,
+    "fat_g": 18,
+    "ingredients": [
+      "1 wrap integral",
+      "120g de frango desfiado",
+      "Alface e tomate",
+      "Molho iogurte (opcional)"
+    ],
+    "steps": [
+      "Monte o wrap com frango e salada.",
+      "Enrole e sirva."
+    ]
+  },
+  {
+    "id": "din_rice_beans_chicken",
+    "mealType": "dinner",
+    "title": "Arroz, feijão e frango",
+    "kcal": 620,
+    "protein_g": 40,
+    "carbs_g": 78,
+    "fat_g": 14,
+    "ingredients": [
+      "1/2 xícara de arroz cozido",
+      "1/2 concha de feijão",
+      "120g de frango",
+      "Salada (opcional)"
+    ],
+    "steps": [
+      "Grelhe o frango e ajuste temperos.",
+      "Sirva com arroz, feijão e salada."
+    ]
+  },
+  {
+    "id": "din_omelette_cheese_tomato",
+    "mealType": "dinner",
+    "title": "Omelete com queijo e tomate",
+    "kcal": 460,
+    "protein_g": 30,
+    "carbs_g": 10,
+    "fat_g": 32,
+    "ingredients": [
+      "3 ovos",
+      "1 fatia de queijo minas",
+      "Tomate em cubos",
+      "Sal e pimenta"
+    ],
+    "steps": [
+      "Bata os ovos e adicione tomate.",
+      "Cozinhe na frigideira e adicione o queijo.",
+      "Dobre e sirva."
+    ]
+  },
+  {
+    "id": "din_yakisoba_chicken_light",
+    "mealType": "dinner",
+    "title": "Yakisoba de frango (caseiro)",
+    "kcal": 620,
+    "protein_g": 34,
+    "carbs_g": 78,
+    "fat_g": 18,
+    "ingredients": [
+      "Macarrão",
+      "120g de frango",
+      "Legumes (repolho, cenoura, brócolis)",
+      "Shoyu light (opcional)"
+    ],
+    "steps": [
+      "Cozinhe o macarrão.",
+      "Salteie frango e legumes, misture ao macarrão e finalize."
+    ]
+  },
+  {
+    "id": "din_grilled_fish_veg",
+    "mealType": "dinner",
+    "title": "Peixe grelhado com legumes",
+    "kcal": 520,
+    "protein_g": 40,
+    "carbs_g": 30,
+    "fat_g": 24,
+    "ingredients": [
+      "170g de peixe",
+      "Legumes no vapor",
+      "Azeite e limão"
+    ],
+    "steps": [
+      "Grelhe o peixe com limão e sal.",
+      "Sirva com legumes e um fio de azeite."
+    ]
+  },
+  {
+    "id": "din_beef_veg_stirfry",
+    "mealType": "dinner",
+    "title": "Carne salteada com legumes",
+    "kcal": 560,
+    "protein_g": 38,
+    "carbs_g": 28,
+    "fat_g": 32,
+    "ingredients": [
+      "160g de carne magra",
+      "Legumes (brócolis, cenoura, pimentão)",
+      "Alho e cebola"
+    ],
+    "steps": [
+      "Salteie a carne em tiras.",
+      "Junte legumes e cozinhe até ficarem al dente."
+    ]
+  },
+  {
+    "id": "din_pasta_tuna",
+    "mealType": "dinner",
+    "title": "Macarrão com atum e tomate",
+    "kcal": 610,
+    "protein_g": 34,
+    "carbs_g": 78,
+    "fat_g": 16,
+    "ingredients": [
+      "Macarrão",
+      "1 lata de atum (escorrida)",
+      "Molho de tomate",
+      "Cebola (opcional)"
+    ],
+    "steps": [
+      "Aqueça o molho e misture o atum.",
+      "Misture ao macarrão e sirva."
+    ]
+  },
+  {
+    "id": "din_chicken_cauliflower",
+    "mealType": "dinner",
+    "title": "Frango com creme de couve-flor",
+    "kcal": 520,
+    "protein_g": 44,
+    "carbs_g": 22,
+    "fat_g": 28,
+    "ingredients": [
+      "150g de frango",
+      "Couve-flor cozida",
+      "Alho",
+      "Sal e pimenta"
+    ],
+    "steps": [
+      "Bata a couve-flor cozida com temperos até virar creme.",
+      "Grelhe o frango e sirva com o creme."
+    ]
+  },
+  {
+    "id": "din_savory_pancake",
+    "mealType": "dinner",
+    "title": "Panqueca salgada de frango",
+    "kcal": 590,
+    "protein_g": 40,
+    "carbs_g": 62,
+    "fat_g": 18,
+    "ingredients": [
+      "Massa de panqueca (caseira)",
+      "120g de frango desfiado",
+      "Molho de tomate",
+      "Queijo (opcional)"
+    ],
+    "steps": [
+      "Recheie a panqueca com frango.",
+      "Cubra com molho e aqueça."
+    ]
+  },
+  {
+    "id": "din_cuscuz_fish",
+    "mealType": "dinner",
+    "title": "Cuscuz com peixe desfiado",
+    "kcal": 590,
+    "protein_g": 34,
+    "carbs_g": 78,
+    "fat_g": 14,
+    "ingredients": [
+      "1 porção de cuscuz",
+      "160g de peixe",
+      "Tomate e cebola",
+      "Cheiro-verde"
+    ],
+    "steps": [
+      "Cozinhe o peixe e desfie.",
+      "Misture ao cuscuz com tomate e cheiro-verde."
+    ]
+  },
+  {
+    "id": "din_shakshuka",
+    "mealType": "dinner",
+    "title": "Ovos ao molho de tomate (shakshuka)",
+    "kcal": 520,
+    "protein_g": 26,
+    "carbs_g": 32,
+    "fat_g": 32,
+    "ingredients": [
+      "3 ovos",
+      "Molho de tomate caseiro",
+      "Cebola e pimentão (opcional)",
+      "Temperos"
+    ],
+    "steps": [
+      "Aqueça o molho com temperos.",
+      "Quebre os ovos por cima e cozinhe até firmar."
+    ]
+  },
+  {
+    "id": "din_chicken_burger_salad",
+    "mealType": "dinner",
+    "title": "Hambúrguer de frango com salada",
+    "kcal": 520,
+    "protein_g": 40,
+    "carbs_g": 24,
+    "fat_g": 28,
+    "ingredients": [
+      "Hambúrguer de frango (caseiro ou pronto)",
+      "Salada verde",
+      "Tomate e pepino",
+      "Azeite"
+    ],
+    "steps": [
+      "Grelhe o hambúrguer de frango.",
+      "Sirva com salada temperada."
+    ]
+  },
+  {
+    "id": "din_vegetable_soup_beans",
+    "mealType": "dinner",
+    "title": "Sopa de legumes com feijão",
+    "kcal": 520,
+    "protein_g": 22,
+    "carbs_g": 78,
+    "fat_g": 10,
+    "ingredients": [
+      "Legumes (abóbora, cenoura, chuchu)",
+      "1/2 concha de feijão",
+      "Caldo caseiro",
+      "Temperos"
+    ],
+    "steps": [
+      "Cozinhe os legumes no caldo.",
+      "Adicione feijão e ajuste temperos."
+    ]
+  },
+  {
+    "id": "din_salmon_sushi_bowl",
+    "mealType": "dinner",
+    "title": "Bowl de salmão com arroz e pepino",
+    "kcal": 640,
+    "protein_g": 34,
+    "carbs_g": 78,
+    "fat_g": 20,
+    "ingredients": [
+      "150g de salmão",
+      "1/2 xícara de arroz",
+      "Pepino e cenoura",
+      "Shoyu light (opcional)"
+    ],
+    "steps": [
+      "Asse ou grelhe o salmão.",
+      "Monte o bowl com arroz e legumes e finalize."
+    ]
+  },
+  {
+    "id": "din_egg_salad_sandwich",
+    "mealType": "dinner",
+    "title": "Sanduíche de ovos (integral)",
+    "kcal": 540,
+    "protein_g": 26,
+    "carbs_g": 52,
+    "fat_g": 24,
+    "ingredients": [
+      "2 fatias de pão integral",
+      "2 ovos",
+      "Iogurte ou maionese light (1 colher)",
+      "Alface"
+    ],
+    "steps": [
+      "Cozinhe os ovos e amasse com iogurte/maionese.",
+      "Monte no pão com alface."
+    ]
+  },
+  {
+    "id": "din_quinoa_veg_eggs",
+    "mealType": "dinner",
+    "title": "Quinoa com legumes e ovos",
+    "kcal": 590,
+    "protein_g": 28,
+    "carbs_g": 68,
+    "fat_g": 22,
+    "ingredients": [
+      "1/2 xícara de quinoa cozida",
+      "Legumes (abobrinha, cenoura)",
+      "2 ovos",
+      "Azeite"
+    ],
+    "steps": [
+      "Salteie os legumes e misture com quinoa.",
+      "Adicione os ovos e sirva."
+    ]
+  },
+  {
+    "id": "snk_whey_shake",
+    "mealType": "snack",
+    "title": "Shake de proteína",
+    "kcal": 220,
+    "protein_g": 26,
+    "carbs_g": 14,
+    "fat_g": 6,
+    "ingredients": [
+      "1 scoop de proteína",
+      "250ml de água ou leite",
+      "Gelo (opcional)"
+    ],
+    "steps": [
+      "Bata ou misture tudo em coqueteleira.",
+      "Consuma gelado."
+    ]
+  },
+  {
+    "id": "snk_yogurt_chia",
+    "mealType": "snack",
+    "title": "Iogurte com chia",
+    "kcal": 220,
+    "protein_g": 16,
+    "carbs_g": 18,
+    "fat_g": 10,
+    "ingredients": [
+      "170g de iogurte natural",
+      "1 colher (sopa) de chia"
+    ],
+    "steps": [
+      "Misture a chia no iogurte e consuma."
+    ]
+  },
+  {
+    "id": "snk_apple_peanut_butter",
+    "mealType": "snack",
+    "title": "Maçã com pasta de amendoim",
+    "kcal": 240,
+    "protein_g": 6,
+    "carbs_g": 30,
+    "fat_g": 12,
+    "ingredients": [
+      "1 maçã",
+      "1 colher (sopa) de pasta de amendoim"
+    ],
+    "steps": [
+      "Fatie a maçã e consuma com pasta de amendoim."
+    ]
+  },
+  {
+    "id": "snk_carrot_hummus",
+    "mealType": "snack",
+    "title": "Cenoura com homus",
+    "kcal": 200,
+    "protein_g": 8,
+    "carbs_g": 22,
+    "fat_g": 8,
+    "ingredients": [
+      "1 cenoura em palitos",
+      "3 colheres (sopa) de homus"
+    ],
+    "steps": [
+      "Corte a cenoura em palitos.",
+      "Consuma com homus."
+    ]
+  },
+  {
+    "id": "snk_cheese_tomato",
+    "mealType": "snack",
+    "title": "Queijo minas com tomate",
+    "kcal": 220,
+    "protein_g": 14,
+    "carbs_g": 10,
+    "fat_g": 14,
+    "ingredients": [
+      "60g de queijo minas",
+      "1 tomate",
+      "Orégano"
+    ],
+    "steps": [
+      "Fatie o queijo e o tomate.",
+      "Finalize com orégano e sal a gosto."
+    ]
+  },
+  {
+    "id": "snk_tapioca_small_cheese",
+    "mealType": "snack",
+    "title": "Tapioca pequena com queijo",
+    "kcal": 260,
+    "protein_g": 10,
+    "carbs_g": 34,
+    "fat_g": 10,
+    "ingredients": [
+      "1 colher (sopa) cheia de goma de tapioca",
+      "1 fatia de queijo minas"
+    ],
+    "steps": [
+      "Prepare uma tapioca pequena na frigideira.",
+      "Recheie com queijo e dobre."
+    ]
+  },
+  {
+    "id": "snk_protein_bar",
+    "mealType": "snack",
+    "title": "Barra de proteína",
+    "kcal": 220,
+    "protein_g": 18,
+    "carbs_g": 20,
+    "fat_g": 8,
+    "ingredients": [
+      "1 barra de proteína (industrializada)"
+    ],
+    "steps": [
+      "Consumir como lanche."
+    ]
+  },
+  {
+    "id": "snk_cottage_pineapple",
+    "mealType": "snack",
+    "title": "Cottage com abacaxi",
+    "kcal": 210,
+    "protein_g": 16,
+    "carbs_g": 26,
+    "fat_g": 6,
+    "ingredients": [
+      "120g de cottage",
+      "1 porção de abacaxi"
+    ],
+    "steps": [
+      "Misture cottage com abacaxi em cubos."
+    ]
+  },
+  {
+    "id": "snk_oat_banana_cookie",
+    "mealType": "snack",
+    "title": "Biscoito de banana e aveia (caseiro)",
+    "kcal": 240,
+    "protein_g": 6,
+    "carbs_g": 38,
+    "fat_g": 8,
+    "ingredients": [
+      "1 banana",
+      "40g de aveia",
+      "Canela (opcional)"
+    ],
+    "steps": [
+      "Misture banana amassada com aveia.",
+      "Asse por 12–15 min até dourar."
+    ]
+  },
+  {
+    "id": "snk_milk_cocoa",
+    "mealType": "snack",
+    "title": "Leite com cacau",
+    "kcal": 210,
+    "protein_g": 12,
+    "carbs_g": 24,
+    "fat_g": 8,
+    "ingredients": [
+      "250ml de leite",
+      "1 colher (chá) de cacau em pó"
+    ],
+    "steps": [
+      "Misture o cacau no leite e aqueça, se desejar."
+    ]
+  },
+  {
+    "id": "snk_nuts_raisins",
+    "mealType": "snack",
+    "title": "Mix de castanhas com uva-passa",
+    "kcal": 240,
+    "protein_g": 6,
+    "carbs_g": 18,
+    "fat_g": 16,
+    "ingredients": [
+      "15g de castanhas",
+      "10g de uva-passa"
+    ],
+    "steps": [
+      "Misture e consuma em porção controlada."
+    ]
+  },
+  {
+    "id": "snk_small_sandwich",
+    "mealType": "snack",
+    "title": "Sanduíche pequeno de peito de peru",
+    "kcal": 260,
+    "protein_g": 18,
+    "carbs_g": 30,
+    "fat_g": 8,
+    "ingredients": [
+      "1 pão integral pequeno",
+      "2 fatias de peito de peru",
+      "Alface e tomate"
+    ],
+    "steps": [
+      "Monte o sanduíche e consuma."
+    ]
+  },
+  {
+    "id": "snk_egg_toast",
+    "mealType": "snack",
+    "title": "Torrada com ovo",
+    "kcal": 260,
+    "protein_g": 14,
+    "carbs_g": 24,
+    "fat_g": 12,
+    "ingredients": [
+      "2 torradas integrais",
+      "1 ovo",
+      "Sal e pimenta"
+    ],
+    "steps": [
+      "Prepare o ovo mexido ou cozido.",
+      "Sirva com as torradas."
+    ]
+  },
+  {
+    "id": "snk_fruit_salad",
+    "mealType": "snack",
+    "title": "Salada de frutas",
+    "kcal": 200,
+    "protein_g": 4,
+    "carbs_g": 48,
+    "fat_g": 2,
+    "ingredients": [
+      "Frutas variadas",
+      "Limão (opcional)"
+    ],
+    "steps": [
+      "Corte as frutas e misture.",
+      "Finalize com limão, se desejar."
+    ]
+  },
+  {
+    "id": "snk_greek_yogurt_honey",
+    "mealType": "snack",
+    "title": "Iogurte grego com mel",
+    "kcal": 230,
+    "protein_g": 16,
+    "carbs_g": 26,
+    "fat_g": 8,
+    "ingredients": [
+      "170g de iogurte grego",
+      "1 colher (chá) de mel"
+    ],
+    "steps": [
+      "Misture o mel no iogurte e consuma."
+    ]
+  },
+  {
+    "id": "snk_cheese_crackers",
+    "mealType": "snack",
+    "title": "Queijo com biscoitos integrais",
+    "kcal": 260,
+    "protein_g": 12,
+    "carbs_g": 28,
+    "fat_g": 12,
+    "ingredients": [
+      "60g de queijo branco",
+      "4 biscoitos integrais"
+    ],
+    "steps": [
+      "Sirva o queijo com os biscoitos."
+    ]
+  },
+  {
+    "id": "snk_pear_yogurt",
+    "mealType": "snack",
+    "title": "Pera com iogurte natural",
+    "kcal": 210,
+    "protein_g": 10,
+    "carbs_g": 32,
+    "fat_g": 4,
+    "ingredients": [
+      "1 pera",
+      "170g de iogurte natural"
+    ],
+    "steps": [
+      "Corte a pera e consuma com iogurte."
+    ]
+  },
+  {
+    "id": "snk_brazil_nuts_portion",
+    "mealType": "snack",
+    "title": "Castanha-do-pará (porção)",
+    "kcal": 200,
+    "protein_g": 4,
+    "carbs_g": 4,
+    "fat_g": 20,
+    "ingredients": [
+      "20g de castanha-do-pará"
+    ],
+    "steps": [
+      "Consumir em porção controlada."
+    ]
+  }
+]

@@ -15,6 +15,16 @@ class OnboardingNotifier extends _$OnboardingNotifier {
   Timer? _draftTimer;
   UserProfile? _pendingDraft;
   UserProfile? _lastSavedDraft;
+  Future<void>? _calculationFuture;
+  Future<void>? _persistCompletionFuture;
+  bool _calculationCompleted = false;
+  bool _completionPersisted = false;
+
+  void _logOnboardingSignal(String event) {
+    if (DebugFlags.canVerbose) {
+      debugPrint(event);
+    }
+  }
 
   @override
   UserProfile build() {
@@ -30,11 +40,12 @@ class OnboardingNotifier extends _$OnboardingNotifier {
       birthDate: DateTime(now.year - 30, 1, 1),
       height: 170,
       currentWeight: 70,
+      startWeight: 70,
       targetWeight: 70,
       weeklyGoal: 0,
       activityLevel: ActivityLevel.sedentary,
       mainGoal: MainGoal.maintain,
-      dietaryPreference: DietaryPreference.classic,
+      dietaryPreference: DietaryPreference.balanced,
       sleepDuration: SleepDuration.sevenToEight,
       waterIntake: WaterIntake.oneToTwoL,
       badHabits: const [],
@@ -59,7 +70,10 @@ class OnboardingNotifier extends _$OnboardingNotifier {
     try {
       final isar = ref.read(isarProvider);
       final repository = ProfileRepository(isar);
-      final profile = await repository.getProfile();
+      final profile = await repository.getProfile().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => null,
+      );
       if (profile != null) {
         state = profile;
       }
@@ -89,6 +103,7 @@ class OnboardingNotifier extends _$OnboardingNotifier {
       birthDate: birthDate ?? state.birthDate,
       height: height ?? state.height,
       currentWeight: currentWeight ?? state.currentWeight,
+      startWeight: currentWeight ?? state.startWeight,
     );
   }
 
@@ -180,7 +195,14 @@ class OnboardingNotifier extends _$OnboardingNotifier {
     try {
       final isar = ref.read(isarProvider);
       final repository = ProfileRepository(isar);
-      await repository.saveProfile(draft);
+      await repository
+          .saveProfile(draft)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw TimeoutException('ProfileRepository.saveProfile timeout');
+            },
+          );
       _lastSavedDraft = draft;
     } catch (e) {
       if (DebugFlags.canVerbose) {
@@ -190,21 +212,53 @@ class OnboardingNotifier extends _$OnboardingNotifier {
   }
 
   Future<void> persistCompletion() async {
-    if (DebugFlags.canVerbose) {
-      debugPrint(
-        'DEBUG: OnboardingNotifier.persistCompletion (before) isOnboardingCompleted=${state.isOnboardingCompleted}',
-      );
+    if (_completionPersisted) return;
+    if (_persistCompletionFuture != null) {
+      await _persistCompletionFuture;
+      return;
     }
-    state = state.copyWith(isOnboardingCompleted: true);
-    await saveDraft(immediate: true);
-    if (DebugFlags.canVerbose) {
-      debugPrint(
-        'DEBUG: OnboardingNotifier.persistCompletion (after) isOnboardingCompleted=${state.isOnboardingCompleted}',
-      );
+
+    _persistCompletionFuture = () async {
+      _logOnboardingSignal('persist_completion_start');
+      if (!state.isOnboardingCompleted) {
+        state = state.copyWith(isOnboardingCompleted: true);
+      }
+      try {
+        await saveDraft(
+          immediate: true,
+        ).timeout(const Duration(seconds: 10), onTimeout: () => null);
+      } catch (_) {
+        // If local persistence hangs/fails, don't block the user from moving on.
+      } finally {
+        _completionPersisted = true;
+        _logOnboardingSignal('persist_completion_end');
+      }
+    }();
+
+    try {
+      await _persistCompletionFuture;
+    } finally {
+      _persistCompletionFuture = null;
     }
   }
 
   Future<void> calculateAndSave() async {
+    if (_calculationCompleted) return;
+    if (_calculationFuture != null) {
+      await _calculationFuture;
+      return;
+    }
+
+    _calculationFuture = _calculateAndSaveInternal();
+    try {
+      await _calculationFuture;
+    } finally {
+      _calculationFuture = null;
+    }
+  }
+
+  Future<void> _calculateAndSaveInternal() async {
+    _logOnboardingSignal('calculation_start');
     final calculator = NutritionCalculatorService();
 
     final age = DateTime.now().year - state.birthDate.year;
@@ -255,7 +309,9 @@ class OnboardingNotifier extends _$OnboardingNotifier {
       isOnboardingCompleted: state.isOnboardingCompleted,
     );
 
-    // Save to local storage
-    await saveDraft(immediate: true);
+    // Avoid blocking the UI on devices where Isar can be slow/hang on first run.
+    unawaited(saveDraft(immediate: true));
+    _calculationCompleted = true;
+    _logOnboardingSignal('calculation_complete');
   }
 }

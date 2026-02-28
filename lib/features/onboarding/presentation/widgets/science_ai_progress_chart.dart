@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -103,8 +101,8 @@ class _ScienceAiProgressChartPainter extends CustomPainter {
     final points = <Offset>[
       p(0.02, 0.15),
       p(0.28, 0.14),
-      p(0.62, 0.62),
-      p(0.98, 0.82),
+      p(0.62, 0.45),
+      p(0.98, 0.65),
     ];
 
     // Axis baseline.
