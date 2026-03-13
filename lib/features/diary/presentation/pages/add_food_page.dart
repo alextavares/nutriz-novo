@@ -327,8 +327,9 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
               ref.read(foodSearchNotifierProvider.notifier).loadRecents(),
             );
             ref.read(aiFoodNotifierProvider.notifier).clearResult();
-            if (sheetContext.mounted)
+            if (sheetContext.mounted) {
               Navigator.pop(sheetContext); // Fecha sheet
+            }
             if (!mounted) return;
             _showAddedSnackBar(
               pageContext: context,
@@ -488,22 +489,23 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Ajuste automático do seu dia',
+                'Seu dia já começou',
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Boa. Você registrou $foodName. Agora falta pouco para ficar no trilho.',
+                'Boa. Você registrou $foodName e agora já sabe o que falta para seguir no trilho.',
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.md),
               _InlineMessageCard(
                 icon: Icons.bolt_rounded,
-                title: 'Próximo passo (simples)',
+                title: 'Próximo passo',
                 subtitle:
-                    'Tente bater proteína hoje. Faltam ~${remainingProtein < 0 ? 0 : remainingProtein}g '
+                    'Tente incluir mais proteína nas próximas refeições. '
+                    'Ainda faltam ~${remainingProtein < 0 ? 0 : remainingProtein}g '
                     'e ~${remainingCalories < 0 ? 0 : remainingCalories} kcal.',
               ),
               const SizedBox(height: AppSpacing.md),
@@ -527,12 +529,13 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
                   onPressed: () async {
                     await analytics.logEvent('first_meal_wow_cta_tap', {
                       'meal_type': widget.mealType,
+                      'destination': 'diary',
                     });
                     if (ctx.mounted) Navigator.of(ctx).pop();
-                    if (pageContext.mounted) await pageContext.push('/premium');
+                    if (pageContext.mounted) pageContext.pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.premium,
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -540,17 +543,22 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
                     ),
                     elevation: 0,
                   ),
-                  child: const Text('Desbloquear IA por foto'),
+                  child: const Text('Continuar no diário'),
                 ),
               ),
               const SizedBox(height: AppSpacing.sm),
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
+                  onPressed: () async {
+                    await analytics.logEvent('first_meal_wow_secondary_tap', {
+                      'meal_type': widget.mealType,
+                      'destination': 'premium',
+                    });
+                    if (ctx.mounted) Navigator.of(ctx).pop();
+                    if (pageContext.mounted) await pageContext.push('/premium');
                   },
-                  child: const Text('Continuar depois'),
+                  child: const Text('Ver Premium'),
                 ),
               ),
             ],

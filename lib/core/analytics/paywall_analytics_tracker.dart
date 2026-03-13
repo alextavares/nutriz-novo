@@ -5,11 +5,13 @@ class PaywallAnalyticsTracker {
     required this.paywallId,
     required this.variant,
     required this.logEvent,
+    this.source,
   });
 
   final String paywallId;
   final PaywallVariant variant;
   final Future<void> Function(String, Map<String, Object?>) logEvent;
+  final String? source;
 
   bool _viewLogged = false;
 
@@ -17,14 +19,18 @@ class PaywallAnalyticsTracker {
     return {
       'paywall_id': paywallId,
       'paywall_variant': variant.analyticsValue,
+      if (source != null && source!.isNotEmpty) 'source': source,
       ...extra,
     };
   }
 
-  Future<void> trackPaywallView() async {
+  Future<void> trackPaywallView({String? source}) async {
     if (_viewLogged) return;
     _viewLogged = true;
-    await logEvent('paywall_view', withBase(const {}));
+    await logEvent(
+      'paywall_view',
+      withBase({if (source != null && source.isNotEmpty) 'source': source}),
+    );
   }
 
   Future<void> trackDismissed({String? source}) {

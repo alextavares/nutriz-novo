@@ -12,7 +12,7 @@ import '../../domain/entities/subscription_status.dart';
 const _premiumEntitlementId = 'premium';
 const _debugForcePro = bool.fromEnvironment(
   'NUTRIZ_DEBUG_FORCE_PRO',
-  defaultValue: true, // Forçando PRO para testes do usuário
+  defaultValue: false,
 );
 
 final revenueCatOfferingsErrorProvider = StateProvider<String?>((ref) => null);

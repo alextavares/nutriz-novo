@@ -33,6 +33,14 @@ class _QuickWeightLogCardState extends State<QuickWeightLogCard> {
   }
 
   @override
+  void didUpdateWidget(covariant QuickWeightLogCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if ((widget.currentWeight - oldWidget.currentWeight).abs() > 0.05) {
+      _tempWeight = widget.currentWeight;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final progress =
         ((widget.startWeight - _tempWeight) /

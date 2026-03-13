@@ -74,7 +74,7 @@ class UserProfile with _$UserProfile {
     @Default(<String>[]) List<String> favoriteFoodKeys,
 
     // Monetization / gating (bootstrapped growth)
-    @Default(1) int freeMealsRemaining,
+    @Default(7) int freeMealsRemaining,
     DateTime? challengeStartedAt,
     DateTime? challengeLastMealAt,
     @Default(0) int challengeMealsRemaining,

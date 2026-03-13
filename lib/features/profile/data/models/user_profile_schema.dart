@@ -100,7 +100,7 @@ class UserProfileEntity {
       carbsGrams: carbsGrams,
       fatGrams: fatGrams,
       favoriteFoodKeys: _decodeFavorites(favoriteFoodKeysJson),
-      freeMealsRemaining: freeMealsRemaining ?? 1,
+      freeMealsRemaining: freeMealsRemaining ?? 7,
       challengeStartedAt: challengeStartedAt,
       challengeLastMealAt: challengeLastMealAt,
       challengeMealsRemaining: challengeMealsRemaining ?? 0,

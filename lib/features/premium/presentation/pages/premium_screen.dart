@@ -5,9 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:flutter/services.dart';
-import 'package:nutriz/core/monetization/promo_offer.dart';
 import 'package:nutriz/core/monetization/meal_log_gate.dart';
-import 'package:nutriz/features/profile/presentation/notifiers/profile_notifier.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -30,7 +28,7 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   late final PageController _pageController;
   late final PaywallVariant _paywallVariant;
   late final PaywallAnalyticsTracker _tracker;
-  int _stepIndex = 0;
+  int _stepIndex = 2;
 
   Future<void> _handleClose() async {
     final navigator = Navigator.of(context);
@@ -44,55 +42,6 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
             paywallVariant: _paywallVariant.analyticsValue,
             source: 'close_button',
           );
-      ref
-          .read(promoOfferProvider.notifier)
-          .ensureActive(
-            duration: const Duration(minutes: 10),
-            discountPercent: 75,
-            source: 'premium_screen_close',
-          );
-      if (!mounted) return;
-
-      final profile = ref.read(profileNotifierProvider);
-      final now = DateTime.now();
-      final shouldOfferChallenge =
-          profile.freeMealsRemaining == 0 &&
-          profile.challengeMealsRemaining == 0 &&
-          ref.read(mealLogGateProvider).peekBlockReason(profile, now) ==
-              MealLogBlockReason.locked;
-
-      if (shouldOfferChallenge) {
-        final joinChallenge = await showDialog<bool>(
-          context: context,
-          builder: (ctx) {
-            return AlertDialog(
-              title: const Text('Topa um desafio de 3 dias?'),
-              content: const Text(
-                'Registre 1 refeição por dia e foque na proteína. '
-                'No dia 3, a gente te mostra uma oferta para desbloquear a IA por foto.',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(ctx).pop(false),
-                  child: const Text('Agora não'),
-                ),
-                ElevatedButton(
-                  onPressed: () => Navigator.of(ctx).pop(true),
-                  child: const Text('Começar'),
-                ),
-              ],
-            );
-          },
-        );
-
-        if (joinChallenge == true) {
-          await ref.read(mealLogGateProvider).start3DayChallenge();
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Desafio iniciado: 3 dias.')),
-          );
-        }
-      }
     }
 
     if (navigator.canPop()) {
@@ -121,20 +70,19 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
   void initState() {
     super.initState();
     _paywallVariant = ref.read(paywallVariantProvider);
-    _selectedPlan = _paywallVariant == PaywallVariant.variantA
-        ? PremiumPlan.annual
-        : PremiumPlan.monthly;
+    _selectedPlan = PremiumPlan.annual;
     _tracker = PaywallAnalyticsTracker(
       paywallId: 'premium_screen',
       variant: _paywallVariant,
+      source: 'premium_tab_entry',
       logEvent: (name, props) {
         return ref.read(analyticsServiceProvider).logEvent(name, props);
       },
     );
-    _pageController = PageController();
+    _pageController = PageController(initialPage: 2);
     Future.microtask(() {
       _tracker.trackPaywallView();
-      _tracker.logEvent('paywall_step_view', _tracker.withBase({'step': 0}));
+      _tracker.logEvent('paywall_step_view', _tracker.withBase({'step': 2}));
     });
   }
 
@@ -162,11 +110,13 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
     final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
     final offerings = offeringsAsync.asData?.value;
     final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
+    final isOfferingsLoading = offeringsAsync.isLoading;
 
     final annualLookup = _lookupForPlan(offerings, PremiumPlan.annual);
     final monthlyLookup = _lookupForPlan(offerings, PremiumPlan.monthly);
     final annualPackage = annualLookup.package;
     final monthlyPackage = monthlyLookup.package;
+    final plansUnavailable = annualPackage == null || monthlyPackage == null;
     final isLastStep = _stepIndex == 2;
 
     return Scaffold(
@@ -254,15 +204,16 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
             },
             children: [
               _PaywallStep(
-                title: 'Comece com clareza',
-                subtitle: 'Menos esforço. Mais consistência.',
+                title: 'Emagreça sem complicação.',
+                subtitle:
+                    'Registre refeições mais rápido, acompanhe sua meta e mantenha consistência todos os dias.',
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _HeroCard(isPro: subscriptionStatus.isPro),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'O Premium é feito para te dar um “próximo passo” fácil todos os dias.',
+                      'O Premium reduz o atrito no seu dia e ajuda você a manter consistência com menos esforço.',
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: AppColors.textPrimary,
@@ -278,21 +229,23 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     const SizedBox(height: AppSpacing.sm),
                     const _InlineBullet(
                       icon: Icons.bolt_rounded,
-                      title: 'Ajuste automático do dia',
-                      subtitle: 'Foco em proteína e metas — sem complicar.',
+                      title: 'Registros ilimitados',
+                      subtitle: 'Acompanhe seu dia inteiro sem travas.',
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     const _InlineBullet(
                       icon: Icons.lock_open_rounded,
-                      title: 'Sem limites para registrar refeições',
-                      subtitle: 'Registre quantas refeições quiser.',
+                      title: 'Recursos avançados',
+                      subtitle:
+                          'Tenha mais apoio para seguir calorias, proteína e consistência.',
                     ),
                   ],
                 ),
               ),
               _PaywallStep(
-                title: 'Sem pegadinhas',
-                subtitle: 'Teste grátis e controle total.',
+                title: 'Grátis x Premium',
+                subtitle:
+                    'No grátis você começa. No Premium você continua com menos esforço.',
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -311,14 +264,14 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Teste grátis (quando disponível)',
+                            'Grátis',
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            'Você pode cancelar quando quiser.',
+                            'O essencial para começar.',
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: AppColors.textSecondary,
                               fontWeight: FontWeight.w600,
@@ -326,24 +279,23 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                           ),
                           const SizedBox(height: AppSpacing.md),
                           const _InlineBullet(
-                            icon: Icons.notifications_active_rounded,
-                            title: 'Sem surpresa',
-                            subtitle:
-                                'Na hora de assinar, a loja mostra a data de renovação e você pode cancelar quando quiser.',
+                            icon: Icons.edit_rounded,
+                            title: 'Registro manual',
+                            subtitle: 'Diário, água, peso e metas básicas.',
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           const _InlineBullet(
                             icon: Icons.receipt_long_rounded,
-                            title: 'Transparência',
+                            title: 'Resumo diário básico',
                             subtitle:
-                                'Os preços e a cobrança são processados pela loja (Google/Apple).',
+                                'Veja calorias, proteína e progresso geral.',
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
-                      'Pronto para destravar a IA por foto?',
+                      'No Premium você registra mais rápido e reduz a fricção para manter o foco.',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
@@ -353,7 +305,8 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
               ),
               _PaywallStep(
                 title: 'Escolha seu plano',
-                subtitle: 'Desbloqueie tudo e siga no automático.',
+                subtitle:
+                    'Mais praticidade para registrar refeições e manter consistência.',
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -368,45 +321,46 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                     const SizedBox(height: AppSpacing.sm),
                     const _BenefitsList(),
                     const SizedBox(height: AppSpacing.lg),
-                    if (_paywallVariant == PaywallVariant.variantA) ...[
-                      _PlanTile(
-                        title: '12 meses',
-                        price: _priceLabel(annualPackage, fallback: '—'),
-                        subtitle: 'Mais popular • melhor custo',
-                        badge: 'Mais popular',
-                        isSelected: _selectedPlan == PremiumPlan.annual,
-                        onTap: () =>
-                            setState(() => _selectedPlan = PremiumPlan.annual),
+                    if (isOfferingsLoading) ...[
+                      const _OfferingsStatusCard(
+                        icon: Icons.sync_rounded,
+                        title: 'Carregando planos',
+                        message:
+                            'Estamos buscando os precos e opcoes de assinatura.',
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      _PlanTile(
-                        title: '1 mês',
-                        price: _priceLabel(monthlyPackage, fallback: '—'),
-                        subtitle: 'Para começar agora',
-                        isSelected: _selectedPlan == PremiumPlan.monthly,
-                        onTap: () =>
-                            setState(() => _selectedPlan = PremiumPlan.monthly),
+                      const SizedBox(height: AppSpacing.md),
+                    ] else if (plansUnavailable) ...[
+                      _OfferingsStatusCard(
+                        icon: Icons.info_outline_rounded,
+                        title: 'Planos indisponiveis agora',
+                        message:
+                            offeringsError ??
+                            'Nao foi possivel carregar os planos de assinatura. Verifique a configuracao do RevenueCat e os produtos da loja.',
+                        actionLabel: 'Tentar de novo',
+                        onAction: () {
+                          ref.invalidate(revenueCatOfferingsProvider);
+                        },
                       ),
-                    ] else ...[
-                      _PlanTile(
-                        title: '1 mês',
-                        price: _priceLabel(monthlyPackage, fallback: '—'),
-                        subtitle: 'Mais flexível para começar',
-                        badge: 'Sem compromisso',
-                        isSelected: _selectedPlan == PremiumPlan.monthly,
-                        onTap: () =>
-                            setState(() => _selectedPlan = PremiumPlan.monthly),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      _PlanTile(
-                        title: '12 meses',
-                        price: _priceLabel(annualPackage, fallback: '—'),
-                        subtitle: 'Melhor preço no longo prazo',
-                        isSelected: _selectedPlan == PremiumPlan.annual,
-                        onTap: () =>
-                            setState(() => _selectedPlan = PremiumPlan.annual),
-                      ),
+                      const SizedBox(height: AppSpacing.md),
                     ],
+                    _PlanTile(
+                      title: 'Plano anual',
+                      price: _priceLabel(annualPackage, fallback: '—'),
+                      subtitle: '7 dias grátis • menos de R\$ 12,50 por mês',
+                      badge: 'Melhor escolha',
+                      isSelected: _selectedPlan == PremiumPlan.annual,
+                      onTap: () =>
+                          setState(() => _selectedPlan = PremiumPlan.annual),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _PlanTile(
+                      title: 'Plano mensal',
+                      price: _priceLabel(monthlyPackage, fallback: '—'),
+                      subtitle: 'Mais flexível para começar',
+                      isSelected: _selectedPlan == PremiumPlan.monthly,
+                      onTap: () =>
+                          setState(() => _selectedPlan = PremiumPlan.monthly),
+                    ),
                     const SizedBox(height: AppSpacing.lg),
                     _SocialProofCard(),
                     const SizedBox(height: AppSpacing.lg),
@@ -435,12 +389,14 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
             title: subscriptionStatus.isPro
                 ? 'Premium ativo'
                 : isLastStep
-                ? 'Desbloquear IA por foto'
+                ? 'Desbloquear Premium'
                 : 'Continuar',
             buttonLabel: subscriptionStatus.isPro
                 ? 'OK'
                 : isLastStep
-                ? 'Ativar teste grátis'
+                ? _selectedPlan == PremiumPlan.annual
+                      ? 'Ativar 7 dias grátis'
+                      : 'Desbloquear Premium'
                 : 'Continuar',
             onPressed: () async {
               final messenger = ScaffoldMessenger.of(context);
@@ -480,11 +436,12 @@ class _PremiumScreenState extends ConsumerState<PremiumScreen> {
                   lookup: selectedLookup,
                   offeringsError: offeringsError,
                 );
-                final technicalReason = revenueCatSelectedPackageNullTechnicalReason(
-                  offerings: offerings,
-                  lookup: selectedLookup,
-                  offeringsError: offeringsError,
-                );
+                final technicalReason =
+                    revenueCatSelectedPackageNullTechnicalReason(
+                      offerings: offerings,
+                      lookup: selectedLookup,
+                      offeringsError: offeringsError,
+                    );
                 logRevenueCatRuntime(
                   'selected_package_null screen=premium_screen plan=${_selectedPlan.planId} '
                   'reason=$reason details="$technicalReason"',
@@ -593,8 +550,8 @@ enum PremiumPlan { annual, monthly }
 
 extension PremiumPlanX on PremiumPlan {
   String get label => switch (this) {
-    PremiumPlan.annual => '12 meses',
-    PremiumPlan.monthly => '1 mês',
+    PremiumPlan.annual => 'anual',
+    PremiumPlan.monthly => 'mensal',
   };
 
   String get planId => switch (this) {
@@ -643,7 +600,7 @@ class _HeroCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isPro ? 'Premium ativo' : 'Desbloqueie o Premium',
+                  isPro ? 'Premium ativo' : 'Menos atrito no seu dia',
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w800,
                   ),
@@ -652,7 +609,7 @@ class _HeroCard extends StatelessWidget {
                 Text(
                   isPro
                       ? 'Aproveite todos os recursos sem limitações.'
-                      : 'Mais consistência e resultados com recursos avançados.',
+                      : 'Registre mais rápido, acompanhe sua meta e mantenha consistência.',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                   ),
@@ -672,9 +629,18 @@ class _BenefitsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const benefits = [
-      (Icons.analytics_rounded, 'Estatísticas avançadas do diário'),
-      (Icons.camera_alt_rounded, 'Análise de refeições por foto com IA'),
-      (Icons.lock_open_rounded, 'Registros ilimitados de refeições'),
+      (
+        Icons.camera_alt_rounded,
+        'IA por foto para registrar refeições em segundos',
+      ),
+      (
+        Icons.lock_open_rounded,
+        'Registros ilimitados para acompanhar o dia inteiro',
+      ),
+      (
+        Icons.analytics_rounded,
+        'Recursos avançados para seguir proteína e calorias',
+      ),
     ];
 
     return Column(
@@ -855,25 +821,31 @@ class _SocialProofCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: List.generate(
-              5,
-              (index) => const Icon(
-                Icons.star_rounded,
+            children: [
+              const Icon(
+                Icons.shield_rounded,
                 size: 18,
                 color: AppColors.premium,
               ),
-            ),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                'Assinatura transparente',
+                style: theme.textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            '“Muito mais fácil manter consistência com o resumo e metas.”',
+            'Cancele quando quiser pela App Store ou Google Play.',
             style: theme.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            '— Avaliação verificada',
+            'Pagamento seguro. Restaurar compra disponível a qualquer momento.',
             style: theme.textTheme.bodySmall?.copyWith(
               color: AppColors.textSecondary,
             ),
@@ -993,6 +965,70 @@ class _PaywallStep extends StatelessWidget {
         const SizedBox(height: AppSpacing.lg),
         body,
       ],
+    );
+  }
+}
+
+class _OfferingsStatusCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String message;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  const _OfferingsStatusCard({
+    required this.icon,
+    required this.title,
+    required this.message,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: AppColors.textSecondary),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  title,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            message,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (actionLabel != null && onAction != null) ...[
+            const SizedBox(height: AppSpacing.md),
+            TextButton(
+              onPressed: onAction,
+              child: Text(actionLabel!),
+            ),
+          ],
+        ],
+      ),
     );
   }
 }

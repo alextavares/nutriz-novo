@@ -8,53 +8,6 @@ import '../../core/monetization/promo_offer_badge.dart';
 import '../../features/premium/presentation/providers/subscription_provider.dart';
 import 'bottom_nav_bar.dart';
 
-class _TryFreePill extends StatelessWidget {
-  final VoidCallback? onTap;
-
-  const _TryFreePill({this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(999),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-          decoration: BoxDecoration(
-            color: Colors.orange,
-            borderRadius: BorderRadius.circular(999),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.18),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
-          ),
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'TRY FREE',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 12,
-                  letterSpacing: 0.2,
-                ),
-              ),
-              SizedBox(width: 6),
-              Icon(Icons.workspace_premium, size: 16, color: Colors.white),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 /// MainScaffold with WidgetsBindingObserver to intercept the back button
 /// at the platform level, before GoRouter processes it.
 class MainScaffold extends ConsumerStatefulWidget {
@@ -136,19 +89,12 @@ class _MainScaffoldState extends ConsumerState<MainScaffold>
     final showOfferBadge = !isPro && offer.isActive;
     final bottomOffset =
         MediaQuery.of(context).padding.bottom + kBottomNavigationBarHeight + 36;
-    final topOffset = MediaQuery.of(context).padding.top + 8;
 
     return Scaffold(
       extendBody: true,
       body: Stack(
         children: [
           widget.child,
-          if (!isPro && currentIndex != 4)
-            Positioned(
-              top: topOffset,
-              right: 16,
-              child: _TryFreePill(onTap: () => context.push('/premium')),
-            ),
           if (showOfferBadge)
             Positioned(
               right: 16,

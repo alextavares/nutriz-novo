@@ -42,6 +42,7 @@ class NutrizBottomNavBar extends StatelessWidget {
                   child: _NavBarItem(
                     icon: Icons.grid_view_rounded,
                     label: 'Diário',
+                    isPrimary: true,
                     isSelected: currentIndex == 0,
                     onTap: () => onTap(0),
                   ),
@@ -92,20 +93,24 @@ class _NavBarItem extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onTap;
-  final bool isPremium;
+  final bool isPrimary;
 
   const _NavBarItem({
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
-    this.isPremium = false,
+    this.isPrimary = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final selectedColor = isPremium ? AppColors.premium : AppColors.primary;
-    final color = isSelected ? selectedColor : AppColors.textHint;
+    final selectedColor = AppColors.primary;
+    final color = isSelected
+        ? selectedColor
+        : isPrimary
+        ? AppColors.textPrimary.withValues(alpha: 0.72)
+        : AppColors.textHint;
 
     return GestureDetector(
       onTap: onTap,
@@ -116,13 +121,15 @@ class _NavBarItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? selectedColor.withValues(alpha: 0.12)
+              : isPrimary
+              ? AppColors.primary.withValues(alpha: 0.04)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 24),
+            Icon(icon, color: color, size: isPrimary ? 25 : 24),
             const SizedBox(height: 4),
             Text(
               label,
@@ -131,7 +138,9 @@ class _NavBarItem extends StatelessWidget {
               softWrap: false,
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: isSelected || isPrimary
+                    ? FontWeight.w700
+                    : FontWeight.w500,
                 color: color,
               ),
             ),

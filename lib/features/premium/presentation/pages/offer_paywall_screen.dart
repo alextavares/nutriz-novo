@@ -4,22 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../../core/analytics/analytics_providers.dart';
 import '../../../../core/analytics/paywall_analytics_tracker.dart';
-import '../../../../core/monetization/promo_offer.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../domain/entities/paywall_variant.dart';
 import '../providers/paywall_variant_provider.dart';
 import '../providers/subscription_provider.dart';
-
-String _formatCountdown(Duration duration) {
-  final totalSeconds = duration.inSeconds.clamp(0, 24 * 60 * 60);
-  final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
-  final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
-  return '$minutes:$seconds';
-}
 
 class OfferPaywallScreen extends ConsumerStatefulWidget {
   final VoidCallback? onClose;
@@ -44,20 +37,12 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
     _tracker = PaywallAnalyticsTracker(
       paywallId: 'offer_paywall_screen',
       variant: _paywallVariant,
+      source: 'offer_contextual',
       logEvent: (name, props) {
         return ref.read(analyticsServiceProvider).logEvent(name, props);
       },
     );
-    Future.microtask(() {
-      _tracker.trackPaywallView();
-    });
-    ref
-        .read(promoOfferProvider.notifier)
-        .ensureActive(
-          duration: const Duration(minutes: 10),
-          discountPercent: 75,
-          source: 'offer_paywall_view',
-        );
+    Future.microtask(_tracker.trackPaywallView);
   }
 
   Future<void> _handleClose() async {
@@ -243,6 +228,7 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
     final offerings = offeringsAsync.asData?.value;
     final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
@@ -254,140 +240,304 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
     final price = annualPackage?.storeProduct.priceString ?? '—';
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.sm,
+                AppSpacing.sm,
+              ),
               child: Row(
                 children: [
-                  const Spacer(),
                   Text(
-                    'Assine o PRO',
-                    style: GoogleFonts.inter(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 16,
+                    'Oferta especial',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                   const Spacer(),
+                  TextButton(
+                    onPressed: _isRestoring ? null : _handleRestore,
+                    child: _isRestoring
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Restaurar'),
+                  ),
                   IconButton(
                     tooltip: 'Fechar',
                     onPressed: _handleClose,
-                    icon: const Icon(Icons.close),
+                    icon: const Icon(Icons.close_rounded),
                   ),
                 ],
               ),
             ),
             Expanded(
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.green.withValues(alpha: 0.12),
-                          shape: BoxShape.circle,
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.md,
+                  120,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Seu próximo passo, sem complicação',
+                      style: theme.textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'Desbloqueie o Premium para continuar com mais praticidade e consistência.',
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.primary.withValues(alpha: 0.10),
+                            AppColors.premium.withValues(alpha: 0.18),
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.schedule,
-                          size: 36,
-                          color: Colors.green,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl,
+                        ),
+                        border: Border.all(
+                          color: Colors.black.withValues(alpha: 0.06),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Pare de Digitar Calorias',
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        'Desbloqueie o Escaneamento Infinito por IA. Reconhecimento instantâneo para qualquer prato.',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 26,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        price,
-                        style: GoogleFonts.inter(
-                          color: Colors.green[700],
-                          fontWeight: FontWeight.w900,
-                          fontSize: 28,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        'COMEÇAR MINHA DIETA FÁCIL',
-                        style: GoogleFonts.inter(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Corra! A oferta termina em',
-                        style: GoogleFonts.inter(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                      if (annualPackage == null && offeringsError != null) ...[
-                        const SizedBox(height: 10),
-                        Text(
-                          'Planos indisponíveis no momento.',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.inter(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.redAccent,
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 8),
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final now =
-                              ref
-                                  .watch(promoOfferTickerProvider)
-                                  .asData
-                                  ?.value ??
-                              DateTime.now();
-                          final remaining = ref
-                              .watch(promoOfferProvider)
-                              .remaining(now);
-                          return Text(
-                            _formatCountdown(remaining),
-                            style: GoogleFonts.robotoMono(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 44,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: BoxDecoration(
+                              color: AppColors.premium.withValues(alpha: 0.22),
+                              borderRadius: BorderRadius.circular(16),
                             ),
-                          );
-                        },
+                            child: const Icon(
+                              Icons.workspace_premium_rounded,
+                              color: AppColors.premium,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Oferta contextual do anual',
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  'Ative o plano anual e aproveite 7 dias grátis para continuar sem travas.',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    const _OfferBenefitTile(
+                      icon: Icons.camera_alt_rounded,
+                      title: 'Registre por foto com IA',
+                      subtitle:
+                          'Mais rapidez para registrar refeições no dia a dia.',
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    const _OfferBenefitTile(
+                      icon: Icons.lock_open_rounded,
+                      title: 'Acompanhe seu dia sem limites',
+                      subtitle:
+                          'Continue registrando refeições sem travas no fluxo principal.',
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    const _OfferBenefitTile(
+                      icon: Icons.insights_rounded,
+                      title: 'Mais consistência com menos esforço',
+                      subtitle:
+                          'Tenha recursos avançados para seguir proteína, calorias e rotina.',
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl,
+                        ),
+                        border: Border.all(
+                          color: AppColors.primary.withValues(alpha: 0.35),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Plano anual',
+                                      style: theme.textTheme.titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                    ),
+                                    const SizedBox(width: AppSpacing.sm),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.premium.withValues(
+                                          alpha: 0.18,
+                                        ),
+                                        borderRadius: BorderRadius.circular(
+                                          999,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Melhor escolha',
+                                        style: theme.textTheme.labelSmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  '7 dias grátis • menos de R\$ 12,50 por mês',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: AppColors.textSecondary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Text(
+                            price,
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (annualPackage == null && offeringsError != null) ...[
+                      const SizedBox(height: AppSpacing.md),
+                      Text(
+                        'Planos indisponíveis no momento.',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.redAccent,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
-                  ),
+                    const SizedBox(height: AppSpacing.lg),
+                    Container(
+                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(
+                          AppSpacing.radiusXl,
+                        ),
+                        border: Border.all(
+                          color: Colors.black.withValues(alpha: 0.06),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.shield_rounded,
+                                size: 18,
+                                color: AppColors.premium,
+                              ),
+                              const SizedBox(width: AppSpacing.xs),
+                              Text(
+                                'Assinatura transparente',
+                                style: theme.textTheme.labelLarge?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            'Cancele quando quiser pela App Store ou Google Play.',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            'Pagamento seguro. Restaurar compra disponível a qualquer momento.',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: Column(
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
+            SafeArea(
+              top: false,
+              minimum: const EdgeInsets.all(AppSpacing.md),
+              child: Container(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.10),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.black.withValues(alpha: 0.06),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton(
                       onPressed: (_isPurchasing || _isRestoring)
                           ? null
                           : () => _handlePurchase(
@@ -397,67 +547,115 @@ class _OfferPaywallScreenState extends ConsumerState<OfferPaywallScreen> {
                               offeringsError: offeringsError,
                             ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor: AppColors.primary,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: AppSpacing.md,
+                        ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusLg,
+                          ),
                         ),
                       ),
                       child: _isPurchasing
                           ? const SizedBox(
-                              height: 18,
-                              width: 18,
+                              width: 20,
+                              height: 20,
                               child: CircularProgressIndicator(
-                                strokeWidth: 2,
                                 color: Colors.white,
+                                strokeWidth: 2,
                               ),
                             )
-                          : Text(
-                              'APROVEITAR AGORA',
-                              style: GoogleFonts.inter(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 14,
-                                letterSpacing: 0.4,
-                              ),
-                            ),
+                          : const Text('Ativar 7 dias grátis'),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                        onPressed: () => context.push('/legal/privacy'),
-                        child: const Text('Privacidade'),
-                      ),
-                      const Text(' | '),
-                      TextButton(
-                        onPressed: () => context.push('/legal/terms'),
-                        child: const Text('Termos'),
-                      ),
-                      const Text(' | '),
-                      TextButton(
-                        onPressed: (_isPurchasing || _isRestoring)
-                            ? null
-                            : _handleRestore,
-                        child: _isRestoring
-                            ? const SizedBox(
-                                height: 14,
-                                width: 14,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Text('Restaurar'),
-                      ),
-                    ],
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.xs),
+                    TextButton(
+                      onPressed: (_isPurchasing || _isRestoring)
+                          ? null
+                          : _handleClose,
+                      child: const Text('Agora não'),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () => context.push('/legal/privacy'),
+                          child: const Text('Privacidade'),
+                        ),
+                        const Text(' | '),
+                        TextButton(
+                          onPressed: () => context.push('/legal/terms'),
+                          child: const Text('Termos'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _OfferBenefitTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _OfferBenefitTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

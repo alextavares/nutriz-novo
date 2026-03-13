@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:nutriz/features/profile/domain/models/user_profile.dart';
 import 'package:nutriz/features/gamification/presentation/providers/gamification_providers.dart'; // For isarProvider
@@ -7,6 +9,9 @@ part 'profile_notifier.g.dart';
 
 @riverpod
 class ProfileNotifier extends _$ProfileNotifier {
+  ProfileRepository get _repository =>
+      ProfileRepository(ref.read(isarProvider));
+
   @override
   UserProfile build() {
     _loadProfile();
@@ -34,9 +39,7 @@ class ProfileNotifier extends _$ProfileNotifier {
 
   Future<void> _loadProfile() async {
     try {
-      final isar = ref.read(isarProvider);
-      final repository = ProfileRepository(isar);
-      final profile = await repository.getProfile();
+      final profile = await _repository.getProfile();
       if (profile != null) {
         state = profile;
       }
@@ -51,7 +54,8 @@ class ProfileNotifier extends _$ProfileNotifier {
   }
 
   void updateWeight(double newWeight) {
-    state = state.copyWith(currentWeight: newWeight);
-    // Recalculate progress or other metrics if needed
+    final updatedProfile = state.copyWith(currentWeight: newWeight);
+    state = updatedProfile;
+    unawaited(_repository.saveProfile(updatedProfile));
   }
 }

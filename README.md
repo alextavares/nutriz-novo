@@ -1,6 +1,19 @@
 # nutriz
 
-A new Flutter project.
+Nutriz e um app de nutricao para emagrecer sem complicacao.
+
+Proposta principal:
+- registrar refeicoes com rapidez
+- acompanhar calorias e proteina
+- entender o que ainda falta no dia
+- construir consistencia diaria
+
+Core loop atual:
+- onboarding
+- meta personalizada
+- primeira refeicao
+- leitura de restantes
+- retorno no dia seguinte
 
 ## Getting Started
 

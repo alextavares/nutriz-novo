@@ -4,22 +4,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 import '../../../../core/analytics/analytics_providers.dart';
 import '../../../../core/analytics/paywall_analytics_tracker.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/monetization/meal_log_gate.dart';
-import '../../../../core/monetization/promo_offer.dart';
 import '../../domain/entities/paywall_variant.dart';
 import '../providers/paywall_variant_provider.dart';
 import '../providers/subscription_provider.dart';
 
-String _formatCountdown(Duration duration) {
-  final totalSeconds = duration.inSeconds.clamp(0, 24 * 60 * 60);
-  final minutes = (totalSeconds ~/ 60).toString().padLeft(2, '0');
-  final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
-  return '$minutes:$seconds';
+enum _HardPaywallPlan { annual, monthly }
+
+extension on _HardPaywallPlan {
+  String get planId => switch (this) {
+    _HardPaywallPlan.annual => 'annual',
+    _HardPaywallPlan.monthly => 'monthly',
+  };
+
+  String get label => switch (this) {
+    _HardPaywallPlan.annual => 'anual',
+    _HardPaywallPlan.monthly => 'mensal',
+  };
+
+  PackageType get packageType => switch (this) {
+    _HardPaywallPlan.annual => PackageType.annual,
+    _HardPaywallPlan.monthly => PackageType.monthly,
+  };
 }
 
 class HardPaywallScreen extends ConsumerStatefulWidget {
@@ -32,6 +44,7 @@ class HardPaywallScreen extends ConsumerStatefulWidget {
 class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
   bool _isLoading = false;
   bool _isRestoring = false;
+  _HardPaywallPlan _selectedPlan = _HardPaywallPlan.annual;
   late final PaywallVariant _paywallVariant;
   late final PaywallAnalyticsTracker _tracker;
 
@@ -42,20 +55,25 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
     _tracker = PaywallAnalyticsTracker(
       paywallId: 'hard_paywall_screen',
       variant: _paywallVariant,
+      source: 'hard_gate',
       logEvent: (name, props) {
         return ref.read(analyticsServiceProvider).logEvent(name, props);
       },
     );
-    Future.microtask(() {
-      _tracker.trackPaywallView();
-    });
-    ref
-        .read(promoOfferProvider.notifier)
-        .ensureActive(
-          duration: const Duration(minutes: 10),
-          discountPercent: 75,
-          source: 'hard_paywall_view',
-        );
+    Future.microtask(_tracker.trackPaywallView);
+  }
+
+  RevenueCatPackageLookupResult _lookupForPlan(
+    Offerings? offerings,
+    _HardPaywallPlan plan,
+  ) {
+    return findPackageForPlanDetailed(offerings, plan.packageType);
+  }
+
+  String _priceLabel(Package? package, {required String fallback}) {
+    final product = package?.storeProduct;
+    if (product == null) return fallback;
+    return product.priceString;
   }
 
   Future<void> _handleClose() async {
@@ -65,13 +83,6 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
           paywallId: 'hard_paywall_screen',
           paywallVariant: _paywallVariant.analyticsValue,
           source: 'close_button',
-        );
-    ref
-        .read(promoOfferProvider.notifier)
-        .ensureActive(
-          duration: const Duration(minutes: 10),
-          discountPercent: 75,
-          source: 'hard_paywall_close',
         );
     if (!mounted) return;
     if (Navigator.of(context).canPop()) {
@@ -118,312 +129,15 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
-    final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
-    final offerings = offeringsAsync.asData?.value;
-    final monthlyLookup = findPackageForPlanDetailed(
-      offerings,
-      PackageType.monthly,
-    );
-    final monthlyPackage = monthlyLookup.package;
-
-    final priceString = monthlyPackage?.storeProduct.priceString ?? '—';
-
-    return PopScope(
-      canPop: false, // prevent Android back (supports predictive back)
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Header with Timer + Close
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
-                ),
-                color: Colors.red[50],
-                child: Row(
-                  children: [
-                    Text(
-                      'OFERTA EXPIRA EM:',
-                      style: GoogleFonts.inter(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red[700],
-                        fontSize: 12,
-                      ),
-                    ),
-                    const Spacer(),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final now =
-                            ref.watch(promoOfferTickerProvider).asData?.value ??
-                            DateTime.now();
-                        final remaining = ref
-                            .watch(promoOfferProvider)
-                            .remaining(now);
-                        return Text(
-                          _formatCountdown(remaining),
-                          style: GoogleFonts.robotoMono(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.red[700],
-                            fontSize: 16,
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(width: 6),
-                    IconButton(
-                      tooltip: 'Fechar',
-                      onPressed: _handleClose,
-                      icon: const Icon(Icons.close),
-                      color: Colors.black87,
-                    ),
-                  ],
-                ),
-              ),
-
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Seu Plano Está Pronto!',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w900,
-                          color: const Color(0xFF1E1E1E),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Baseado no seu perfil, criamos um protocolo exclusivo para você.',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-
-                      _buildCheckItem('Protocolo Anti-Inchaço (7 Dias)'),
-                      _buildCheckItem('Cardápio Detox de Cortisol'),
-                      _buildCheckItem('Lista de Compras Inteligente'),
-                      _buildCheckItem('Acesso Ilimitado ao Diário'),
-
-                      const SizedBox(height: 40),
-
-                      // Offer Box
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color(0xFF4CAF50),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(16),
-                          color: const Color(
-                            0xFF4CAF50,
-                          ).withValues(alpha: 0.05),
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF4CAF50),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(12),
-                                  topRight: Radius.circular(12),
-                                ),
-                              ),
-                              child: Text(
-                                'MAIS ESCOLHIDO',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Plano Mensal',
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Acesso total imediato',
-                                        style: GoogleFonts.inter(
-                                          color: Colors.grey[600],
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        priceString,
-                                        style: GoogleFonts.inter(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 24,
-                                          color: const Color(0xFF4CAF50),
-                                        ),
-                                      ),
-                                      Text(
-                                        '/mês',
-                                        style: GoogleFonts.inter(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // Bottom Sticky Button
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: (_isLoading || _isRestoring)
-                            ? null
-                            : () => _handlePurchase(
-                                package: monthlyPackage,
-                                lookup: monthlyLookup,
-                                offerings: offerings,
-                                offeringsError: offeringsError,
-                              ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4CAF50),
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: _isLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                'CONTINUAR',
-                                style: GoogleFonts.inter(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Garantia de 7 dias ou seu dinheiro de volta',
-                      style: GoogleFonts.inter(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () => context.push('/legal/privacy'),
-                          child: const Text('Privacidade'),
-                        ),
-                        const Text(' | '),
-                        TextButton(
-                          onPressed: () => context.push('/legal/terms'),
-                          child: const Text('Termos'),
-                        ),
-                        const Text(' | '),
-                        TextButton(
-                          onPressed: (_isLoading || _isRestoring)
-                              ? null
-                              : _handleRestore,
-                          child: _isRestoring
-                              ? const SizedBox(
-                                  height: 14,
-                                  width: 14,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Text('Restaurar compra'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCheckItem(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle, color: Color(0xFF4CAF50), size: 24),
-          const SizedBox(width: 12),
-          Text(
-            text,
-            style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _handlePurchase({
+    required _HardPaywallPlan plan,
     required Package? package,
     required RevenueCatPackageLookupResult lookup,
     required Offerings? offerings,
     required String? offeringsError,
   }) async {
     final analytics = _tracker;
-    unawaited(analytics.trackCtaTap(planId: 'monthly', plan: 'mensal'));
+    unawaited(analytics.trackCtaTap(planId: plan.planId, plan: plan.label));
 
     if (package == null) {
       final reason = revenueCatSelectedPackageNullReason(
@@ -437,12 +151,12 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
         offeringsError: offeringsError,
       );
       logRevenueCatRuntime(
-        'selected_package_null screen=hard_paywall_screen plan=monthly '
+        'selected_package_null screen=hard_paywall_screen plan=${plan.planId} '
         'reason=$reason details="$technicalReason"',
       );
       await analytics.trackPurchaseFailed(
-        planId: 'monthly',
-        plan: 'mensal',
+        planId: plan.planId,
+        plan: plan.label,
         productId: 'unavailable',
         reason: reason,
       );
@@ -451,7 +165,7 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
         SnackBar(
           content: Text(
             revenueCatPackageNotFoundMessage(
-              planLabel: 'mensal',
+              planLabel: plan.label,
               offeringsError: offeringsError,
               technicalReason: technicalReason,
             ),
@@ -466,15 +180,15 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
 
     try {
       await analytics.trackPurchaseStart(
-        planId: 'monthly',
-        plan: 'mensal',
+        planId: plan.planId,
+        plan: plan.label,
         productId: package.storeProduct.identifier,
       );
       await ref.read(subscriptionProvider.notifier).purchasePackage(package);
       await ref.read(subscriptionProvider.notifier).refresh();
       await analytics.trackPurchaseComplete(
-        planId: 'monthly',
-        plan: 'mensal',
+        planId: plan.planId,
+        plan: plan.label,
         productId: package.storeProduct.identifier,
       );
 
@@ -492,8 +206,8 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
       }
     } on StateError catch (e) {
       await analytics.trackPurchaseFailed(
-        planId: 'monthly',
-        plan: 'mensal',
+        planId: plan.planId,
+        plan: plan.label,
         reason: 'sdk_not_configured',
         productId: package.storeProduct.identifier,
       );
@@ -507,8 +221,8 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
           ? 'cancelled'
           : code.name;
       await analytics.trackPurchaseFailed(
-        planId: 'monthly',
-        plan: 'mensal',
+        planId: plan.planId,
+        plan: plan.label,
         reason: reason,
         productId: package.storeProduct.identifier,
       );
@@ -524,8 +238,8 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
       );
     } catch (_) {
       await analytics.trackPurchaseFailed(
-        planId: 'monthly',
-        plan: 'mensal',
+        planId: plan.planId,
+        plan: plan.label,
         reason: 'unknown',
         productId: package.storeProduct.identifier,
       );
@@ -536,5 +250,500 @@ class _HardPaywallScreenState extends ConsumerState<HardPaywallScreen> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final offeringsAsync = ref.watch(revenueCatOfferingsProvider);
+    final offeringsError = ref.watch(revenueCatOfferingsErrorProvider);
+    final offerings = offeringsAsync.asData?.value;
+
+    final annualLookup = _lookupForPlan(offerings, _HardPaywallPlan.annual);
+    final monthlyLookup = _lookupForPlan(offerings, _HardPaywallPlan.monthly);
+    final annualPackage = annualLookup.package;
+    final monthlyPackage = monthlyLookup.package;
+
+    final selectedPackage = _selectedPlan == _HardPaywallPlan.annual
+        ? annualPackage
+        : monthlyPackage;
+    final selectedLookup = _selectedPlan == _HardPaywallPlan.annual
+        ? annualLookup
+        : monthlyLookup;
+
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  AppSpacing.sm,
+                  AppSpacing.sm,
+                  AppSpacing.sm,
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      'Premium',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: _isRestoring ? null : _handleRestore,
+                      child: _isRestoring
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Restaurar'),
+                    ),
+                    IconButton(
+                      tooltip: 'Fechar',
+                      onPressed: _handleClose,
+                      icon: const Icon(Icons.close_rounded),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.md,
+                    AppSpacing.sm,
+                    AppSpacing.md,
+                    120,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Continue sem complicação',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        'Desbloqueie mais praticidade para registrar refeições e acompanhar seu dia.',
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.primary.withValues(alpha: 0.10),
+                              AppColors.premium.withValues(alpha: 0.18),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusXl,
+                          ),
+                          border: Border.all(
+                            color: Colors.black.withValues(alpha: 0.06),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                color: AppColors.premium.withValues(
+                                  alpha: 0.22,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt_rounded,
+                                color: AppColors.premium,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.md),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Mais consistência, menos esforço',
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.w800),
+                                  ),
+                                  const SizedBox(height: AppSpacing.xs),
+                                  Text(
+                                    'Use IA por foto, registros ilimitados e recursos avançados para manter o foco.',
+                                    style: theme.textTheme.bodyMedium?.copyWith(
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      const _HardBenefitTile(
+                        icon: Icons.camera_alt_rounded,
+                        title: 'IA por foto',
+                        subtitle:
+                            'Tire uma foto da refeição e registre em segundos.',
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      const _HardBenefitTile(
+                        icon: Icons.lock_open_rounded,
+                        title: 'Registros ilimitados',
+                        subtitle: 'Acompanhe seu dia inteiro sem travas.',
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      const _HardBenefitTile(
+                        icon: Icons.insights_rounded,
+                        title: 'Recursos avançados',
+                        subtitle:
+                            'Tenha mais apoio para seguir proteína, calorias e consistência.',
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      _HardPlanTile(
+                        title: 'Plano anual',
+                        price: _priceLabel(annualPackage, fallback: '—'),
+                        subtitle: '7 dias grátis • menos de R\$ 12,50 por mês',
+                        badge: 'Melhor escolha',
+                        isSelected: _selectedPlan == _HardPaywallPlan.annual,
+                        onTap: () => setState(
+                          () => _selectedPlan = _HardPaywallPlan.annual,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                      _HardPlanTile(
+                        title: 'Plano mensal',
+                        price: _priceLabel(monthlyPackage, fallback: '—'),
+                        subtitle: 'Mais flexível para começar',
+                        isSelected: _selectedPlan == _HardPaywallPlan.monthly,
+                        onTap: () => setState(
+                          () => _selectedPlan = _HardPaywallPlan.monthly,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        decoration: BoxDecoration(
+                          color: AppColors.surface,
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusXl,
+                          ),
+                          border: Border.all(
+                            color: Colors.black.withValues(alpha: 0.06),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.shield_rounded,
+                                  size: 18,
+                                  color: AppColors.premium,
+                                ),
+                                const SizedBox(width: AppSpacing.xs),
+                                Text(
+                                  'Assinatura transparente',
+                                  style: theme.textTheme.labelLarge?.copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: AppSpacing.sm),
+                            Text(
+                              'Cancele quando quiser pela App Store ou Google Play.',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              'Pagamento seguro. Restaurar compra disponível a qualquer momento.',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SafeArea(
+                top: false,
+                minimum: const EdgeInsets.all(AppSpacing.md),
+                child: Container(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.10),
+                        blurRadius: 20,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: Colors.black.withValues(alpha: 0.06),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ElevatedButton(
+                        onPressed: (_isLoading || _isRestoring)
+                            ? null
+                            : () => _handlePurchase(
+                                plan: _selectedPlan,
+                                package: selectedPackage,
+                                lookup: selectedLookup,
+                                offerings: offerings,
+                                offeringsError: offeringsError,
+                              ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.md,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppSpacing.radiusLg,
+                            ),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                _selectedPlan == _HardPaywallPlan.annual
+                                    ? 'Ativar 7 dias grátis'
+                                    : 'Desbloquear Premium',
+                              ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      TextButton(
+                        onPressed: (_isLoading || _isRestoring)
+                            ? null
+                            : _handleClose,
+                        child: const Text('Agora não'),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            onPressed: () => context.push('/legal/privacy'),
+                            child: const Text('Privacidade'),
+                          ),
+                          const Text(' | '),
+                          TextButton(
+                            onPressed: () => context.push('/legal/terms'),
+                            child: const Text('Termos'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HardBenefitTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _HardBenefitTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(color: Colors.black.withValues(alpha: 0.06)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: AppColors.primary),
+          ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  subtitle,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HardPlanTile extends StatelessWidget {
+  final String title;
+  final String price;
+  final String subtitle;
+  final String? badge;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _HardPlanTile({
+    required this.title,
+    required this.price,
+    required this.subtitle,
+    required this.isSelected,
+    required this.onTap,
+    this.badge,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final borderColor = isSelected ? AppColors.primary : Colors.black12;
+    final background = isSelected
+        ? AppColors.primary.withValues(alpha: 0.08)
+        : AppColors.surface;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+          border: Border.all(color: borderColor.withValues(alpha: 0.5)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        title,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      if (badge != null) ...[
+                        const SizedBox(width: AppSpacing.sm),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.premium.withValues(alpha: 0.18),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            badge!,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    subtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  price,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Icon(
+                  isSelected
+                      ? Icons.radio_button_checked_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                  color: isSelected ? AppColors.primary : AppColors.textHint,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -85,7 +87,9 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
       } else if (firstOpenStr != todayStr) {
         // Different day from first open means D1 retention
         await prefs.setBool('has_logged_d1', true);
-        ref.read(analyticsServiceProvider).logEvent('d1_retained', {});
+        unawaited(
+          ref.read(analyticsServiceProvider).logEvent('d1_retained', {}),
+        );
       }
     } catch (_) {
       // Ignore errors silently for analytics
@@ -426,6 +430,7 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
               );
               final showFirstMealCta = canShowEmptyDayCta && !dismissedForDay;
               final showCollapsedCta = canShowEmptyDayCta && dismissedForDay;
+              final useCompactChallengeBanner = canShowEmptyDayCta;
               final profile = ref.watch(profileNotifierProvider);
               final gate = ref.watch(mealLogGateProvider);
               final isReadOnlyLocked = gate.isReadOnlyLocked(profile);
@@ -525,13 +530,15 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                         const SizedBox(height: AppSpacing.md),
                         if (isToday &&
                             challengeActive &&
-                            challengeDayIndex != null) ...[
+                            challengeDayIndex != null &&
+                            !useCompactChallengeBanner) ...[
                           const SizedBox(height: AppSpacing.sm),
                           _ChallengeBanner(
                             dayIndex: challengeDayIndex,
                             mealsRemaining: profile.challengeMealsRemaining,
                             usedToday: usedChallengeToday,
                             remainingProteinGrams: remainingProtein,
+                            compact: false,
                             onLogMealTap: () {
                               ref
                                   .read(analyticsServiceProvider)
@@ -580,11 +587,11 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                           _buildFirstMealCta(
                             show: true,
                             title: isToday
-                                ? 'Registrar 1ª refeição'
-                                : 'Adicionar refeição',
+                                ? 'Comece pelo que você já comeu hoje'
+                                : 'Registre uma refeição neste dia',
                             subtitle: isToday
-                                ? 'Toque para adicionar um alimento e atualizar seus Restantes.'
-                                : 'Adicione um alimento neste dia e atualize seus Restantes.',
+                                ? 'Registre uma refeição e veja o que ainda falta no seu dia.'
+                                : 'Adicione uma refeição para atualizar calorias, proteína e restantes.',
                             dateKey: dateKey,
                           ),
                           const SizedBox(height: AppSpacing.md),
@@ -595,6 +602,57 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                             dateKey: dateKey,
                           ),
                           const SizedBox(height: AppSpacing.sm),
+                        ],
+                        if (isToday &&
+                            challengeActive &&
+                            challengeDayIndex != null &&
+                            useCompactChallengeBanner) ...[
+                          _ChallengeBanner(
+                            dayIndex: challengeDayIndex,
+                            mealsRemaining: profile.challengeMealsRemaining,
+                            usedToday: usedChallengeToday,
+                            remainingProteinGrams: remainingProtein,
+                            compact: true,
+                            onLogMealTap: () {
+                              ref
+                                  .read(analyticsServiceProvider)
+                                  .logEvent('challenge_banner_log_meal_tap', {
+                                    'day': challengeDayIndex,
+                                    'used_today': usedChallengeToday,
+                                    'compact': true,
+                                  });
+                              if (usedChallengeToday) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: const Text(
+                                      'Você já registrou a refeição do desafio hoje. Volte amanhã.',
+                                    ),
+                                    action: SnackBarAction(
+                                      label: 'Premium',
+                                      onPressed: () => context.push('/premium'),
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+                              final mealType = _suggestFirstMealType();
+                              context.push(
+                                '/food-search/$mealType?tab=search&focus=1',
+                              );
+                            },
+                            onTipsTap: () {
+                              ref.read(analyticsServiceProvider).logEvent(
+                                'challenge_banner_tips_tap',
+                                {'day': challengeDayIndex, 'compact': true},
+                              );
+                              _showChallengeTipsSheet(
+                                context,
+                                remainingProteinGrams: remainingProtein,
+                              );
+                            },
+                            onPremiumTap: () => context.push('/premium'),
+                          ),
+                          const SizedBox(height: AppSpacing.md),
                         ],
 
                         // Nutrition Section Header
@@ -1079,6 +1137,7 @@ class _ChallengeBanner extends StatelessWidget {
   final int mealsRemaining;
   final bool usedToday;
   final int remainingProteinGrams;
+  final bool compact;
   final VoidCallback onLogMealTap;
   final VoidCallback onTipsTap;
   final VoidCallback onPremiumTap;
@@ -1088,6 +1147,7 @@ class _ChallengeBanner extends StatelessWidget {
     required this.mealsRemaining,
     required this.usedToday,
     required this.remainingProteinGrams,
+    this.compact = false,
     required this.onLogMealTap,
     required this.onTipsTap,
     required this.onPremiumTap,
@@ -1105,7 +1165,7 @@ class _ChallengeBanner extends StatelessWidget {
         : 'Hoje: registre 1 refeição e foque em proteína (faltam ~${remainingProteinGrams.clamp(0, 9999)}g).';
 
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: EdgeInsets.all(compact ? AppSpacing.sm : AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -1158,6 +1218,8 @@ class _ChallengeBanner extends StatelessWidget {
                   ],
                 ),
               ),
+              if (compact)
+                TextButton(onPressed: onTipsTap, child: const Text('Dicas')),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -1180,54 +1242,58 @@ class _ChallengeBanner extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: mealsRemaining <= 0 ? onPremiumTap : onLogMealTap,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+          if (!compact) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: mealsRemaining <= 0
+                        ? onPremiumTap
+                        : onLogMealTap,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      textStyle: const TextStyle(fontWeight: FontWeight.w900),
                     ),
-                    textStyle: const TextStyle(fontWeight: FontWeight.w900),
+                    child: Text(
+                      mealsRemaining <= 0
+                          ? 'Desbloquear'
+                          : usedToday
+                          ? 'Voltar amanhã'
+                          : 'Registrar refeição de hoje',
+                    ),
                   ),
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                TextButton(
+                  onPressed: onTipsTap,
                   child: Text(
-                    mealsRemaining <= 0
-                        ? 'Desbloquear'
-                        : usedToday
-                        ? 'Voltar amanhã'
-                        : 'Registrar refeição de hoje',
+                    'Dicas',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimary.withValues(alpha: 0.65),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              TextButton(
-                onPressed: onTipsTap,
-                child: Text(
-                  'Dicas',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary.withValues(alpha: 0.65),
+                TextButton(
+                  onPressed: onPremiumTap,
+                  child: Text(
+                    'Premium',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimary.withValues(alpha: 0.65),
+                    ),
                   ),
                 ),
-              ),
-              TextButton(
-                onPressed: onPremiumTap,
-                child: Text(
-                  'Premium',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimary.withValues(alpha: 0.65),
-                  ),
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ],
       ),
     );

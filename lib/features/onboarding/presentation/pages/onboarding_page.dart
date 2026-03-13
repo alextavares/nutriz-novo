@@ -18,7 +18,6 @@ import '../widgets/onboarding_step_container.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/goal_card.dart';
 import '../widgets/calorie_result_display.dart';
-import '../widgets/pro_upsell_card.dart';
 import '../widgets/calculating_step.dart';
 import '../widgets/ruler_picker.dart';
 import '../widgets/long_term_results_chart.dart';
@@ -40,13 +39,8 @@ class OnboardingPage extends ConsumerStatefulWidget {
 class _HeaderIcon extends StatelessWidget {
   final String assetPath;
   final double size;
-  final Color? backgroundColor;
 
-  const _HeaderIcon({
-    required this.assetPath,
-    this.size = 80,
-    this.backgroundColor,
-  });
+  const _HeaderIcon({required this.assetPath, this.size = 80});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +48,7 @@ class _HeaderIcon extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: backgroundColor ?? Colors.transparent,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(22),
         ),
         child: Image.asset(
@@ -76,7 +70,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   late final PageController _pageController;
   late final TextEditingController _nameController;
   int _currentPage = 0;
-  bool _heightUseMetric = true;
   bool _weightUseMetric = true;
   bool _birthDateDefaulted = false;
   bool _weeklyGoalDefaulted = false;
@@ -164,7 +157,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.dietaryPreference,
           _StepKey.healthConditions,
           _StepKey.thankYou,
-          _StepKey.pushNotifications,
           _StepKey.extraDetails,
           _StepKey.water,
           _StepKey.sleep,
@@ -174,7 +166,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.calculating,
           _StepKey.results,
           _StepKey.allDone,
-          _StepKey.foodLoggingMethod,
         ]
       : const [
           _StepKey.welcome,
@@ -194,7 +185,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.dietaryPreference,
           _StepKey.healthConditions,
           _StepKey.thankYou,
-          _StepKey.pushNotifications,
           _StepKey.extraDetails,
           _StepKey.water,
           _StepKey.sleep,
@@ -203,9 +193,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           _StepKey.rating,
           _StepKey.calculating,
           _StepKey.results,
-          _StepKey.proUpsell,
           _StepKey.allDone,
-          _StepKey.foodLoggingMethod,
         ];
 
   int get _totalPages => _stepKeys.length;
@@ -810,13 +798,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
         _currentStepKey != _StepKey.foodLoggingMethod &&
         _currentStepKey != _StepKey.badHabits;
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: _currentPage == 0,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         if (_currentPage > 0) {
           _handleBack();
-          return false;
         }
-        return true;
       },
       child: Scaffold(
         body: SafeArea(
@@ -1046,7 +1034,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                   setState(() {
                                     _calculationInProgress = true;
                                   });
-                                  notifier.saveDraft();
+                                  unawaited(notifier.saveDraft());
                                   _nextPage();
                                   return;
                                 }
@@ -1068,7 +1056,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                                 }
 
                                 if (_currentPage > 0) {
-                                  notifier.saveDraft();
+                                  unawaited(notifier.saveDraft());
                                 }
                                 _nextPage();
                               } catch (e, stack) {
@@ -1197,26 +1185,30 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       }
       if (!widget.isEditMode) {
         final p = ref.read(onboardingNotifierProvider);
-        ref.read(analyticsServiceProvider).logEvent('onboarding_complete', {
-          'screen': 'onboarding',
-          'goal_type': p.mainGoal.name,
-          'activity_level': p.activityLevel.name,
-          'calorie_target': p.calculatedCalories,
-          'protein_g': p.proteinGrams,
-          'carbs_g': p.carbsGrams,
-          'fat_g': p.fatGrams,
-          'skipped': true,
-        });
-        ref.read(analyticsServiceProvider).logEvent('goal_set', {
-          'screen': 'onboarding',
-          'goal_type': p.mainGoal.name,
-          'activity_level': p.activityLevel.name,
-          'calorie_target': p.calculatedCalories,
-          'protein_g': p.proteinGrams,
-          'carbs_g': p.carbsGrams,
-          'fat_g': p.fatGrams,
-          'source': 'skip',
-        });
+        unawaited(
+          ref.read(analyticsServiceProvider).logEvent('onboarding_complete', {
+            'screen': 'onboarding',
+            'goal_type': p.mainGoal.name,
+            'activity_level': p.activityLevel.name,
+            'calorie_target': p.calculatedCalories,
+            'protein_g': p.proteinGrams,
+            'carbs_g': p.carbsGrams,
+            'fat_g': p.fatGrams,
+            'skipped': true,
+          }),
+        );
+        unawaited(
+          ref.read(analyticsServiceProvider).logEvent('goal_set', {
+            'screen': 'onboarding',
+            'goal_type': p.mainGoal.name,
+            'activity_level': p.activityLevel.name,
+            'calorie_target': p.calculatedCalories,
+            'protein_g': p.proteinGrams,
+            'carbs_g': p.carbsGrams,
+            'fat_g': p.fatGrams,
+            'source': 'skip',
+          }),
+        );
       }
       await _navigateFinalOnce('/diary?firstRun=1');
     } finally {
@@ -1254,26 +1246,30 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       if (!mounted) return;
       if (!widget.isEditMode) {
         final p = ref.read(onboardingNotifierProvider);
-        ref.read(analyticsServiceProvider).logEvent('onboarding_complete', {
-          'screen': 'onboarding',
-          'goal_type': p.mainGoal.name,
-          'activity_level': p.activityLevel.name,
-          'calorie_target': p.calculatedCalories,
-          'protein_g': p.proteinGrams,
-          'carbs_g': p.carbsGrams,
-          'fat_g': p.fatGrams,
-          'skipped': false,
-        });
-        ref.read(analyticsServiceProvider).logEvent('goal_set', {
-          'screen': 'onboarding',
-          'goal_type': p.mainGoal.name,
-          'activity_level': p.activityLevel.name,
-          'calorie_target': p.calculatedCalories,
-          'protein_g': p.proteinGrams,
-          'carbs_g': p.carbsGrams,
-          'fat_g': p.fatGrams,
-          'source': 'finish',
-        });
+        unawaited(
+          ref.read(analyticsServiceProvider).logEvent('onboarding_complete', {
+            'screen': 'onboarding',
+            'goal_type': p.mainGoal.name,
+            'activity_level': p.activityLevel.name,
+            'calorie_target': p.calculatedCalories,
+            'protein_g': p.proteinGrams,
+            'carbs_g': p.carbsGrams,
+            'fat_g': p.fatGrams,
+            'skipped': false,
+          }),
+        );
+        unawaited(
+          ref.read(analyticsServiceProvider).logEvent('goal_set', {
+            'screen': 'onboarding',
+            'goal_type': p.mainGoal.name,
+            'activity_level': p.activityLevel.name,
+            'calorie_target': p.calculatedCalories,
+            'protein_g': p.proteinGrams,
+            'carbs_g': p.carbsGrams,
+            'fat_g': p.fatGrams,
+            'source': 'finish',
+          }),
+        );
       }
 
       await _navigateFinalOnce(nextRoute);
@@ -1369,7 +1365,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
                 // TITLE
                 Text(
-                  'Ano Novo, Nova Você!\nFique mais saudável em 2026 🎄',
+                  'Emagreça sem complicação.\nComece seu plano personalizado hoje.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 20,
@@ -1382,7 +1378,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
                 // BODY
                 Text(
-                  'Olá 👋 Eu sou sua Nutricionista Pessoal baseada em IA. Vou fazer algumas perguntas para personalizar um plano de dieta inteligente para você.',
+                  'Vou fazer algumas perguntas rápidas para calcular sua meta de calorias e proteína e colocar sua alimentação no trilho.',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.inter(
                     fontSize: 16,
@@ -1425,29 +1421,13 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // SIGN IN LINK
-                TextButton(
-                  onPressed: () {
-                    // Navigate to login
-                    context.push('/login');
-                  },
-                  child: Text.rich(
-                    TextSpan(
-                      text: 'Já tem uma conta? ',
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        color: const Color(0xFF9E9E9E),
-                      ),
-                      children: [
-                        TextSpan(
-                          text: 'Entrar',
-                          style: GoogleFonts.inter(
-                            color: const Color(0xFF2196F3),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                Text(
+                  'Você poderá ajustar tudo depois no Perfil.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    color: const Color(0xFF9E9E9E),
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -1784,8 +1764,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             const LongTermResultsChart(),
             const SizedBox(height: 10),
             Text(
-              '80% dos usuários dedicados mantêm o peso após 6 meses. '
-              'O Nutriz usa IA e ciência da nutrição para criar hábitos sustentáveis.',
+              'O objetivo aqui não é uma solução rápida. '
+              'É criar um ritmo simples para você registrar, ajustar o dia e manter consistência.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -2092,32 +2072,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
-  Widget _buildHeightUnitToggle() {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      padding: const EdgeInsets.all(4),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildUnitToggleOption(
-            'cm',
-            _heightUseMetric,
-            onTap: () => setState(() => _heightUseMetric = true),
-          ),
-          _buildUnitToggleOption(
-            'ft',
-            !_heightUseMetric,
-            onTap: () => setState(() => _heightUseMetric = false),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildUnitToggleOption(
     String text,
     bool isSelected, {
@@ -2144,10 +2098,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
   }
 
-  int _cmToInches(int cm) => (cm / 2.54).round();
-
-  int _inchesToCm(int inches) => (inches * 2.54).round();
-
   int _kgToLbs(int kg) => (kg * 2.2046226218).round();
 
   double _kgToLbsDouble(double kg) => kg * 2.2046226218;
@@ -2165,13 +2115,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     if (bmi < 30) return 'Sobrepeso';
     if (bmi < 35) return 'Obesidade';
     return 'Obesidade grave';
-  }
-
-  String _formatImperial(int cm) {
-    final totalInches = _cmToInches(cm);
-    final feet = totalInches ~/ 12;
-    final inches = totalInches % 12;
-    return "$feet'${inches.toString().padLeft(2, '0')}\"";
   }
 
   Widget _buildWeightUnitToggle() {
@@ -3096,8 +3039,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             const Expanded(child: RestrictiveDietsChart()),
             const SizedBox(height: 10),
             Text(
-              '90% dos usuários comprometidos notam resultados visíveis e o progresso se mantém, '
-              'enquanto dietas restritivas causam efeito sanfona.',
+              'Metas realistas são mais fáceis de sustentar e reduzem o risco de efeito sanfona.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -3152,7 +3094,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           children: [
             const SizedBox(height: 8),
             Text(
-              'Ciência da Nutrição\n+\nIA\n= NutriZ',
+              'Seu progresso fica\nmais simples com\no Nutriz',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 30,
@@ -3181,8 +3123,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               ),
             ),
             Text(
-              'Os dados históricos do NutriZ mostram que o progresso pode parecer '
-              'lento no começo, mas após 7 dias a perda de gordura acelera significativamente.',
+              'No começo, o mais importante é criar ritmo. '
+              'Quando você registra com consistência, fica muito mais fácil ajustar o dia e continuar.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -3497,7 +3439,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ),
             const SizedBox(height: 28),
             Text(
-              'Perca 2x mais peso\ncom NutriZ do que\nsozinho',
+              'Mais consistência.\nMenos esforço para\nseguir no plano.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 26,
@@ -3513,7 +3455,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Sem\nNutriZ',
+                    'Sem\nrotina',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 12,
@@ -3522,7 +3464,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     ),
                   ),
                   Text(
-                    'Com\nNutriZ',
+                    'Com\nNutriz',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
                       fontSize: 12,
@@ -3546,7 +3488,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
-                      '20%',
+                      'Mais\nconfusão',
                       style: GoogleFonts.inter(
                         fontSize: 14,
                         fontWeight: FontWeight.w900,
@@ -3565,7 +3507,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
-                      '2X',
+                      'Mais\ncontrole',
                       style: GoogleFonts.inter(
                         fontSize: 18,
                         fontWeight: FontWeight.w900,
@@ -3578,7 +3520,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
             ),
             const SizedBox(height: 22),
             Text(
-              'O NutriZ torna mais simples alcançar suas metas\ne ajuda você a manter consistência.',
+              'O Nutriz reduz a fricção do dia a dia e ajuda você a manter consistência com mais facilidade.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 13,
@@ -4116,7 +4058,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   Widget _buildNameStep(OnboardingNotifier notifier, UserProfile profile) {
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
     final canContinue = profile.name.trim().isNotEmpty;
 
     return LayoutBuilder(
@@ -4560,11 +4501,6 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   }
 
   Widget _buildAllDoneStep(OnboardingNotifier notifier, UserProfile profile) {
-    final isMale = profile.gender == Gender.male;
-    final assetPath = isMale
-        ? 'assets/images/all_done_male.png'
-        : 'assets/images/all_done_female.png';
-
     return Container(
       color: Colors.white,
       child: Padding(
@@ -4574,7 +4510,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
           children: [
             const SizedBox(height: 18),
             Text(
-              'Tudo pronto! Prepare-se para\nregistrar seu primeiro alimento!',
+              'Tudo pronto. Agora vamos\nregistrar sua primeira refeição.',
               textAlign: TextAlign.center,
               style: GoogleFonts.inter(
                 fontSize: 26,
@@ -4746,8 +4682,17 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               height: 56,
               child: ElevatedButton(
                 onPressed: () async {
-                  notifier.saveDraft();
-                  _goToStep(_StepKey.foodLoggingMethod);
+                  unawaited(notifier.saveDraft());
+                  unawaited(
+                    ref.read(analyticsServiceProvider).logEvent(
+                      'first_meal_cta_tap',
+                      {
+                        'source': 'onboarding_all_done',
+                        'meal_type': 'suggested',
+                      },
+                    ),
+                  );
+                  await _finishOnboarding(nextRoute: '/diary?firstRun=1');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4CAF50),
@@ -4932,7 +4877,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               height: 56,
               child: ElevatedButton(
                 onPressed: () async {
-                  notifier.saveDraft();
+                  unawaited(notifier.saveDraft());
                   await _finishOnboarding(nextRoute: '/diary?firstRun=1');
                 },
                 style: ElevatedButton.styleFrom(
@@ -5209,7 +5154,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
     );
 
     if (!mounted) return;
-    notifier.saveDraft();
+    unawaited(notifier.saveDraft());
     _nextPage();
 
     // Silence unused variable analysis; the result is not used yet but might be
@@ -5597,8 +5542,9 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
 
   Widget _buildResultsStep(UserProfile profile) {
     return OnboardingStepContainer(
-      title: 'Seu plano está pronto!',
-      subtitle: 'Baseado nas suas informações, calculamos:',
+      title: 'Sua meta de hoje está pronta',
+      subtitle:
+          'Agora registre sua primeira refeição para ver o que ainda falta no seu dia.',
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -5630,7 +5576,16 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                     width: double.infinity,
                     height: 56,
                     child: FilledButton(
-                      onPressed: _nextPage,
+                      onPressed: () {
+                        ref.read(analyticsServiceProvider).logEvent(
+                          'first_meal_cta_tap',
+                          {
+                            'source': 'onboarding_result',
+                            'meal_type': 'suggested',
+                          },
+                        );
+                        _finishOnboarding(nextRoute: '/diary?firstRun=1');
+                      },
                       style: FilledButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -5638,7 +5593,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                         elevation: 2,
                       ),
                       child: const Text(
-                        'Conhecer o Nutriz Pro',
+                        'Registrar minha 1ª refeição',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -5909,71 +5864,6 @@ class _BmiScalePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _BmiScalePainter oldDelegate) {
     return bmi != oldDelegate.bmi;
-  }
-}
-
-class _GenderCard extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final Color color;
-  final Color iconColor;
-  final VoidCallback onTap;
-
-  const _GenderCard({
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.iconColor,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.transparent),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: iconColor, size: 32),
-            ),
-            const SizedBox(width: 24),
-            Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 20,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
-              ),
-            ),
-            const Spacer(),
-            const Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: Colors.black26,
-              size: 18,
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -6519,86 +6409,6 @@ class _HealthConditionItem {
     required this.title,
     required this.info,
   });
-}
-
-class _BetterMeGoalCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final IconData? icon;
-  final String? emoji; // Added emoji support
-  final Color color;
-  final Color iconColor;
-  final VoidCallback onTap;
-
-  const _BetterMeGoalCard({
-    required this.title,
-    required this.subtitle,
-    this.icon,
-    this.emoji,
-    required this.color,
-    required this.iconColor,
-    required this.onTap,
-  }) : assert(icon != null || emoji != null, 'Provide either icon or emoji');
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: const Color(0xFF1E1E1E),
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(color: Colors.grey.withOpacity(0.15)),
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-              child: emoji != null
-                  ? Text(emoji!, style: const TextStyle(fontSize: 28))
-                  : Icon(icon, color: iconColor, size: 28),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: GoogleFonts.inter(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1E1E1E),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: Colors.grey,
-              size: 16,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _MultiSelectCard extends StatelessWidget {
