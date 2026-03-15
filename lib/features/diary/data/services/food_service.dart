@@ -1,15 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'package:isar/isar.dart';
-import '../../domain/entities/food_item.dart';
-import '../models/diary_schemas.dart';
-import '../datasources/local_food_database.dart';
+
 import '../../../../core/network/worker_endpoints.dart';
+import '../../domain/entities/food_item.dart';
+import '../datasources/local_food_database.dart';
+import '../models/diary_schemas.dart';
 import 'custom_food_service.dart';
 
 abstract class FoodService {
   Future<List<FoodItem>> searchFood(String query);
+  Future<List<FoodItem>> searchFoodLocal(String query);
+  Future<List<FoodItem>> searchFoodRemote(
+    String query, {
+    List<FoodItem> seed = const [],
+  });
   Future<List<FoodItem>> getFrequentFoods({int limit = 12, int days = 30});
   Future<List<FoodItem>> getRecentFoods({int limit = 12, int days = 30});
   Future<FoodItem?> analyzeImage(File image);
@@ -17,11 +24,13 @@ abstract class FoodService {
 }
 
 class FoodServiceImpl implements FoodService {
+  static const int _enoughLocalResultsThreshold = 6;
+  static const Duration _workerSearchTimeout = Duration(milliseconds: 1400);
+  static const Duration _openFoodFactsTimeout = Duration(milliseconds: 1800);
+
   final Isar? _isar;
   final CustomFoodService? _customFoodService;
   final String workerUrl = resolveWorkerBaseUrl();
-
-  // OpenFoodFacts API (gratuita, sem key)
   final String openFoodFactsUrl = 'https://world.openfoodfacts.org';
 
   FoodServiceImpl({Isar? isar, CustomFoodService? customFoodService})
@@ -30,63 +39,54 @@ class FoodServiceImpl implements FoodService {
 
   @override
   Future<List<FoodItem>> searchFood(String query) async {
+    final local = await searchFoodLocal(query);
+    return searchFoodRemote(query, seed: local);
+  }
+
+  @override
+  Future<List<FoodItem>> searchFoodLocal(String query) async {
     if (query.isEmpty) return _popularLocalDatabase();
 
-    // 1. Primeiro busca no banco local (rápido, offline) e alimentos costumizados
     final localResults = _searchLocalDatabase(query);
 
-    List<FoodItem> customResults = [];
+    var customResults = <FoodItem>[];
     if (_customFoodService != null) {
-      customResults = await _customFoodService!.searchCustomFoods(query);
+      customResults = await _customFoodService.searchCustomFoods(query);
     }
 
-    final combinedLocalResults = [...customResults, ...localResults];
+    return _sortByQuery(
+      _dedupeById([...customResults, ...localResults]),
+      query,
+    ).take(30).toList();
+  }
 
-    // Mantém busca local para queries muito curtas
-    if (query.length < 3) {
-      return combinedLocalResults;
+  @override
+  Future<List<FoodItem>> searchFoodRemote(
+    String query, {
+    List<FoodItem> seed = const [],
+  }) async {
+    if (query.isEmpty) return _popularLocalDatabase();
+
+    final localSeed = _dedupeById(seed);
+    if (query.length < 3 || localSeed.length >= _enoughLocalResultsThreshold) {
+      return _sortByQuery(localSeed, query).take(30).toList();
     }
 
-    // Inicia a lista de resultados com os itens locais reunidos (banco offline + banco do usuário)
-    List<FoodItem> finalResults = List.from(combinedLocalResults);
+    final finalResults = <FoodItem>[...localSeed];
+    final futures = <Future<List<FoodItem>>>[
+      _searchWorkerApi(query).catchError((_) => <FoodItem>[]),
+      if (localSeed.isEmpty)
+        _searchOpenFoodFacts(query).catchError((_) => <FoodItem>[]),
+    ];
 
-    // 3. Busca primária remota (Cloudflare D1 + IA):
-    // O Worker agora consulta o banco TACO (rápido!) e só usa IA se não achar nada.
-    try {
-      final cloudResults = await _searchWorkerApi(query);
-      if (cloudResults.isNotEmpty) {
-        finalResults.addAll(cloudResults);
-      }
-    } catch (e) {
-      // Ignora erro do worker
-    }
-
-    // 4. Fallback Secundário: OpenFoodFacts (Ampla base, mas pode ser lenta)
-    // Acionamos apenas se tivermos poucos resultados brasileiros confiáveis
-    if (finalResults.length < 5) {
-      try {
-        final offResults = await _searchOpenFoodFacts(query);
-        if (offResults.isNotEmpty) {
-          finalResults.addAll(offResults);
-        }
-      } catch (e) {
-        // Ignora
+    final remoteBuckets = await Future.wait(futures);
+    for (final bucket in remoteBuckets) {
+      if (bucket.isNotEmpty) {
+        finalResults.addAll(bucket);
       }
     }
 
-    // Remove eventuais duplicatas por ID antes da ordenação final
-    final seenIds = <String>{};
-    final uniqueResults = <FoodItem>[];
-
-    for (final item in finalResults) {
-      if (!seenIds.contains(item.id)) {
-        seenIds.add(item.id);
-        uniqueResults.add(item);
-      }
-    }
-
-    // Retorna ordenado por similaridade de nome, com um limite top 30
-    return _sortByQuery(uniqueResults, query).take(30).toList();
+    return _sortByQuery(_dedupeById(finalResults), query).take(30).toList();
   }
 
   @override
@@ -224,7 +224,6 @@ class FoodServiceImpl implements FoodService {
     return results;
   }
 
-  /// Search local database
   List<FoodItem> _searchLocalDatabase(String query) {
     final results = LocalFoodDatabase.search(query);
     return results
@@ -262,18 +261,15 @@ class FoodServiceImpl implements FoodService {
 
     if (_customFoodService == null) return mappedLocal;
 
-    final customFoods = await _customFoodService!.searchCustomFoods('');
-
-    // Mostramos os alimentos customizados recentes primeiro
+    final customFoods = await _customFoodService.searchCustomFoods('');
     final combined = [...customFoods.reversed, ...mappedLocal];
     return combined.take(limit).toList();
   }
 
-  /// Search Worker API
   Future<List<FoodItem>> _searchWorkerApi(String query) async {
     final response = await http
         .get(Uri.parse('$workerUrl/search-food?q=$query'))
-        .timeout(const Duration(seconds: 5));
+        .timeout(_workerSearchTimeout);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -282,11 +278,10 @@ class FoodServiceImpl implements FoodService {
     return [];
   }
 
-  /// Search OpenFoodFacts API via Cloudflare Proxy
   Future<List<FoodItem>> _searchOpenFoodFacts(String query) async {
     final response = await http
         .get(Uri.parse('$workerUrl/proxy-off?q=$query'))
-        .timeout(const Duration(seconds: 8));
+        .timeout(_openFoodFactsTimeout);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -308,7 +303,7 @@ class FoodServiceImpl implements FoodService {
               imageUrl: p['image_small_url'],
             );
           })
-          .where((f) => f.calories > 0) // Filtra itens sem dados nutricionais
+          .where((f) => f.calories > 0)
           .toList();
     }
     return [];
@@ -322,8 +317,10 @@ class FoodServiceImpl implements FoodService {
   }
 
   String _removeDiacritics(String str) {
-    var withDia = 'áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇ';
-    var withoutDia = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC';
+    const withDia =
+        'áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÔÖÚÙÛÜÇ';
+    const withoutDia =
+        'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC';
     for (int i = 0; i < withDia.length; i++) {
       str = str.replaceAll(withDia[i], withoutDia[i]);
     }
@@ -340,6 +337,19 @@ class FoodServiceImpl implements FoodService {
       return a.name.toLowerCase().compareTo(b.name.toLowerCase());
     });
     return sorted;
+  }
+
+  List<FoodItem> _dedupeById(List<FoodItem> items) {
+    final seenIds = <String>{};
+    final deduped = <FoodItem>[];
+
+    for (final item in items) {
+      if (seenIds.add(item.id)) {
+        deduped.add(item);
+      }
+    }
+
+    return deduped;
   }
 
   int _matchScore(FoodItem item, String normalizedQuery) {
@@ -382,11 +392,9 @@ class FoodServiceImpl implements FoodService {
         body = body.replaceAll('```json', '').replaceAll('```', '').trim();
         final Map<String, dynamic> data = jsonDecode(body);
         return FoodItem.fromJson(data);
-      } else {
-        throw Exception('Failed to analyze image: ${response.body}');
       }
-    } catch (e) {
-      // print('Error analyzing image: $e');
+      throw Exception('Failed to analyze image: ${response.body}');
+    } catch (_) {
       return null;
     }
   }
@@ -418,8 +426,7 @@ class FoodServiceImpl implements FoodService {
         }
       }
       return null;
-    } catch (e) {
-      // print('Error scanning barcode: $e');
+    } catch (_) {
       return null;
     }
   }

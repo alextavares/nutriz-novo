@@ -1077,7 +1077,7 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
       );
     }
 
-    if (state.isLoading) {
+    if (state.isLoading && state.results.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(color: AppColors.primary),
       );
@@ -1127,28 +1127,44 @@ class _AddFoodPageState extends ConsumerState<AddFoodPage>
     }
 
     if (items.isNotEmpty) {
-      return ListView.separated(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.md,
-          AppSpacing.sm,
-          AppSpacing.md,
-          bottomPadding,
-        ),
-        itemCount: items.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 10),
-        itemBuilder: (context, index) {
-          final food = items[index];
-          final query = state.query;
-          final notifier = ref.read(foodSearchNotifierProvider.notifier);
-          return _FoodResultTile(
-            food: food,
-            onTap: () => _openFoodSheet(food),
-            isFavorite: notifier.isFavorite(food),
-            onFavoriteToggle: () => notifier.toggleFavorite(food),
-            highlightQuery: query.isEmpty ? null : query,
-          );
-        },
+      return Column(
+        children: [
+          if (state.isLoading)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.md,
+                0,
+              ),
+              child: _SearchLoadingHint(),
+            ),
+          Expanded(
+            child: ListView.separated(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.sm,
+                AppSpacing.md,
+                bottomPadding,
+              ),
+              itemCount: items.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 10),
+              itemBuilder: (context, index) {
+                final food = items[index];
+                final query = state.query;
+                final notifier = ref.read(foodSearchNotifierProvider.notifier);
+                return _FoodResultTile(
+                  food: food,
+                  onTap: () => _openFoodSheet(food),
+                  isFavorite: notifier.isFavorite(food),
+                  onFavoriteToggle: () => notifier.toggleFavorite(food),
+                  highlightQuery: query.isEmpty ? null : query,
+                );
+              },
+            ),
+          ),
+        ],
       );
     }
 
@@ -1796,6 +1812,60 @@ class _InlineMessageCard extends StatelessWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchLoadingHint extends StatelessWidget {
+  const _SearchLoadingHint();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.primary.withValues(alpha: 0.18)),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Resultados rapidos carregados',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Buscando mais opcoes para completar a lista...',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textSecondary,
                   ),
                 ),
               ],

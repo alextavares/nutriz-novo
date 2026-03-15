@@ -47,7 +47,9 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
         ? Calories(calorieGoal!.toDouble())
         : (diaryDay.calorieGoal ?? const Calories(2000));
     final consumed = diaryDay.totalCalories;
-    const burned = 0;
+    final remainingCalories = goal.value.toInt() - consumed.value.toInt();
+    final remainingProtein =
+        profile.proteinGrams - diaryDay.totalMacros.protein.toInt();
     final isFasting = ref.watch(
       fastingNotifierProvider.select((s) => s.isFasting),
     );
@@ -148,7 +150,7 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: _StatColumn(
-                            label: 'Consumidas',
+                            label: 'Consumidas hoje',
                             value: consumed.value.toInt(),
                             alignment: CrossAxisAlignment.end,
                           ),
@@ -162,22 +164,25 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
                             child: _CalorieRing(
                               consumed: consumed.value.toInt(),
                               goal: goal.value.toInt(),
-                              burned: burned,
                               diameter: ringSize,
                             ),
                           ),
                         ),
                         const SizedBox(width: 8),
-                        Expanded(
-                          child: _StatColumn(
-                            label: 'Queimadas',
-                            value: burned,
-                            alignment: CrossAxisAlignment.start,
-                          ),
-                        ),
+                        const Spacer(),
                       ],
                     );
                   },
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                child: _DailyFocusCopy(
+                  remainingCalories: remainingCalories,
+                  remainingProtein: remainingProtein,
                 ),
               ),
 
@@ -228,6 +233,7 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
                 value: diaryDay.totalMacros.protein,
                 goal: profile.proteinGrams.toDouble(),
                 color: AppColors.protein,
+                isHighlighted: true,
               ),
               const SizedBox(width: AppSpacing.sm),
               _MacroCard(
@@ -250,44 +256,75 @@ class _MacroCard extends StatelessWidget {
   final double value;
   final double goal;
   final Color color;
+  final bool isHighlighted;
 
   const _MacroCard({
     required this.label,
     required this.value,
     required this.goal,
     required this.color,
+    this.isHighlighted = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final safeProgress = goal > 0 ? (value / goal).clamp(0.0, 1.0) : 0.0;
+    final remaining = goal > 0 ? (goal - value).toInt() : 0;
     return Expanded(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isHighlighted ? color.withValues(alpha: 0.08) : Colors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(
+            color: isHighlighted ? color.withValues(alpha: 0.35) : AppColors.border,
+            width: isHighlighted ? 1.4 : 1,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: isHighlighted ? color : AppColors.textPrimary,
+                    ),
+                  ),
+                ),
+                if (isHighlighted)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.14),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      'Foco',
+                      style: TextStyle(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w800,
+                        color: color,
+                      ),
+                    ),
+                  ),
+              ],
             ),
             const SizedBox(height: 4),
             ClipRRect(
               borderRadius: BorderRadius.circular(999),
               child: LinearProgressIndicator(
                 value: safeProgress,
-                backgroundColor: color.withValues(alpha: 0.15),
+                backgroundColor: color.withValues(alpha: isHighlighted ? 0.22 : 0.15),
                 valueColor: AlwaysStoppedAnimation<Color>(color),
-                minHeight: 5,
+                minHeight: isHighlighted ? 6 : 5,
               ),
             ),
             const SizedBox(height: 4),
@@ -295,12 +332,23 @@ class _MacroCard extends StatelessWidget {
               goal > 0
                   ? '${value.toInt()}/${goal.toInt()}g'
                   : '${value.toInt()}g',
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textSecondary,
+              style: TextStyle(
+                fontSize: isHighlighted ? 12 : 11,
+                fontWeight: FontWeight.w800,
+                color: isHighlighted ? AppColors.textPrimary : AppColors.textSecondary,
               ),
             ),
+            if (isHighlighted) ...[
+              const SizedBox(height: 2),
+              Text(
+                remaining > 0 ? 'Faltam ${remaining}g' : 'Meta batida',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: remaining > 0 ? color : AppColors.success,
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -312,19 +360,20 @@ class _MacroCard extends StatelessWidget {
 class _CalorieRing extends StatelessWidget {
   final int consumed;
   final int goal;
-  final int burned;
   final double diameter;
 
   const _CalorieRing({
     required this.consumed,
     required this.goal,
-    required this.burned,
     required this.diameter,
   });
 
   @override
   Widget build(BuildContext context) {
-    final remaining = goal - consumed + burned;
+    final remaining = goal - consumed;
+    final isOverGoal = remaining < 0;
+    final headlineValue = isOverGoal ? remaining.abs() : remaining;
+    final caption = isOverGoal ? 'kcal acima' : 'kcal restantes';
     final progress = goal > 0 ? (consumed / goal).clamp(0.0, 1.0) : 0.0;
     final numFontSize = (diameter * 0.26).clamp(36.0, 52.0);
 
@@ -335,7 +384,7 @@ class _CalorieRing extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              remaining.toString(),
+              headlineValue.toString(),
               style: TextStyle(
                 fontSize: numFontSize,
                 fontWeight: FontWeight.w900,
@@ -344,9 +393,9 @@ class _CalorieRing extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 2),
-            const Text(
-              'Restantes',
-              style: TextStyle(
+            Text(
+              caption,
+              style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 color: _kDarkTextMid,
@@ -416,7 +465,7 @@ class _StatColumn extends StatelessWidget {
         Text(
           label,
           style: const TextStyle(
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: FontWeight.w600,
             color: _kDarkTextLight,
           ),
@@ -425,12 +474,76 @@ class _StatColumn extends StatelessWidget {
         Text(
           value.toString(),
           style: const TextStyle(
-            fontSize: 22,
+            fontSize: 20,
             fontWeight: FontWeight.w900,
             color: _kDarkText,
           ),
         ),
+        const SizedBox(height: 1),
+        const Text(
+          'kcal',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            color: _kDarkTextLight,
+          ),
+        ),
       ],
+    );
+  }
+}
+
+class _DailyFocusCopy extends StatelessWidget {
+  final int remainingCalories;
+  final int remainingProtein;
+
+  const _DailyFocusCopy({
+    required this.remainingCalories,
+    required this.remainingProtein,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final caloriesLabel = remainingCalories >= 0
+        ? 'Restam $remainingCalories kcal hoje'
+        : '${remainingCalories.abs()} kcal acima da meta hoje';
+    final proteinLabel = remainingProtein > 0
+        ? 'Proteina: faltam $remainingProtein g para a meta'
+        : 'Proteina: meta batida por hoje';
+    final proteinColor = remainingProtein > 0
+        ? AppColors.protein
+        : _kDarkTextMid;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.22),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Column(
+        children: [
+          Text(
+            caloriesLabel,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w900,
+              color: _kDarkText,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            proteinLabel,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: proteinColor,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

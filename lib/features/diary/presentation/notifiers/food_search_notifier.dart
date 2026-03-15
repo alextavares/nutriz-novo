@@ -1,11 +1,15 @@
 import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../../core/analytics/analytics_service.dart';
 import '../../domain/entities/food_item.dart';
 import '../../data/services/food_service.dart';
 import '../../data/services/custom_food_service.dart';
 import '../../data/services/favorite_food_service.dart';
 import '../../../gamification/presentation/providers/gamification_providers.dart';
 import '../../../profile/data/repositories/profile_repository.dart';
+import '../../../../core/analytics/analytics_providers.dart';
 
 // State class
 class FoodSearchState {
@@ -52,9 +56,11 @@ class FoodSearchState {
 class FoodSearchNotifier extends StateNotifier<FoodSearchState> {
   final FoodService _service;
   final FavoriteFoodService _favorites;
+  final AnalyticsService _analytics;
   int _activeSearchId = 0;
 
-  FoodSearchNotifier(this._service, this._favorites) : super(FoodSearchState());
+  FoodSearchNotifier(this._service, this._favorites, this._analytics)
+    : super(FoodSearchState());
 
   void setQuery(String query) {
     state = state.copyWith(query: query, error: null);
@@ -64,10 +70,34 @@ class FoodSearchNotifier extends StateNotifier<FoodSearchState> {
     final searchId = ++_activeSearchId;
     state = state.copyWith(query: query, isLoading: true, error: null);
     try {
-      final results = query.trim().isEmpty
-          ? await _service.getFrequentFoods()
-          : await _service.searchFood(query);
+      final trimmed = query.trim();
+      if (trimmed.isEmpty) {
+        final results = await _service.getFrequentFoods();
+        if (searchId != _activeSearchId) return;
+        state = state.copyWith(results: results, isLoading: false);
+        return;
+      }
+
+      final stopwatch = Stopwatch()..start();
+      final localResults = await _service.searchFoodLocal(trimmed);
       if (searchId != _activeSearchId) return;
+
+      state = state.copyWith(results: localResults, isLoading: true);
+      await _analytics.logEvent('food_search_local_results', {
+        'query_len': trimmed.length,
+        'results': localResults.length,
+        'elapsed_ms': stopwatch.elapsedMilliseconds,
+      });
+
+      final results = await _service.searchFoodRemote(trimmed, seed: localResults);
+      if (searchId != _activeSearchId) return;
+
+      await _analytics.logEvent('food_search_remote_results', {
+        'query_len': trimmed.length,
+        'results': results.length,
+        'elapsed_ms': stopwatch.elapsedMilliseconds,
+      });
+
       state = state.copyWith(results: results, isLoading: false);
     } catch (e) {
       if (searchId != _activeSearchId) return;
@@ -137,5 +167,6 @@ final foodSearchNotifierProvider =
       final favorites = FavoriteFoodService(
         profileRepository: profileRepository,
       );
-      return FoodSearchNotifier(service, favorites);
+      final analytics = ref.watch(analyticsServiceProvider);
+      return FoodSearchNotifier(service, favorites, analytics);
     });
