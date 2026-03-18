@@ -148,16 +148,10 @@ GoRouter appRouter(AppRouterRef ref) {
               'DEBUG: Router redirect loading. loc=${state.matchedLocation}',
             );
           }
-          // While loading, avoid bouncing off onboarding (resets its PageView).
-          // Avoid bouncing from diary back to splash during transient loading
-          // states right after onboarding completion/navigation.
-          if (isSplashRoute ||
-              isOnboardingRoute ||
-              isOnboardingEditRoute ||
-              state.matchedLocation == '/diary') {
-            return null;
-          }
-          return '/splash';
+          // Keep the current route during transient loading states. Redirecting
+          // back to splash from shell routes such as /diet can cause visible
+          // flicker and make the target screen feel like it never opens.
+          return null;
         },
         error: (err, stack) {
           if (logRedirects) {

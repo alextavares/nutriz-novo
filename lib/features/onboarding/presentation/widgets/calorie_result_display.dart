@@ -8,6 +8,7 @@ class CalorieResultDisplay extends StatefulWidget {
   final int protein;
   final int carbs;
   final int fat;
+  final bool compact;
   final VoidCallback? onAnimationComplete;
 
   const CalorieResultDisplay({
@@ -16,6 +17,7 @@ class CalorieResultDisplay extends StatefulWidget {
     required this.protein,
     required this.carbs,
     required this.fat,
+    this.compact = false,
     this.onAnimationComplete,
   });
 
@@ -58,25 +60,31 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
 
     // Using a more modern primary color if its default was simple green
     final Color ringColor = theme.colorScheme.primary;
+    final ringSize = widget.compact ? 200.0 : 240.0;
+    final ringStroke = widget.compact ? 16.0 : 18.0;
+    final valueFontSize = widget.compact ? 46.0 : 56.0;
+    final ringBottomSpacing = widget.compact ? 28.0 : 48.0;
+    final titleBottomSpacing = widget.compact ? 18.0 : 24.0;
+    final horizontalPadding = widget.compact ? 4.0 : 16.0;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Calorie ring
         SizedBox(
-              width: 240,
-              height: 240,
+              width: ringSize,
+              height: ringSize,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   // Background ring
                   CustomPaint(
-                    size: const Size(240, 240),
+                    size: Size(ringSize, ringSize),
                     painter: _CalorieRingPainter(
                       progress: 1.0,
                       color: theme.colorScheme.surfaceContainerHighest
                           .withValues(alpha: 0.3),
-                      strokeWidth: 18,
+                      strokeWidth: ringStroke,
                     ),
                   ),
                   // Animated progress ring with glow
@@ -84,11 +92,11 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
                     animation: _controller,
                     builder: (context, child) {
                       return CustomPaint(
-                        size: const Size(240, 240),
+                        size: Size(ringSize, ringSize),
                         painter: _CalorieRingPainter(
                           progress: _controller.value,
                           color: ringColor,
-                          strokeWidth: 18,
+                          strokeWidth: ringStroke,
                           addGlow: true,
                         ),
                       );
@@ -106,7 +114,7 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
                             style: theme.textTheme.displayLarge?.copyWith(
                               fontWeight: FontWeight.w900,
                               color: ringColor,
-                              fontSize: 56,
+                              fontSize: valueFontSize,
                               letterSpacing: -1.5,
                             ),
                           );
@@ -134,7 +142,7 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
               curve: Curves.easeOutBack,
             )
             .fadeIn(duration: 600.ms),
-        const SizedBox(height: 48),
+        SizedBox(height: ringBottomSpacing),
         // Description
         Text(
               'Seu orçamento diário de calorias',
@@ -147,10 +155,10 @@ class _CalorieResultDisplayState extends State<CalorieResultDisplay>
             .animate(delay: 500.ms)
             .fadeIn(duration: 400.ms)
             .slideY(begin: 0.2, duration: 400.ms),
-        const SizedBox(height: 24),
+        SizedBox(height: titleBottomSpacing),
         // Macro breakdown
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

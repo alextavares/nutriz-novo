@@ -190,17 +190,17 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
     if (!show) return const SizedBox.shrink();
 
     return Container(
-      margin: const EdgeInsets.only(top: AppSpacing.sm),
-      padding: const EdgeInsets.all(AppSpacing.md),
+      margin: const EdgeInsets.only(top: AppSpacing.xs),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
             color: AppColors.shadow.withValues(alpha: 0.08),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -210,7 +210,7 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
           Text(
             title,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
               fontWeight: FontWeight.w900,
               color: AppColors.textPrimary,
             ),
@@ -219,12 +219,13 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
           Text(
             subtitle,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w700,
               color: AppColors.textSecondary,
+              height: 1.35,
             ),
           ),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
@@ -274,15 +275,19 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    minimumSize: const Size.fromHeight(48),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 14,
+                    ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(14),
                     ),
                     textStyle: const TextStyle(fontWeight: FontWeight.w900),
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.sm),
+              const SizedBox(width: AppSpacing.xs),
               TextButton(
                 onPressed: () {
                   ref.read(analyticsServiceProvider).logEvent(
@@ -294,6 +299,7 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                 child: Text(
                   'Agora não',
                   style: TextStyle(
+                    fontSize: 14,
                     fontWeight: FontWeight.w900,
                     color: AppColors.textPrimary.withValues(alpha: 0.65),
                   ),
@@ -587,10 +593,10 @@ class _DiaryPageState extends ConsumerState<DiaryPage> {
                           _buildFirstMealCta(
                             show: true,
                             title: isToday
-                                ? 'Comece pelo que você já comeu hoje'
+                                ? 'Registre sua primeira refeição'
                                 : 'Registre uma refeição neste dia',
                             subtitle: isToday
-                                ? 'Registre uma refeição e veja o que ainda falta no seu dia.'
+                                ? 'Comece pelo que você já comeu e veja calorias e proteína restantes.'
                                 : 'Adicione uma refeição para atualizar calorias, proteína e restantes.',
                             dateKey: dateKey,
                           ),

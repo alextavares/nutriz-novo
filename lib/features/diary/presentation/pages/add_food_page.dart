@@ -1854,7 +1854,7 @@ class _SearchLoadingHint extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Resultados rapidos carregados',
+                  'Resultados iniciais prontos',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w900,
                     color: AppColors.textPrimary,
@@ -1862,7 +1862,7 @@ class _SearchLoadingHint extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Buscando mais opcoes para completar a lista...',
+                  'Estamos buscando mais opcoes para completar a lista.',
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: AppColors.textSecondary,

@@ -5548,11 +5548,48 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            if (!widget.isEditMode) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 60,
+                child: FilledButton(
+                  onPressed: () {
+                    ref.read(analyticsServiceProvider).logEvent(
+                      'first_meal_cta_tap',
+                      {
+                        'source': 'onboarding_result',
+                        'meal_type': 'suggested',
+                      },
+                    );
+                    _finishOnboarding(nextRoute: '/diary?firstRun=1');
+                  },
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 2,
+                  ),
+                  child: const Text(
+                    'Registrar minha 1ª refeição',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      height: 1.1,
+                    ),
+                  ),
+                ),
+              ).animate(delay: 400.ms).fadeIn(duration: 300.ms),
+              const SizedBox(height: 20),
+            ],
             CalorieResultDisplay(
               calories: profile.calculatedCalories,
               protein: profile.proteinGrams,
               carbs: profile.carbsGrams,
               fat: profile.fatGrams,
+              compact: true,
             ),
             const SizedBox(height: 32),
             if (profile.weeksToGoal != null && profile.weeksToGoal! > 0)
@@ -5570,43 +5607,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
-            if (!widget.isEditMode) ...[
-              const SizedBox(height: 32),
-              SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: FilledButton(
-                      onPressed: () {
-                        ref.read(analyticsServiceProvider).logEvent(
-                          'first_meal_cta_tap',
-                          {
-                            'source': 'onboarding_result',
-                            'meal_type': 'suggested',
-                          },
-                        );
-                        _finishOnboarding(nextRoute: '/diary?firstRun=1');
-                      },
-                      style: FilledButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 2,
-                      ),
-                      child: const Text(
-                        'Registrar minha 1ª refeição',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  )
-                  .animate(delay: 800.ms)
-                  .fadeIn(duration: 400.ms)
-                  .slideY(begin: 0.2, duration: 400.ms),
-              const SizedBox(height: 24),
-            ],
+            const SizedBox(height: 24),
           ],
         ),
       ),

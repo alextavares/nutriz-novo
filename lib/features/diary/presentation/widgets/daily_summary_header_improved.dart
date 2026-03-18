@@ -17,6 +17,8 @@ import '../../../fasting/presentation/notifiers/fasting_notifier.dart';
 const _kDarkText = Color(0xFF143D22);
 const _kDarkTextMid = Color(0xFF1E5930);
 const _kDarkTextLight = Color(0xFF2D7A45);
+const _kRingTrack = Color(0xFFE5E7EB);
+const _kRingProgress = Color(0xFF36C275);
 
 class DailySummaryHeaderImproved extends ConsumerWidget {
   final DiaryDay diaryDay;
@@ -47,7 +49,7 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
         ? Calories(calorieGoal!.toDouble())
         : (diaryDay.calorieGoal ?? const Calories(2000));
     final consumed = diaryDay.totalCalories;
-    final remainingCalories = goal.value.toInt() - consumed.value.toInt();
+    const burnedCalories = 0;
     final remainingProtein =
         profile.proteinGrams - diaryDay.totalMacros.protein.toInt();
     final isFasting = ref.watch(
@@ -76,7 +78,7 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppSpacing.md,
-                  vertical: 6,
+                  vertical: 2,
                 ),
                 child: Row(
                   children: [
@@ -133,68 +135,94 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
                 ),
               ),
 
-              // Ring + flanking stats
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: 4,
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final ringSize = (constraints.maxWidth * 0.50).clamp(
-                      140.0,
-                      175.0,
-                    );
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: _StatColumn(
-                            label: 'Consumidas hoje',
-                            value: consumed.value.toInt(),
-                            alignment: CrossAxisAlignment.end,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: onDetailsTap,
-                          child: SizedBox(
-                            width: ringSize,
-                            height: ringSize,
-                            child: _CalorieRing(
-                              consumed: consumed.value.toInt(),
-                              goal: goal.value.toInt(),
-                              diameter: ringSize,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        const Spacer(),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                child: _DailyFocusCopy(
-                  remainingCalories: remainingCalories,
-                  remainingProtein: remainingProtein,
-                ),
-              ),
-
-              const SizedBox(height: 12),
-
-              // Fasting chip inside gradient
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.md,
                   0,
                   AppSpacing.md,
+                  10,
+                ),
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.surface,
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(
+                      color: AppColors.border.withValues(alpha: 0.9),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.04),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final ringSize = (constraints.maxWidth * 0.34).clamp(
+                            98.0,
+                            120.0,
+                          );
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: _SideSummaryStat(
+                                  label: 'Consumidas',
+                                  value: consumed.value.toInt(),
+                                  alignment: CrossAxisAlignment.center,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              GestureDetector(
+                                onTap: onDetailsTap,
+                                child: SizedBox(
+                                  width: ringSize,
+                                  height: ringSize,
+                                  child: _CalorieRing(
+                                    consumed: consumed.value.toInt(),
+                                    goal: goal.value.toInt(),
+                                    diameter: ringSize,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _SideSummaryStat(
+                                  label: 'Queimadas',
+                                  value: burnedCalories,
+                                  alignment: CrossAxisAlignment.center,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      _ProteinFocusLine(remainingProtein: remainingProtein),
+                      const SizedBox(height: 10),
+                      MacroBars(
+                        carbs: diaryDay.totalMacros.carbs,
+                        protein: diaryDay.totalMacros.protein,
+                        fat: diaryDay.totalMacros.fat,
+                        carbsGoal: profile.carbsGrams.toDouble(),
+                        proteinGoal: profile.proteinGrams.toDouble(),
+                        fatGoal: profile.fatGrams.toDouble(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
                   AppSpacing.md,
+                  0,
+                  AppSpacing.md,
+                  8,
                 ),
                 child: showCompactFastingCta
                     ? _FastingAction(
@@ -205,42 +233,6 @@ class DailySummaryHeaderImproved extends ConsumerWidget {
                         isFasting: isFasting,
                         onTap: () => context.push('/fasting'),
                       ),
-              ),
-            ],
-          ),
-        ),
-
-        // ── Macro cards (white, below gradient) ──────────────────────────
-        Container(
-          color: AppColors.surfaceVariant,
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md,
-            AppSpacing.md,
-            AppSpacing.md,
-            0,
-          ),
-          child: Row(
-            children: [
-              _MacroCard(
-                label: 'Carbo',
-                value: diaryDay.totalMacros.carbs,
-                goal: profile.carbsGrams.toDouble(),
-                color: AppColors.carbs,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              _MacroCard(
-                label: 'Proteína',
-                value: diaryDay.totalMacros.protein,
-                goal: profile.proteinGrams.toDouble(),
-                color: AppColors.protein,
-                isHighlighted: true,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              _MacroCard(
-                label: 'Gordura',
-                value: diaryDay.totalMacros.fat,
-                goal: profile.fatGrams.toDouble(),
-                color: AppColors.fat,
               ),
             ],
           ),
@@ -375,7 +367,7 @@ class _CalorieRing extends StatelessWidget {
     final headlineValue = isOverGoal ? remaining.abs() : remaining;
     final caption = isOverGoal ? 'kcal acima' : 'kcal restantes';
     final progress = goal > 0 ? (consumed / goal).clamp(0.0, 1.0) : 0.0;
-    final numFontSize = (diameter * 0.26).clamp(36.0, 52.0);
+    final numFontSize = (diameter * 0.24).clamp(30.0, 44.0);
 
     return CustomPaint(
       painter: _RingPainter(progress: progress),
@@ -387,7 +379,7 @@ class _CalorieRing extends StatelessWidget {
               headlineValue.toString(),
               style: TextStyle(
                 fontSize: numFontSize,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w800,
                 height: 1,
                 color: _kDarkText,
               ),
@@ -396,7 +388,7 @@ class _CalorieRing extends StatelessWidget {
             Text(
               caption,
               style: const TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: FontWeight.w700,
                 color: _kDarkTextMid,
               ),
@@ -415,12 +407,12 @@ class _RingPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
-    final strokeWidth = (size.shortestSide * 0.09).clamp(10.0, 16.0);
+    final strokeWidth = (size.shortestSide * 0.075).clamp(8.0, 12.0);
     final radius = (size.shortestSide - strokeWidth) / 2;
 
     // Track
     final trackPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.45)
+      ..color = _kRingTrack
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -428,7 +420,7 @@ class _RingPainter extends CustomPainter {
 
     // Progress
     final progressPaint = Paint()
-      ..color = Colors.white
+      ..color = _kRingProgress
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
@@ -445,12 +437,12 @@ class _RingPainter extends CustomPainter {
   bool shouldRepaint(_RingPainter old) => old.progress != progress;
 }
 
-class _StatColumn extends StatelessWidget {
+class _SideSummaryStat extends StatelessWidget {
   final String label;
   final int value;
   final CrossAxisAlignment alignment;
 
-  const _StatColumn({
+  const _SideSummaryStat({
     required this.label,
     required this.value,
     required this.alignment,
@@ -467,25 +459,25 @@ class _StatColumn extends StatelessWidget {
           style: const TextStyle(
             fontSize: 10,
             fontWeight: FontWeight.w600,
-            color: _kDarkTextLight,
+            color: AppColors.textSecondary,
           ),
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 4),
         Text(
           value.toString(),
           style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w900,
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
             color: _kDarkText,
           ),
         ),
-        const SizedBox(height: 1),
+        const SizedBox(height: 2),
         const Text(
           'kcal',
           style: TextStyle(
-            fontSize: 10,
-            fontWeight: FontWeight.w700,
-            color: _kDarkTextLight,
+            fontSize: 9,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
           ),
         ),
       ],
@@ -493,20 +485,15 @@ class _StatColumn extends StatelessWidget {
   }
 }
 
-class _DailyFocusCopy extends StatelessWidget {
-  final int remainingCalories;
+class _ProteinFocusLine extends StatelessWidget {
   final int remainingProtein;
 
-  const _DailyFocusCopy({
-    required this.remainingCalories,
+  const _ProteinFocusLine({
     required this.remainingProtein,
   });
 
   @override
   Widget build(BuildContext context) {
-    final caloriesLabel = remainingCalories >= 0
-        ? 'Restam $remainingCalories kcal hoje'
-        : '${remainingCalories.abs()} kcal acima da meta hoje';
     final proteinLabel = remainingProtein > 0
         ? 'Proteina: faltam $remainingProtein g para a meta'
         : 'Proteina: meta batida por hoje';
@@ -514,35 +501,13 @@ class _DailyFocusCopy extends StatelessWidget {
         ? AppColors.protein
         : _kDarkTextMid;
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.22),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        children: [
-          Text(
-            caloriesLabel,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w900,
-              color: _kDarkText,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            proteinLabel,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: proteinColor,
-            ),
-          ),
-        ],
+    return Text(
+      proteinLabel,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        color: proteinColor,
       ),
     );
   }
@@ -565,21 +530,21 @@ class _FastingAction extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 11),
+        padding: const EdgeInsets.symmetric(vertical: 7),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.35),
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.white.withValues(alpha: 0.18),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 16, color: _kDarkText),
-            const SizedBox(width: 6),
+            Icon(icon, size: 14, color: _kDarkText),
+            const SizedBox(width: 5),
             Text(
               label,
               style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w800,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
                 color: _kDarkText,
               ),
             ),
